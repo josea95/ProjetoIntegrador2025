@@ -42,4 +42,6 @@ descricao text,
 preco float,
 data_criacao date,
 data_atualizacao date
-);
+
+
+testando
