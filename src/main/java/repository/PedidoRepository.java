@@ -6,9 +6,9 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class FilaPedido {
+public class PedidoRepository {
 
-    public void salvar(org.example.entity.FilaPedido pedido) {
+    public void salvar(org.example.entity.HistoricoPedido pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 
@@ -18,21 +18,21 @@ public class FilaPedido {
         session.close();
     }
 
-    public org.example.entity.FilaPedido buscarPorId(int id) {
+    public org.example.entity.HistoricoPedido buscarPorId(int id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        org.example.entity.FilaPedido pedido = session.get(org.example.entity.FilaPedido.class, id);
+        org.example.entity.HistoricoPedido pedido = session.get(org.example.entity.HistoricoPedido.class, id);
         session.close();
         return pedido;
     }
 
-    public List<org.example.entity.FilaPedido> listarTodos() {
+    public List<org.example.entity.HistoricoPedido> listarTodos() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<org.example.entity.FilaPedido> pedidos = session.createQuery("FROM FilaPedido", org.example.entity.FilaPedido.class).list();
+        List<org.example.entity.HistoricoPedido> pedidos = session.createQuery("FROM HistoricoPedido", org.example.entity.HistoricoPedido.class).list();
         session.close();
         return pedidos;
     }
 
-    public void deletar(org.example.entity.FilaPedido pedido) {
+    public void deletar(org.example.entity.HistoricoPedido pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 

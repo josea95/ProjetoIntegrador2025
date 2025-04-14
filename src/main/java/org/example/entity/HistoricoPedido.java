@@ -32,5 +32,26 @@ public class HistoricoPedido {
     private String observacao;
 
 
+    public void setUsuario(Usuario usuario) {
+    }
+
+    public void setValorPedido(float v) {
+    }
+
+    public void setObservacao(Object observacao) {
+    }
+
+    public void setSenhaPedido(String senhaPedido) {
+    }
+
+    public void setHoraPedido(Object horaPedido) {
+    }
+
+    public void setDataPedido(Object dataPedido) {
+    }
+
+    public void setNomeCliente(String nome) {
+
+    }
 }
 

@@ -1,6 +1,8 @@
 package org.example.entity;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "tb_fila_pedidos")
@@ -29,5 +31,43 @@ public class FilaPedido {
     private String observacao;
 
 
+    public void setUsuario(Usuario usuario) {
+    }
+
+    public Object getDataPedido() {
+        return null;
+    }
+
+    public Object getHoraPedido() {
+        return null;
+    }
+
+    public String getSenhaPedido() {
+        return "";
+    }
+
+    public Object getObservacao() {
+        return null;
+    }
+
+    public void setDataPedido(Date date) {
+    }
+
+    public void setHoraPedido(Time time) {
+    }
+
+    public void setStatusPedido(String emPreparo) {
+    }
+
+    public void setSenhaPedido(String m123) {
+    }
+
+    public void setObservacao(String semCebola) {
+
+    }
+
+    public String getStatusPedido() {
+        return "";
+    }
 }
 
