@@ -28,7 +28,7 @@ public class ProdutoRepository {
     }
 
     //metodo para remover o produto pelo ID
-    public void remover(Long id) {
+    public void deletar(Long id) {
         ProdutoEntity produto = em.find( ProdutoEntity.class, id ); //busca o produto pelo ID
         if (produto != null) { // verifica se o produto existe
             em.getTransaction().begin(); // inicia/faz uma transacao

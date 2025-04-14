@@ -19,7 +19,7 @@ public class ProdutoPedidoRepository {
         em.getTransaction().commit(); // confirma a transacao
     }
 
-    public void remover(Long id) {
+    public void deletar(Long id) {
         ProdutoPedidoEntity produtoPedido = em.find(ProdutoPedidoEntity.class, id); // busca o produtoPedido pelo ID
         if (produtoPedido != null) { // verifica se o produtoPedido existe
             em.getTransaction().begin(); // inicia/faz uma transacao
