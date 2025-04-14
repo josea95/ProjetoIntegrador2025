@@ -1,15 +1,14 @@
 package repository;
 
-import org.example.entity.FilaPedido;
 import org.example.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class FilaPedidoRepository {
+public class FilaPedido {
 
-    public void salvar(FilaPedido pedido) {
+    public void salvar(org.example.entity.FilaPedido pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 
@@ -19,21 +18,21 @@ public class FilaPedidoRepository {
         session.close();
     }
 
-    public FilaPedido buscarPorId(int id) {
+    public org.example.entity.FilaPedido buscarPorId(int id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        FilaPedido pedido = session.get(FilaPedido.class, id);
+        org.example.entity.FilaPedido pedido = session.get(org.example.entity.FilaPedido.class, id);
         session.close();
         return pedido;
     }
 
-    public List<FilaPedido> listarTodos() {
+    public List<org.example.entity.FilaPedido> listarTodos() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<FilaPedido> pedidos = session.createQuery("FROM FilaPedido", FilaPedido.class).list();
+        List<org.example.entity.FilaPedido> pedidos = session.createQuery("FROM FilaPedido", org.example.entity.FilaPedido.class).list();
         session.close();
         return pedidos;
     }
 
-    public void deletar(FilaPedido pedido) {
+    public void deletar(org.example.entity.FilaPedido pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 
