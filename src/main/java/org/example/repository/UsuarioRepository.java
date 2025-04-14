@@ -6,10 +6,18 @@ import org.example.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 
 public class UsuarioRepository {
+
+    private EntityManager em;
+
+    public UsuarioRepository(EntityManager em) {
+        this.em = em;
+    }
 
     public void salvar(UsuarioEntity usuario) {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -43,5 +51,20 @@ public class UsuarioRepository {
 
         tx.commit();
         session.close();
+    }
+
+    public UsuarioEntity buscarPorLoginESenha(String login, String senha) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            return session.createQuery(
+                            "SELECT u FROM UsuarioEntity u WHERE u.login = :login AND u.senha = :senha", UsuarioEntity.class)
+                    .setParameter("login", login)
+                    .setParameter("senha", senha)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            session.close();
+        }
     }
 }

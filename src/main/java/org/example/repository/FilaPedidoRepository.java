@@ -14,10 +14,10 @@ import java.util.List;
 public class FilaPedidoRepository {
 
     private EntityManager em;
-
-    public FilaPedidoRepository(EntityManager em) {
-        this.em = em;
-    }
+//
+//    public FilaPedidoRepository(EntityManager em) {
+//        this.em = em;
+//    }
 
     public void salvar(org.example.entities.FilaPedidoEntity pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();
