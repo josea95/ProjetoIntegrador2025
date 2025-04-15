@@ -125,45 +125,8 @@ public class PedidoService {
         }
     }
 
-    //metodo para cancelar pedido
-    public void cancelarPedido() {
-        System.out.print("Digite a senha do pedido a cancelar: ");
-        String senha = scanner.nextLine();
 
-        // Busca o pedido pelo número da senha
-        FilaPedidoEntity pedido = pedidoRepo.buscarPorSenha(senha);
 
-        if (pedido == null) { // verifica se o pedido existe
-            System.out.println("Pedido não encontrado.");
-        } else if (!pedido.getStatusPedido().equalsIgnoreCase("na fila")) { //verifica se o pedido está na fila, ou outro status *
-            System.out.println("O pedido já está em preparo ou finalizado e não pode ser cancelado.");
-        } else {
-            pedidoRepo.deletar(pedido); // remove o pedido do banco de dados
-            System.out.println("Pedido cancelado com sucesso.");
-        }
-    }
-
-    public void pesquisarPedido() {
-        System.out.print("Digite a senha do pedido: ");
-        String senha = scanner.nextLine();
-
-        FilaPedidoEntity pedido = pedidoRepo.buscarPorSenha(senha); // Busca o pedido pelo número da senha
-
-        if (pedido == null) { // verifica se o pedido existe
-            System.out.println("Pedido não encontrado.");
-        } else {
-            System.out.println("Senha: " + pedido.getSenhaPedido()); // exibe a senha do pedido
-            System.out.println("Produtos:");
-            for (ProdutoPedidoEntity produtoPedido : pedido.getProdutos()) { // itera sobre a lista de produtos do pedido
-                ProdutoEntity produto = produtoPedido.getProduto(); // pega o produto do produtoPedido
-                System.out.println(" - " + produto.getNome() + " - R$" + produto.getPreco());
-            }
-            System.out.println("Data: " + pedido.getDataPedido());
-            System.out.println("Status: " + pedido.getStatusPedido());
-            System.out.println("-----------------------------");
-        }
-    }
-    
     //Gerador de senha aleatorio pra pedido
     private String gerarSenha() {
         Random rand = new Random(); // cria um objeto Random -> um gerador de números aleatórios
