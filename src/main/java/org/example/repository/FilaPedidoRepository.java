@@ -70,4 +70,14 @@ public class FilaPedidoRepository {
         query.setParameter("usuario", usuario);
         return query.getResultList();
     }
+    public FilaPedidoEntity buscarUltimoPedido() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        FilaPedidoEntity ultimo = session.createQuery(
+                        "FROM FilaPedidoEntity ORDER BY id DESC", FilaPedidoEntity.class)
+                .setMaxResults(1)
+                .uniqueResult();
+        session.close();
+        return ultimo;
+    }
+
 }

@@ -15,19 +15,21 @@ public class FilaPedidoService {
         this.filaRepo = new FilaPedidoRepository(em);
     }
 
-    public void adicionarPedido(FilaPedidoEntity pedido) {
 
+    public void adicionarPedido(FilaPedidoEntity pedido) {
+        // Gerar senha automática
+        FilaPedidoEntity ultimoPedido = filaRepo.buscarUltimoPedido();
+        String novaSenha;
+
+        if (ultimoPedido == null) {
+            novaSenha = "M001";
+        } else {
+            String ultimaSenha = ultimoPedido.getSenhaPedido(); // Ex: M007
+            int numero = Integer.parseInt(ultimaSenha.substring(1));
+            novaSenha = String.format("M%03d", numero + 1); // gera tipo "M008"
+        }
+
+        pedido.setSenhaPedido(novaSenha);
         filaRepo.salvar(pedido);
     }
-
-    public List<FilaPedidoEntity> listarPedidos() {
-        return filaRepo.listarTodos();
-    }
-
-    public void removerPedido(FilaPedidoEntity pedido) {
-        filaRepo.deletar(pedido);
-    }
-
 }
-
-
