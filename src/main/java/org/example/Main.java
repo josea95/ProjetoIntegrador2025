@@ -2,6 +2,8 @@ package org.example;
 
 import org.example.entities.UsuarioEntity;
 import org.example.repository.ProdutoRepository;
+import org.example.services.FilaPedidoService;
+import org.example.services.PedidoService;
 import org.example.services.ProdutoService;
 import org.example.services.UsuarioService;
 import org.example.util.CustomizerFactory;
@@ -14,10 +16,15 @@ public class Main {
         EntityManager em = CustomizerFactory.getEntityManager();
         Scanner scanner = new Scanner(System.in);
 
-        UsuarioService usuarioService = new UsuarioService(em); // ✅ Correto, só uma vez
+        UsuarioService usuarioService = new UsuarioService(em);
+
         ProdutoService produtoService = new ProdutoService(new ProdutoRepository(em));
 
-        UsuarioEntity usuarioLogado = null; // ✅ Só uma vez
+        PedidoService pedidoService = new PedidoService(em, scanner);
+
+        FilaPedidoService filaPedidoService = new FilaPedidoService(em, scanner);
+
+        UsuarioEntity usuarioLogado = null;
 
         // Solicita login antes de exibir o menu
         while (usuarioLogado == null) {
@@ -51,22 +58,22 @@ public class Main {
 
             switch (opcao) {
                 case "1":
-                    // fazerPedido();
+                    pedidoService.fazerPedido( usuarioLogado );
                     break;
                 case "2":
-                    // cancelarPedido();
+                    filaPedidoService.cancelarPedido();
                     break;
                 case "3":
-                    // listarFilaPedidos();
+                    filaPedidoService.listarFilaPedidos();
                     break;
                 case "4":
                     produtoService.cadastrarProduto(scanner, new ProdutoRepository(em));
                     break;
                 case "5":
-                    // pesquisarPedido();
+                    filaPedidoService.pesquisarPedido();
                     break;
                 case "6":
-                    // pedidoService.verHistoricoPedidos(usuarioLogado);
+                    filaPedidoService.verHistoricoPedidos(usuarioLogado);
                     break;
                 case "7":
                     executando = false;
