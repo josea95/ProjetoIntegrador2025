@@ -39,21 +39,18 @@ public class FilaPedidoRepository {
         return pedido;
     }
 
-    public List<org.example.entities.FilaPedidoEntity> listarTodos() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        List<org.example.entities.FilaPedidoEntity> pedidos = session.createQuery("FROM FilaPedidoEntity", org.example.entities.FilaPedidoEntity.class).list();
-        session.close();
-        return pedidos;
+    public List<FilaPedidoEntity> listarTodos() {
+        TypedQuery<FilaPedidoEntity> query = em.createQuery(
+                "SELECT DISTINCT fp FROM FilaPedidoEntity fp LEFT JOIN FETCH fp.produtos",
+                FilaPedidoEntity.class
+        );
+        return query.getResultList();
     }
 
-    public void deletar(org.example.entities.FilaPedidoEntity pedido) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-
-        session.remove( pedido );
-
-        tx.commit();
-        session.close();
+    public void deletar(FilaPedidoEntity pedido) {
+        em.getTransaction().begin();
+        em.remove(em.contains(pedido) ? pedido : em.merge(pedido));
+        em.getTransaction().commit();
     }
 
     public FilaPedidoEntity buscarPorSenha(String senha) {
