@@ -49,7 +49,7 @@ public class Main {
                     //pesquisarPedido();
                     break;
                 case "6":
-                 //  pedidoService.verHistoricoPedidos( usuario  );
+                    //pedidoService.verHistoricoPedidos( usuario  );
                     break;
                 case "7":
                     executando = false;
