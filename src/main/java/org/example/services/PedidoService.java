@@ -23,9 +23,6 @@ public class PedidoService {
     private final ProdutoRepository produtoRepo;
     private final Scanner scanner;
 
-    // StringBuilder para armazenar os produtos comprados
-    StringBuilder produtosComprados = new StringBuilder();
-
     // Construtor da classe PedidoService , recebe o EntityManager e o Scanner
     public PedidoService(EntityManager em, Scanner scanner) {
         this.pedidoRepo = new FilaPedidoRepository(em); //inicializa o repositorio de Fila pedidos
@@ -128,34 +125,6 @@ public class PedidoService {
         }
     }
 
-    public void listarFilaPedidos() {
-        //obter todos os pedidos da fila
-        List<FilaPedidoEntity> pedidos = pedidoRepo.listarTodos();
-
-        if (pedidos.isEmpty()) { // verifica se a lista de pedidos está vazia
-            System.out.println("Nenhum pedido na fila.");
-        } else { // se não estiver vazia, imprime os detalhes de cada pedido
-            for (FilaPedidoEntity pedido : pedidos) {
-
-                System.out.println("Senha: " + pedido.getSenhaPedido()); // exibe a senha do pedido
-                System.out.println("Produto(s):");
-                // verifica se a lista de produtos do pedido está vazia
-                if (pedido.getProdutos().isEmpty()) {
-                    System.out.println("Nenhum produto encontrado.");
-                } else {
-                    // se não estiver vazia, imprime os detalhes de cada produto
-                    for (ProdutoPedidoEntity produtoPedido : pedido.getProdutos()) {
-                        ProdutoEntity produto = produtoPedido.getProduto(); // pega o produto do produtoPedido
-                        System.out.println(" - " + produto.getNome() + " - R$" + produto.getPreco());
-                    }
-                }
-                System.out.println("Data: " + pedido.getDataPedido());
-                System.out.println("Status: " + pedido.getStatusPedido());
-                System.out.println("-----------------------------");
-            }
-        }
-    }
-
     //metodo para cancelar pedido
     public void cancelarPedido() {
         System.out.print("Digite a senha do pedido a cancelar: ");
@@ -194,7 +163,7 @@ public class PedidoService {
             System.out.println("-----------------------------");
         }
     }
-
+    
     //Gerador de senha aleatorio pra pedido
     private String gerarSenha() {
         Random rand = new Random(); // cria um objeto Random -> um gerador de números aleatórios
