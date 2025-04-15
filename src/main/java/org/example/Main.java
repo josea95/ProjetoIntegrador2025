@@ -20,6 +20,8 @@ public class Main {
 
         ProdutoService produtoService = new ProdutoService( new ProdutoRepository( em ) );
 
+        PedidoService pedidoService = new PedidoService( em, scanner );
+
         boolean executando = true;
 
         while (executando) {
@@ -39,10 +41,10 @@ public class Main {
                     //pedidoService.fazerPedido(  );
                     break;
                 case "2":
-                    //pedidoService.cancelarPedido();
+                    pedidoService.cancelarPedido();
                     break;
                 case "3":
-                    //pedidoService.listarFilaPedidos();
+                    pedidoService.listarFilaPedidos();
                     break;
                 case "4":
                     produtoService.cadastrarProduto( scanner, new ProdutoRepository( em ) );

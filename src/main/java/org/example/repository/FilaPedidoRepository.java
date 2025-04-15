@@ -3,21 +3,24 @@ package org.example.repository;
 import org.example.entities.FilaPedidoEntity;
 import org.example.entities.UsuarioEntity;
 import org.example.util.HibernateUtil;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+
 import java.util.List;
 
 public class FilaPedidoRepository {
 
     private EntityManager em;
-//
-//    public FilaPedidoRepository(EntityManager em) {
-//        this.em = em;
-//    }
+
+    // Construtor que recebe o EntityManager
+    public FilaPedidoRepository(EntityManager em) {
+        this.em = em;
+    }
 
     public void salvar(org.example.entities.FilaPedidoEntity pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();
