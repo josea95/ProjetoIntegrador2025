@@ -28,7 +28,7 @@ public class PedidoService {
 
     // Construtor da classe PedidoService , recebe o EntityManager e o Scanner
     public PedidoService(EntityManager em, Scanner scanner) {
-        this.pedidoRepo = new FilaPedidoRepository(); //inicializa o repositorio de Fila pedidos
+        this.pedidoRepo = new FilaPedidoRepository(em); //inicializa o repositorio de Fila pedidos
         this.produtoRepo = new ProdutoRepository(em); //inicializa o repositorio de produtos
         this.scanner = scanner; // inicializa o scanner para ler as entradas do usuario
     }
@@ -156,12 +156,31 @@ public class PedidoService {
         }
     }
 
+    //metodo para cancelar pedido
+    public void cancelarPedido() {
+        System.out.print("Digite a senha do pedido a cancelar: ");
+        String senha = scanner.nextLine();
+
+        // Busca o pedido pelo número da senha
+        FilaPedidoEntity pedido = pedidoRepo.buscarPorSenha(senha);
+
+        if (pedido == null) { // verifica se o pedido existe
+            System.out.println("Pedido não encontrado.");
+        } else if (!pedido.getStatusPedido().equalsIgnoreCase("na fila")) { //verifica se o pedido está na fila, ou outro status *
+            System.out.println("O pedido já está em preparo ou finalizado e não pode ser cancelado.");
+        } else {
+            pedidoRepo.deletar(pedido); // remove o pedido do banco de dados
+            System.out.println("Pedido cancelado com sucesso.");
+        }
+    }
+
     //Gerador de senha aleatorio pra pedido
     private String gerarSenha() {
         Random rand = new Random(); // cria um objeto Random -> um gerador de números aleatórios
         int numero = rand.nextInt(900) + 100; // gera número de 100 a 999
         return String.valueOf(numero); // converte o número para String
     }
+
 }
 
 
