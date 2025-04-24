@@ -75,7 +75,7 @@ public class ProdutoService {
 
         for (String categoria : categorias) {
             System.out.println( "\n=== " + categoria.toUpperCase() + " ===" );
-            List<ProdutoEntity> produtos = produtoRepository.buscarPorCategoria( categoria );
+            List<ProdutoEntity> produtos = produtoRepository.buscarPorCategoria( categoria ); // Busca os produtos da categoria
 
             if (produtos.isEmpty()) {
                 System.out.println( "Nenhum produto encontrado nesta categoria." );
