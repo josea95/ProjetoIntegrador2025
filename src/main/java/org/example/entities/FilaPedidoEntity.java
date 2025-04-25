@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.example.enums.StatusPedido;
+
 @Entity
 @Table(name = "tb_fila_pedidos")
 public class FilaPedidoEntity {
@@ -23,7 +25,7 @@ public class FilaPedidoEntity {
     private LocalTime horaPedido;
 
     @Column(name = "status_pedido")
-    private String statusPedido;
+    private StatusPedido statusPedido;
 
     @Column(name = "senha_pedido")
     private String senhaPedido;
@@ -59,13 +61,14 @@ public class FilaPedidoEntity {
         return senhaPedido;
     }
 
-    public void setStatusPedido(String statusPedido) {
+    public void setStatusPedido(StatusPedido statusPedido) {
         this.statusPedido = statusPedido;
     }
 
-    public String getStatusPedido() {
+    public StatusPedido getStatusPedido() {
         return statusPedido;
     }
+
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
