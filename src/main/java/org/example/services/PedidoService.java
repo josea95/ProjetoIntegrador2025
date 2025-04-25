@@ -5,6 +5,8 @@ import org.example.entities.ProdutoEntity;
 import org.example.entities.ProdutoPedidoEntity;
 import org.example.entities.UsuarioEntity;
 
+import org.example.enums.StatusPedido;
+
 import org.example.repository.FilaPedidoRepository;
 import org.example.repository.ProdutoRepository;
 
@@ -38,7 +40,7 @@ public class PedidoService {
         pedido.setDataPedido(LocalDate.now()); // pega a data atual
         pedido.setHoraPedido(LocalTime.now()); // pega a hora atual
 
-        pedido.setStatusPedido("Preparando..."); //status inical do pedido
+        pedido.setStatusPedido( StatusPedido.FILA); //status inical do pedido
 
         pedido.setUsuario(usuarioLogado); //associando o usuario ao pedido
         pedido.setSenhaPedido(gerarSenha()); //gerando a senha do pedido
@@ -116,7 +118,7 @@ public class PedidoService {
         System.out.println("\nPedido concluído com sucesso? 1 - sim | 2 - nao");
         String confirmacao = scanner.nextLine(); // lê a confirmação do usuario
         if (confirmacao.equals("1")) { // se o usuario confirmar o pedido
-            pedido.setStatusPedido("Preparando...");
+            pedido.setStatusPedido(StatusPedido.FILA);
 
             pedidoRepo.salvar(pedido); //salva o pedido no banco de dados
             System.out.println("Pedido concluído com sucesso! Histórico atualizado.");
