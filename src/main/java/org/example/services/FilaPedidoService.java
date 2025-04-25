@@ -84,7 +84,6 @@ public class FilaPedidoService {
         if (pedido == null) {
             // Se o pedido não for encontrado, exibe uma mensagem
             System.out.println("Pedido não encontrado.");     //o que tiver aqui sera deletado conforme o argumento
-        } else if (!pedido.getStatusPedido().equalsIgnoreCase("teste...")) {
             // Se o pedido não estiver com status 'na fila', não permite o cancelamento
             System.out.println("O pedido já está em preparo ou finalizado e não pode ser cancelado.");
         } else {
