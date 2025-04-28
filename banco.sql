@@ -1,11 +1,9 @@
 -- TABELA USUARIOS --
 
-create table tb_usuarios
-(
-    id    int primary key,
-    nome  varchar(100),
-    senha varchar(12),
-    email varchar(100)
+CREATE TABLE tb_usuarios (
+nome VARCHAR(100) NOT NULL, -- Nome do usuário, obrigatório
+senha VARCHAR(60) NOT NULL, -- Senha criptografada, tamanho maior para bcrypt, por exemplo
+email VARCHAR(100) NOT NULL UNIQUE -- Email deve ser único e obrigatório
 );
 
 -- TABELA  FILA PEDIDOS--
@@ -48,14 +46,13 @@ create table tb_historico_pedidos
 );
 
 -- TABELA PRODUTOS--
-create table tb_produtos
-(
-    id               int primary key,
-    nome             varchar(100),
-    descricao        text,
-    preco            float,
-    data_criacao     date,
-    data_atualizacao date
+CREATE TABLE tb_produtos (
+ id SERIAL PRIMARY KEY,
+ nome VARCHAR(255),
+ descricao TEXT,
+ preco NUMERIC(10,2),
+ data_criacao DATE,
+categoria VARCHAR(255)
 );
 
 -- TABELA PRODUTO HISTORICO PEDIDOS --

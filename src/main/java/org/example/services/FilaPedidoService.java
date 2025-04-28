@@ -84,6 +84,7 @@ public class FilaPedidoService {
         if (pedido == null) {
             // Se o pedido não for encontrado, exibe uma mensagem
             System.out.println("Pedido não encontrado.");     //o que tiver aqui sera deletado conforme o argumento
+        } else if (!pedido.getStatusPedido().equalsIgnoreCase("na fila...")) {
             // Se o pedido não estiver com status 'na fila', não permite o cancelamento
             System.out.println("O pedido já está em preparo ou finalizado e não pode ser cancelado.");
         } else {
@@ -91,6 +92,38 @@ public class FilaPedidoService {
             filaRepo.deletar(pedido);
             System.out.println("Pedido cancelado com sucesso.");
 
+        }
+    }
+    //metodo para ver o historico de pedidos do usuario
+    public void verHistoricoPedidos(UsuarioEntity usuarioLogado) {
+        //obtem os os pedidos do usuario logado - apartir do repositorio
+        List<FilaPedidoEntity> pedidos = filaRepo.listarPorUsuario(usuarioLogado);
+
+        //verifica se a lista de pedidos esta vazia
+        if (pedidos.isEmpty()) {
+            System.out.println("Nenhum pedido encontrado.");
+        } else {
+            //se a lista de pedidos nao estiver vazia, percorre a lista e exibe os detalhes de cada pedido
+            for (FilaPedidoEntity pedido : pedidos) {
+                System.out.println("Senha: " + pedido.getSenhaPedido());
+
+                // Criar um novo StringBuilder a cada pedido
+                StringBuilder produtosComprados = new StringBuilder();
+
+                // Verifica se o pedido tem produtos
+                for (ProdutoPedidoEntity produtoPedido : pedido.getProdutos()) {
+                    ProdutoEntity produto = produtoPedido.getProduto(); // obtem o produto do pedido
+                    produtosComprados.append(produto.getNome()) // adiciona o nome do produto
+                            .append(" - R$") // adiciona o preco do produto
+                            .append(produto.getPreco()) // adiciona o preco do produto
+                            .append("\n"); // adiciona uma quebra de linha
+                }
+
+                System.out.println("Produto(s):\n" + produtosComprados.toString()); // exibe os produtos comprados
+                System.out.println("Data: " + pedido.getDataPedido()); // exibe a data do pedido
+                System.out.println("Status: " + pedido.getStatusPedido()); // exibe o status do pedido
+                System.out.println("-----------------------------");
+            }
         }
     }
 }
