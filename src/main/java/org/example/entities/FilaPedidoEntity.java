@@ -1,12 +1,13 @@
+
 package org.example.entities;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.enums.StatusPedido;
 
 @Entity
 @Table(name = "tb_fila_pedidos")
@@ -22,8 +23,9 @@ public class FilaPedidoEntity {
     @Column(name = "hora_pedido")
     private LocalTime horaPedido;
 
+    @Enumerated(EnumType.STRING) // ao inves de aparecer 0,1,2 vai aparecer fila, preparando, finalizado
     @Column(name = "status_pedido")
-    private String statusPedido;
+    private StatusPedido statusPedido;
 
     @Column(name = "senha_pedido")
     private String senhaPedido;
@@ -42,7 +44,7 @@ public class FilaPedidoEntity {
         return produtos;
     }
 
-    // Setters and Getters
+    // Setters e Getters
     public void setUsuario(UsuarioEntity usuario) {
         this.usuario = usuario;
     }
@@ -59,12 +61,12 @@ public class FilaPedidoEntity {
         return senhaPedido;
     }
 
-    public void setStatusPedido(String statusPedido) {
-        this.statusPedido = statusPedido;
+    public StatusPedido getStatusPedido() {
+        return statusPedido;
     }
 
-    public String getStatusPedido() {
-        return statusPedido;
+    public void setStatusPedido(StatusPedido statusPedido) {
+        this.statusPedido = statusPedido;
     }
 
     public void setObservacao(String observacao) {

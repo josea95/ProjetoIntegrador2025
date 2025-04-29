@@ -5,6 +5,8 @@ import org.example.entities.ProdutoEntity;
 import org.example.entities.ProdutoPedidoEntity;
 import org.example.entities.UsuarioEntity;
 
+import org.example.enums.StatusPedido;
+
 import org.example.repository.FilaPedidoRepository;
 import org.example.repository.ProdutoRepository;
 
@@ -25,32 +27,32 @@ public class PedidoService {
 
     // Construtor da classe PedidoService , recebe o EntityManager e o Scanner
     public PedidoService(EntityManager em, Scanner scanner) {
-        this.pedidoRepo = new FilaPedidoRepository(em); //inicializa o repositorio de Fila pedidos
-        this.produtoRepo = new ProdutoRepository(em); //inicializa o repositorio de produtos
+        this.pedidoRepo = new FilaPedidoRepository( em ); //inicializa o repositorio de Fila pedidos
+        this.produtoRepo = new ProdutoRepository( em ); //inicializa o repositorio de produtos
         this.scanner = scanner; // inicializa o scanner para ler as entradas do usuario
     }
 
     //metodo para fazer pedido
     public void fazerPedido(UsuarioEntity usuarioLogado) {
-        System.out.println("Fazendo novo pedido...");
+        System.out.println( "Fazendo novo pedido..." );
         //instanciando o objeto pedido
         FilaPedidoEntity pedido = new FilaPedidoEntity();
-        pedido.setDataPedido(LocalDate.now()); // pega a data atual
-        pedido.setHoraPedido(LocalTime.now()); // pega a hora atual
+        pedido.setDataPedido( LocalDate.now() ); // pega a data atual
+        pedido.setHoraPedido( LocalTime.now() ); // pega a hora atual
 
-        pedido.setStatusPedido("Preparando..."); //status inical do pedido
+        pedido.setStatusPedido( StatusPedido.FILA ); //status inical do pedido
 
-        pedido.setUsuario(usuarioLogado); //associando o usuario ao pedido
-        pedido.setSenhaPedido(gerarSenha()); //gerando a senha do pedido
+        pedido.setUsuario( usuarioLogado ); //associando o usuario ao pedido
+        pedido.setSenhaPedido( gerarSenha() ); //gerando a senha do pedido
 
         boolean adicionandoProdutos = true;
         while (adicionandoProdutos) {
-            System.out.println("\nEscolha a categoria:");
-            System.out.println("1. Marmitas");
-            System.out.println("2. Bebidas");
-            System.out.println("3. Porções");
-            System.out.println("4. Finalizar pedido");
-            System.out.print("Digite o número da categoria: ");
+            System.out.println( "\nEscolha a categoria:" );
+            System.out.println( "1. Marmitas" );
+            System.out.println( "2. Bebidas" );
+            System.out.println( "3. Porções" );
+            System.out.println( "4. Finalizar pedido" );
+            System.out.print( "Digite o número da categoria: " );
             String opcao = scanner.nextLine();
 
             String categoria;
@@ -68,74 +70,86 @@ public class PedidoService {
                     adicionandoProdutos = false; // finaliza o loop, finaliza a selecao de produtos
                     continue;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println( "Opção inválida. Tente novamente." );
                     continue;
             }
 
             if (categoria != null) { // verifica se a categoria não é nula
 
-                List<ProdutoEntity> produtos = produtoRepo.buscarPorCategoria(categoria);// Busca os produtos da categoria selecionada
+                List<ProdutoEntity> produtos = produtoRepo.buscarPorCategoria( categoria );// Busca os produtos da categoria selecionada
 
                 if (produtos.isEmpty()) { // verifica se a lista de produtos está vazia
-                    System.out.println("Nenhum produto encontrado nesta categoria.");
+                    System.out.println( "Nenhum produto encontrado nesta categoria." );
                 } else { // se não estiver vazia, imprime os detalhes de cada produto
-                    System.out.println("Produtos disponíveis na categoria " + categoria + ":");
+                    System.out.println( "Produtos disponíveis na categoria " + categoria + ":" );
                     for (int i = 0; i < produtos.size(); i++) { // itera sobre a lista de produtos
-                        ProdutoEntity produto = produtos.get(i); // pega o produto da lista
-                        System.out.println((i + 1) + ". " + produto.getNome() + " - R$" + produto.getPreco()); // imprime o nome e o preço do produto
+                        ProdutoEntity produto = produtos.get( i ); // pega o produto da lista
+                        System.out.println( (i + 1) + ". " + produto.getNome() + " - R$" + produto.getPreco() ); // imprime o nome e o preço do produto
                     }
 
-                    System.out.print("Digite o número do produto que deseja adicionar ao pedido: ");
+                    System.out.print( "Digite o número do produto que deseja adicionar ao pedido: " );
                     int escolha = scanner.nextInt(); // lê a escolha do usurio
                     scanner.nextLine(); // Consumir a quebra de linha
 
                     if (escolha < 1 || escolha > produtos.size()) { // verifica se a escolha do usuario é válida
-                        System.out.println("Opção inválida.");
+                        System.out.println( "Opção inválida." );
                     } else {
-                        ProdutoEntity produtoEscolhido = produtos.get(escolha - 1); // pega o produto escolhido
+                        ProdutoEntity produtoEscolhido = produtos.get( escolha - 1 ); // pega o produto escolhido
                         ProdutoPedidoEntity produtoPedido = new ProdutoPedidoEntity(); // cria um novo produtoPedido
 
-                        produtoPedido.setPedido(pedido); // associa o pedido
-                        produtoPedido.setProduto(produtoEscolhido); // associa o produto ao produtoPedido
-                        pedido.getProdutos().add(produtoPedido); // adiciona o produtoPedido na lista de produtos do pedido
+                        produtoPedido.setPedido( pedido ); // associa o pedido
+                        produtoPedido.setProduto( produtoEscolhido ); // associa o produto ao produtoPedido
+                        pedido.getProdutos().add( produtoPedido ); // adiciona o produtoPedido na lista de produtos do pedido
 
-                        System.out.println("Produto adicionado: " + produtoEscolhido.getNome()); // imprime o nome do produto adicionado
+                        System.out.println( "Produto adicionado: " + produtoEscolhido.getNome() ); // imprime o nome do produto adicionado
                     }
                 }
             }
         }
 
-        System.out.print("Deseja adicionar uma observação ao pedido? (s/n): ");
+        System.out.print( "Deseja adicionar uma observação ao pedido? (s/n): " );
         String op = scanner.nextLine(); // lê a opção do usuario
-        if (op.equalsIgnoreCase("s")) { // ignora se for maiúscula ou minúscula, se o usuario quiser adicionar uma observacao
-            System.out.print("Digite a observação: ");
-            pedido.setObservacao(scanner.nextLine()); // adiciona a observacao no pedido
+        if (op.equalsIgnoreCase( "s" )) { // ignora se for maiúscula ou minúscula, se o usuario quiser adicionar uma observacao
+            System.out.print( "Digite a observação: " );
+            pedido.setObservacao( scanner.nextLine() ); // adiciona a observacao no pedido
         }
 
-        // Confirmação final do pedido
-        System.out.println("\nPedido concluído com sucesso? 1 - sim | 2 - nao");
+        System.out.println( "\nPedido concluído com sucesso? 1 - sim | 2 - nao" );
         String confirmacao = scanner.nextLine(); // lê a confirmação do usuario
-        if (confirmacao.equals("1")) { // se o usuario confirmar o pedido
-            pedido.setStatusPedido("Preparando...");
+        if (confirmacao.equals( "1" )) { // se o usuario confirmar o pedido
+            pedido.setStatusPedido( StatusPedido.FILA );
 
-            pedidoRepo.salvar(pedido); //salva o pedido no banco de dados
-            System.out.println("Pedido concluído com sucesso! Histórico atualizado.");
-        } else { // se o usuário não confirmar o pedido
-            System.out.println("Pedido cancelado. Nenhum pedido foi armazenado.");
+            pedidoRepo.salvar( pedido );
+            System.out.println( "Pedido com status 'FILA' salvo. Histórico atualizado." );
+
+            // Mudança automática de status após alguns minutos
+            new Thread( () -> {
+                try {
+                    Thread.sleep( 1 * 60 * 100 ); // aqui vai ser 2/3 minutos
+                    pedido.setStatusPedido( StatusPedido.PREPARANDO );
+                    pedidoRepo.atualizar( pedido );
+                    System.out.println( "Pedido " + pedido.getSenhaPedido() + " agora está PREPARANDO." );
+
+                    Thread.sleep( 1 * 60 * 100 ); // 3-5 minutos
+                    pedido.setStatusPedido( StatusPedido.FINALIZADO );
+                    pedidoRepo.atualizar( pedido );
+                    System.out.println( "Pedido " + pedido.getSenhaPedido() + " agora está FINALIZADO." );
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } ).start();
+
+        } else {
+            System.out.println( "Pedido cancelado. Nenhum pedido foi armazenado." );
         }
-    }
 
+    }
 
     //Gerador de senha aleatorio pra pedido
     private String gerarSenha() {
         Random rand = new Random(); // cria um objeto Random -> um gerador de números aleatórios
-        int numero = rand.nextInt(900) + 100; // gera número de 100 a 999
-        return String.valueOf(numero); // converte o número para String
+        int numero = rand.nextInt( 900 ) + 100; // gera número de 100 a 999
+        return String.valueOf( numero ); // converte o número para String
     }
 
 }
-
-
-
-
-
