@@ -1,5 +1,5 @@
 package org.example.entities;
-
+import javax.validation.constraints.*;
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,13 +23,20 @@ public class UsuarioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login", unique = true, nullable = false)
+    @NotBlank(message = "O login é obrigatório e não pode ser vazio.")
+    @Column(name = "login", unique = true, nullable = false,length = 50)
     private String login;
 
+    @NotBlank (message = "A senha é obrigatória.")
     @Column(name = "senha", nullable = false)
     private String senha;
 
+    @NotBlank(message = "O nome é obrigatório e não pode ser vazio.")
     private String nome;
+
+    @NotBlank(message = "O email é obrigatório e não pode ser vazio.")
+    @Email(message = "Formato de email inválido.")
+    @Column(nullable = false, length = 100, unique = true)
     private String email;
 
     @OneToMany(mappedBy = "usuario")
@@ -79,7 +86,5 @@ public class UsuarioEntity {
     public void setLogin(String login) {
         this.login = login;
     }
-
-
 }
 

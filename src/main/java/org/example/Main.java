@@ -33,6 +33,11 @@ public class Main {
             System.out.print("Senha: ");
             String senha = scanner.nextLine();
 
+            if (login.isBlank() || senha.isBlank()) {
+                System.out.println("❗ Login e senha são obrigatórios.");
+                continue;
+            }
+
             usuarioLogado = usuarioService.login(login, senha);
             if (usuarioLogado != null) {
                 System.out.println("✅ Login realizado com sucesso! Bem-vindo, " + usuarioLogado.getNome());
