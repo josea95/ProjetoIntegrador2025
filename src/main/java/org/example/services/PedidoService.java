@@ -123,21 +123,32 @@ public class PedidoService {
             System.out.println( "Pedido com status 'FILA' salvo. Histórico atualizado." );
 
             // Mudança automática de status após alguns minutos
-            new Thread( () -> {
+            new Thread(() -> {
                 try {
-                    Thread.sleep( 1 * 60 * 100 ); // aqui vai ser 2/3 minutos
-                    pedido.setStatusPedido( StatusPedido.PREPARANDO );
-                    pedidoRepo.atualizar( pedido );
-                    System.out.println( "Pedido " + pedido.getSenhaPedido() + " agora está PREPARANDO." );
+                    Thread.sleep(1 * 60 * 1000); // Espera 1 minuto
 
-                    Thread.sleep( 1 * 60 * 100 ); // 3-5 minutos
-                    pedido.setStatusPedido( StatusPedido.FINALIZADO );
-                    pedidoRepo.atualizar( pedido );
-                    System.out.println( "Pedido " + pedido.getSenhaPedido() + " agora está FINALIZADO." );
+                    FilaPedidoEntity pedidoAtual = pedidoRepo.buscarPorSenha(pedido.getSenhaPedido());
+                    if (pedidoAtual != null && pedidoAtual.getStatusPedido() == StatusPedido.FILA) {
+                        pedidoAtual.setStatusPedido(StatusPedido.PREPARANDO);
+                        pedidoRepo.atualizar(pedidoAtual);
+                        System.out.println("Pedido " + pedidoAtual.getSenhaPedido() + " agora está PREPARANDO.");
+                    } else {
+                        return; // Sai da thread se foi cancelado ou já alterado
+                    }
+
+                    Thread.sleep(1 * 60 * 100); // Espera mais tempo
+
+                    pedidoAtual = pedidoRepo.buscarPorSenha(pedido.getSenhaPedido());
+                    if (pedidoAtual != null && pedidoAtual.getStatusPedido() == StatusPedido.PREPARANDO) {
+                        pedidoAtual.setStatusPedido(StatusPedido.FINALIZADO);
+                        pedidoRepo.atualizar(pedidoAtual);
+                        System.out.println("Pedido " + pedidoAtual.getSenhaPedido() + " agora está FINALIZADO.");
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            } ).start();
+            }).start();
 
         } else {
             System.out.println( "Pedido cancelado. Nenhum pedido foi armazenado." );
