@@ -1,7 +1,7 @@
-package org.example.services;
+package org.example.controller.services;
 
-import org.example.entities.UsuarioEntity;
-import org.example.repository.UsuarioRepository;
+import org.example.model.entities.UsuarioEntity;
+import org.example.model.repository.UsuarioRepository;
 
 import javax.persistence.EntityManager;
 import java.util.List;

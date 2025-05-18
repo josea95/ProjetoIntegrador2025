@@ -1,7 +1,7 @@
-package org.example.repository;
+package org.example.model.repository;
 
-import org.example.entities.FilaPedidoEntity;
-import org.example.entities.UsuarioEntity;
+import org.example.model.entities.FilaPedidoEntity;
+import org.example.model.entities.UsuarioEntity;
 import org.example.util.HibernateUtil;
 
 import org.hibernate.Session;

@@ -1,5 +1,6 @@
-package org.example.repository;
+package org.example.model.repository;
 
+import org.example.model.entities.HistoricoPedidoEntity;
 import org.example.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class HistoricoPedidoRepository {
 
-    public void salvar(org.example.entities.HistoricoPedidoEntity pedido) {
+    public void salvar(HistoricoPedidoEntity pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 
@@ -18,21 +19,21 @@ public class HistoricoPedidoRepository {
         session.close();
     }
 
-    public org.example.entities.HistoricoPedidoEntity buscarPorId(int id) {
+    public HistoricoPedidoEntity buscarPorId(int id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        org.example.entities.HistoricoPedidoEntity pedido = session.get(org.example.entities.HistoricoPedidoEntity.class, id);
+        org.example.model.entities.HistoricoPedidoEntity pedido = session.get( org.example.model.entities.HistoricoPedidoEntity.class, id);
         session.close();
         return pedido;
     }
 
-    public List<org.example.entities.HistoricoPedidoEntity> listarTodos() {
+    public List<HistoricoPedidoEntity> listarTodos() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<org.example.entities.HistoricoPedidoEntity> pedidos = session.createQuery("FROM HistoricoPedidoEntity", org.example.entities.HistoricoPedidoEntity.class).list();
+        List<org.example.model.entities.HistoricoPedidoEntity> pedidos = session.createQuery("FROM HistoricoPedidoEntity", org.example.model.entities.HistoricoPedidoEntity.class).list();
         session.close();
         return pedidos;
     }
 
-    public void deletar(org.example.entities.HistoricoPedidoEntity pedido) {
+    public void deletar(HistoricoPedidoEntity pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 

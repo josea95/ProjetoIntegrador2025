@@ -1,7 +1,7 @@
-package org.example.services;
+package org.example.controller.services;
 
-import org.example.entities.ProdutoEntity;
-import org.example.repository.ProdutoRepository;
+import org.example.model.entities.ProdutoEntity;
+import org.example.model.repository.ProdutoRepository;
 
 import java.time.LocalDate;
 import java.util.List;

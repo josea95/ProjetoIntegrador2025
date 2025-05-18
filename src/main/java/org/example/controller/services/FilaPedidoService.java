@@ -1,13 +1,13 @@
-package org.example.services;
+package org.example.controller.services;
 
-import org.example.entities.FilaPedidoEntity;
-import org.example.entities.ProdutoEntity;
-import org.example.entities.ProdutoPedidoEntity;
-import org.example.entities.UsuarioEntity;
+import org.example.model.entities.FilaPedidoEntity;
+import org.example.model.entities.ProdutoEntity;
+import org.example.model.entities.ProdutoPedidoEntity;
+import org.example.model.entities.UsuarioEntity;
 
-import org.example.repository.FilaPedidoRepository;
+import org.example.model.repository.FilaPedidoRepository;
 
-import org.example.enums.StatusPedido;
+import org.example.model.enums.StatusPedido;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -26,29 +26,37 @@ public class FilaPedidoService {
         this.produtosComprados = new StringBuilder();
     }
 
-    public void listarFilaPedidos() {
-        List<FilaPedidoEntity> pedidos = filaRepo.listarTodos();
+// Metodo atualizado para listar apenas pedidos com status FILA ou PREPARANDO
+public void listarFilaPedidos() {
+    List<FilaPedidoEntity> pedidos = filaRepo.listarTodos();
+    boolean encontrou = false;
 
-        if (pedidos.isEmpty()) {
-            System.out.println( "Nenhum pedido na fila." );
-        } else {
-            for (FilaPedidoEntity pedido : pedidos) {
-                System.out.println( "Senha: " + pedido.getSenhaPedido() );
-                System.out.println( "Produto(s):" );
+    if (pedidos.isEmpty()) {
+        System.out.println("Nenhum pedido na fila.");
+    } else {
+        for (FilaPedidoEntity pedido : pedidos) {
+            if (pedido.getStatusPedido() == StatusPedido.FILA || pedido.getStatusPedido() == StatusPedido.PREPARANDO) {
+                encontrou = true;
+                System.out.println("Senha: " + pedido.getSenhaPedido());
+                System.out.println("Produto(s):");
                 if (pedido.getProdutos().isEmpty()) {
-                    System.out.println( "Nenhum produto encontrado." );
+                    System.out.println("Nenhum produto encontrado.");
                 } else {
                     for (ProdutoPedidoEntity produtoPedido : pedido.getProdutos()) {
                         ProdutoEntity produto = produtoPedido.getProduto();
-                        System.out.println( " - " + produto.getNome() + " - R$" + produto.getPreco() );
+                        System.out.println(" - " + produto.getNome() + " - R$" + produto.getPreco());
                     }
                 }
-                System.out.println( "Data: " + pedido.getDataPedido() );
-                System.out.println( "Status: " + pedido.getStatusPedido() );
-                System.out.println( "-----------------------------" );
+                System.out.println("Data: " + pedido.getDataPedido());
+                System.out.println("Status: " + pedido.getStatusPedido());
+                System.out.println("-----------------------------");
             }
         }
+        if (!encontrou) {
+            System.out.println("Nenhum pedido com status FILA ou PREPARANDO encontrado.");
+        }
     }
+}
 
     // Metodo para pesquisar um pedido por senha e exibir seus detalhes
     public void pesquisarPedido() {
@@ -97,33 +105,35 @@ public class FilaPedidoService {
 
     //metodo para ver o historico de pedidos do usuario
     public void verHistoricoPedidos(UsuarioEntity usuarioLogado) {
-        //obtem os os pedidos do usuario logado - apartir do repositorio
         List<FilaPedidoEntity> pedidos = filaRepo.listarPorUsuario( usuarioLogado );
+        boolean encontrouFinalizados = false;
 
-        //verifica se a lista de pedidos esta vazia
         if (pedidos.isEmpty()) {
             System.out.println( "Nenhum pedido encontrado." );
         } else {
-            //se a lista de pedidos nao estiver vazia, percorre a lista e exibe os detalhes de cada pedido
             for (FilaPedidoEntity pedido : pedidos) {
-                System.out.println( "Senha: " + pedido.getSenhaPedido() );
+                if (pedido.getStatusPedido() == StatusPedido.FINALIZADO) {
+                    encontrouFinalizados = true;
+                    System.out.println( "Senha: " + pedido.getSenhaPedido() );
+                    StringBuilder produtosComprados = new StringBuilder();
 
-                // Criar um novo StringBuilder a cada pedido
-                StringBuilder produtosComprados = new StringBuilder();
+                    for (ProdutoPedidoEntity produtoPedido : pedido.getProdutos()) {
+                        ProdutoEntity produto = produtoPedido.getProduto();
+                        produtosComprados.append( " - " )
+                                .append( produto.getNome() )
+                                .append( " - R$" )
+                                .append( produto.getPreco() )
+                                .append( "\n" );
+                    }
 
-                // Verifica se o pedido tem produtos
-                for (ProdutoPedidoEntity produtoPedido : pedido.getProdutos()) {
-                    ProdutoEntity produto = produtoPedido.getProduto(); // obtem o produto do pedido
-                    produtosComprados.append( produto.getNome() ) // adiciona o nome do produto
-                            .append( " - R$" ) // adiciona o preco do produto
-                            .append( produto.getPreco() ) // adiciona o preco do produto
-                            .append( "\n" ); // adiciona uma quebra de linha
+                    System.out.println( "Produto(s):\n" + produtosComprados.toString() );
+                    System.out.println( "Data: " + pedido.getDataPedido() );
+                    System.out.println( "Status: " + pedido.getStatusPedido() );
+                    System.out.println( "-----------------------------" );
                 }
-
-                System.out.println( "Produto(s):\n" + produtosComprados.toString() ); // exibe os produtos comprados
-                System.out.println( "Data: " + pedido.getDataPedido() ); // exibe a data do pedido
-                System.out.println( "Status: " + pedido.getStatusPedido() ); // exibe o status do pedido
-                System.out.println( "-----------------------------" );
+            }
+            if (!encontrouFinalizados) {
+                System.out.println( "Nenhum pedido FINALIZADO encontrado." );
             }
         }
     }

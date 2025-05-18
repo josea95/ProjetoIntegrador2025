@@ -1,14 +1,11 @@
-package org.example.services;
+package org.example.controller.services;
 
-import org.example.entities.FilaPedidoEntity;
-import org.example.entities.ProdutoEntity;
-import org.example.entities.ProdutoPedidoEntity;
-import org.example.entities.UsuarioEntity;
+import org.example.model.entities.*;
 
-import org.example.enums.StatusPedido;
+import org.example.model.enums.StatusPedido;
 
-import org.example.repository.FilaPedidoRepository;
-import org.example.repository.ProdutoRepository;
+import org.example.model.repository.FilaPedidoRepository;
+import org.example.model.repository.ProdutoRepository;
 
 import javax.persistence.EntityManager;
 
@@ -125,7 +122,7 @@ public class PedidoService {
             // Mudança automática de status após alguns minutos
             new Thread(() -> {
                 try {
-                    Thread.sleep(1 * 60 * 1000); // Espera 1 minuto
+                    Thread.sleep(1 * 60 * 100); // Espera 1 minuto
 
                     FilaPedidoEntity pedidoAtual = pedidoRepo.buscarPorSenha(pedido.getSenhaPedido());
                     if (pedidoAtual != null && pedidoAtual.getStatusPedido() == StatusPedido.FILA) {
@@ -137,14 +134,12 @@ public class PedidoService {
                     }
 
                     Thread.sleep(1 * 60 * 100); // Espera mais tempo
-
                     pedidoAtual = pedidoRepo.buscarPorSenha(pedido.getSenhaPedido());
                     if (pedidoAtual != null && pedidoAtual.getStatusPedido() == StatusPedido.PREPARANDO) {
                         pedidoAtual.setStatusPedido(StatusPedido.FINALIZADO);
                         pedidoRepo.atualizar(pedidoAtual);
                         System.out.println("Pedido " + pedidoAtual.getSenhaPedido() + " agora está FINALIZADO.");
                     }
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

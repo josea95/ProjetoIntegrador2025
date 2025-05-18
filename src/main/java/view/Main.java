@@ -1,11 +1,11 @@
-package org.example;
+package view;
 
-import org.example.entities.UsuarioEntity;
-import org.example.repository.ProdutoRepository;
-import org.example.services.FilaPedidoService;
-import org.example.services.PedidoService;
-import org.example.services.ProdutoService;
-import org.example.services.UsuarioService;
+import org.example.model.entities.UsuarioEntity;
+import org.example.model.repository.ProdutoRepository;
+import org.example.controller.services.FilaPedidoService;
+import org.example.controller.services.PedidoService;
+import org.example.controller.services.ProdutoService;
+import org.example.controller.services.UsuarioService;
 import org.example.util.CustomizerFactory;
 
 import javax.persistence.EntityManager;
