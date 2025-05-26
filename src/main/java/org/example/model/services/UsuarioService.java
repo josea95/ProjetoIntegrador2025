@@ -1,4 +1,4 @@
-package org.example.controller.services;
+package org.example.model.services;
 
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.UsuarioRepository;

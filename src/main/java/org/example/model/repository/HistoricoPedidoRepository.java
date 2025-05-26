@@ -5,9 +5,16 @@ import org.example.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 public class HistoricoPedidoRepository {
+
+    private EntityManager em;
+
+    public HistoricoPedidoRepository(EntityManager em) {
+        this.em = em;
+    }
 
     public void salvar(HistoricoPedidoEntity pedido) {
         Session session = HibernateUtil.getSessionFactory().openSession();

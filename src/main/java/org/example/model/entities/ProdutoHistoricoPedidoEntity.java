@@ -17,5 +17,27 @@ public class ProdutoHistoricoPedidoEntity {
     @ManyToOne
     @JoinColumn(name = "id_produto", nullable = false)
     private ProdutoEntity produto;
+
+
+    public HistoricoPedidoEntity getHistoricoPedido() {
+        return historicoPedido;
+    }
+    public void setHistoricoPedido(HistoricoPedidoEntity historicoPedido) {
+        this.historicoPedido = historicoPedido;
+    }
+
+    public ProdutoEntity getProduto() {
+        return produto;
+    }
+    public void setProduto(ProdutoEntity produto) {
+        this.produto = produto;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
 
