@@ -42,6 +42,9 @@ public class UsuarioService {
     }
 
     public UsuarioEntity login(String login, String senha) {
+        if (login == null || login.isBlank() || senha == null || senha.isBlank()) {
+            return null;
+        }
         return usuarioRepository.buscarPorLoginESenha(login, senha);
     }
 }

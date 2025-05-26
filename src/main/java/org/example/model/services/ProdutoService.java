@@ -53,6 +53,11 @@ public class ProdutoService {
         System.out.println( "Digite a data de criação do produto (formato: yyyy-MM-dd):" );
         String dataCriacao = scanner.nextLine();
 
+        while (!dataCriacao(dataCriacao)) {
+            System.out.println("Data inválida. Digite novamente (formato dd/MM/yyyy):");
+            dataCriacao = scanner.nextLine();
+        }
+
         // Conversão da String para LocalDate
         LocalDate dataCriacaoDate = LocalDate.parse( dataCriacao );
 
@@ -70,23 +75,34 @@ public class ProdutoService {
         System.out.println( "Produto cadastrado com sucesso: Categoria: " + categoria + " - Nome: " + nome + " - R$" + preco );
     }
 
-    public void exibirProdutosPorCategoria() {
-        String[] categorias = {"Marmitas", "Bebidas", "Porções"};
+    public static boolean dataCriacao(String dataCriacao) {
+        if (dataCriacao.isBlank()) {
+            return false;
+        }
+        try {
+            LocalDate.parse(dataCriacao);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-        for (String categoria : categorias) {
-            System.out.println( "\n=== " + categoria.toUpperCase() + " ===" );
-            List<ProdutoEntity> produtos = produtoRepository.buscarPorCategoria( categoria ); // Busca os produtos da categoria
+    public void exibirProdutosPorCategoria () {
+            String[] categorias = {"Marmitas", "Bebidas", "Porções"};
 
-            if (produtos.isEmpty()) {
-                System.out.println( "Nenhum produto encontrado nesta categoria." );
-            } else {
-                for (ProdutoEntity produto : produtos) {
-                    System.out.println( "- " + produto.getNome() );
+            for (String categoria : categorias) {
+                System.out.println("\n=== " + categoria.toUpperCase() + " ===");
+                List<ProdutoEntity> produtos = produtoRepository.buscarPorCategoria(categoria); // Busca os produtos da categoria
+
+                if (produtos.isEmpty()) {
+                    System.out.println("Nenhum produto encontrado nesta categoria.");
+                } else {
+                    for (ProdutoEntity produto : produtos) {
+                        System.out.println("- " + produto.getNome());
+                    }
                 }
             }
         }
     }
-
-}
 
 
