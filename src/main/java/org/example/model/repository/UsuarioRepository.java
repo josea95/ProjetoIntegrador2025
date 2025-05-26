@@ -2,7 +2,7 @@ package org.example.model.repository;
 
 
 import org.example.model.entities.UsuarioEntity;
-import org.example.util.HibernateUtil;
+import org.example.model.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

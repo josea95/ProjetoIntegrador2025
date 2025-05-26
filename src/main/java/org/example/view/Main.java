@@ -1,14 +1,14 @@
-package view;
+package org.example.view;
 
 import org.example.controller.PedidoController;
+import org.example.controller.ProdutoController;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.ProdutoRepository;
 import org.example.model.services.FilaPedidoService;
 import org.example.model.services.PedidoService;
 import org.example.model.services.ProdutoService;
 import org.example.model.services.UsuarioService;
-import org.example.util.CustomizerFactory;
-import view.PedidoView;
+import org.example.model.util.CustomizerFactory;
 
 import javax.persistence.EntityManager;
 import java.util.Scanner;
@@ -19,13 +19,15 @@ public class Main {
         Scanner scanner = new Scanner( System.in );
 
         UsuarioService usuarioService = new UsuarioService( em );
-        ProdutoService produtoService = new ProdutoService( new ProdutoRepository( em ) );
         PedidoService pedidoService = new PedidoService( em );
         FilaPedidoService filaPedidoService = new FilaPedidoService( em, scanner );
 
-        // Instancia a view e o controller para pedido
         PedidoView pedidoView = new PedidoView( scanner, pedidoService );
         PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
+
+        ProdutoService produtoService = new ProdutoService(new ProdutoRepository(em));
+        ProdutoView produtoView = new ProdutoView(scanner, produtoService);
+        ProdutoController produtoController = new ProdutoController(produtoService, produtoView);
 
         UsuarioEntity usuarioLogado = null;
 
@@ -70,7 +72,7 @@ public class Main {
                     filaPedidoService.listarFilaPedidos();
                     break;
                 case "4":
-                    produtoService.cadastrarProduto( scanner, new ProdutoRepository( em ) );
+                    produtoController.iniciarCadastro();
                     break;
                 case "5":
                     filaPedidoService.pesquisarPedido();

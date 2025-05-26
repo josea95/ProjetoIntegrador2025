@@ -5,7 +5,6 @@ import org.example.model.repository.ProdutoRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Scanner;
 
 public class ProdutoService {
     private final ProdutoRepository produtoRepository;
@@ -14,95 +13,23 @@ public class ProdutoService {
         this.produtoRepository = produtoRepository;
     }
 
-    public static void cadastrarProduto(Scanner scanner, ProdutoRepository produtoRepository) {
-        // Menu para selecionar a categoria
-        String categoria = null;
-        while (categoria == null) {
-            System.out.println( "Escolha a categoria do produto:" );
-            System.out.println( "1. Marmitas" );
-            System.out.println( "2. Bebidas" );
-            System.out.println( "3. Porções" );
-            System.out.print( "Digite o número da categoria: " );
-            String opcao = scanner.nextLine();
-
-            switch (opcao) {
-                case "1":
-                    categoria = "Marmitas";
-                    break;
-                case "2":
-                    categoria = "Bebidas";
-                    break;
-                case "3":
-                    categoria = "Porções";
-                    break;
-                default:
-                    System.out.println( "Opção inválida. Tente novamente." );
-            }
+    public void cadastrarProduto(ProdutoEntity produto) {
+        if (!validarDataCriacao(produto.getDataCriacao())) {
+            throw new IllegalArgumentException("Data de criação inválida.");
         }
-
-        System.out.println( "Digite o nome do produto:" );
-        String nome = scanner.nextLine();
-
-        System.out.println( "Digite o preço do produto:" );
-        double preco = scanner.nextDouble();
-        scanner.nextLine(); // Consumir a quebra de linha
-
-        System.out.println( "Digite a descrição do produto:" );
-        String descricao = scanner.nextLine();
-
-        System.out.println( "Digite a data de criação do produto (formato: yyyy-MM-dd):" );
-        String dataCriacao = scanner.nextLine();
-
-        while (!dataCriacao(dataCriacao)) {
-            System.out.println("Data inválida. Digite novamente (formato dd/MM/yyyy):");
-            dataCriacao = scanner.nextLine();
-        }
-
-        // Conversão da String para LocalDate
-        LocalDate dataCriacaoDate = LocalDate.parse( dataCriacao );
-
-        // Criação do produto
-        ProdutoEntity produto = new ProdutoEntity();
-        produto.setNome( nome );
-        produto.setPreco( preco );
-        produto.setCategoria( categoria );
-        produto.setDescricao( descricao );
-        produto.setDataCriacao( dataCriacaoDate );
-
-        // Salvar no banco de dados
-        produtoRepository.salvar( produto );
-
-        System.out.println( "Produto cadastrado com sucesso: Categoria: " + categoria + " - Nome: " + nome + " - R$" + preco );
+        produtoRepository.salvar(produto);
+    }
+    
+    public boolean validarDataCriacao(LocalDate dataCriacao) {
+        return dataCriacao != null;
+    }
+    
+    // Consulta os produtos por categoria sem exibição
+    public List<ProdutoEntity> buscarProdutosPorCategoria(String categoria) {
+        return produtoRepository.buscarPorCategoria(categoria);
     }
 
-    public static boolean dataCriacao(String dataCriacao) {
-        if (dataCriacao.isBlank()) {
-            return false;
-        }
-        try {
-            LocalDate.parse(dataCriacao);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public ProdutoRepository getProdutoRepository() {
+        return produtoRepository;
     }
-
-    public void exibirProdutosPorCategoria () {
-            String[] categorias = {"Marmitas", "Bebidas", "Porções"};
-
-            for (String categoria : categorias) {
-                System.out.println("\n=== " + categoria.toUpperCase() + " ===");
-                List<ProdutoEntity> produtos = produtoRepository.buscarPorCategoria(categoria); // Busca os produtos da categoria
-
-                if (produtos.isEmpty()) {
-                    System.out.println("Nenhum produto encontrado nesta categoria.");
-                } else {
-                    for (ProdutoEntity produto : produtos) {
-                        System.out.println("- " + produto.getNome());
-                    }
-                }
-            }
-        }
-    }
-
-
+}

@@ -2,7 +2,7 @@ package org.example.controller;
 
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.PedidoService;
-import view.PedidoView;
+import org.example.view.PedidoView;
 
 
 public class PedidoController {
