@@ -1,12 +1,14 @@
 package view;
 
+import org.example.controller.PedidoController;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.ProdutoRepository;
-import org.example.controller.services.FilaPedidoService;
-import org.example.controller.services.PedidoService;
-import org.example.controller.services.ProdutoService;
-import org.example.controller.services.UsuarioService;
+import org.example.model.services.FilaPedidoService;
+import org.example.model.services.PedidoService;
+import org.example.model.services.ProdutoService;
+import org.example.model.services.UsuarioService;
 import org.example.util.CustomizerFactory;
+import view.PedidoView;
 
 import javax.persistence.EntityManager;
 import java.util.Scanner;
@@ -17,12 +19,13 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         UsuarioService usuarioService = new UsuarioService(em);
-
         ProdutoService produtoService = new ProdutoService(new ProdutoRepository(em));
-
-        PedidoService pedidoService = new PedidoService(em, scanner);
-
+        PedidoService pedidoService = new PedidoService(em);
         FilaPedidoService filaPedidoService = new FilaPedidoService(em, scanner);
+
+        // Instancia a view e o controller para pedido
+        PedidoView pedidoView = new PedidoView(scanner, pedidoService);
+        PedidoController pedidoController = new PedidoController(pedidoService, pedidoView);
 
         UsuarioEntity usuarioLogado = null;
 
@@ -58,7 +61,7 @@ public class Main {
 
             switch (opcao) {
                 case "1":
-                    pedidoService.fazerPedido( usuarioLogado );
+                    pedidoController.iniciarPedido(usuarioLogado);
                     break;
                 case "2":
                     filaPedidoService.cancelarPedido();
