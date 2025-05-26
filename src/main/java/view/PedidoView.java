@@ -26,7 +26,7 @@ public class PedidoView {
         boolean adicionandoProdutos = true;
         while (adicionandoProdutos) {
             exibeMenuCategorias();
-            String opcao = lerEntrada( "Digite o número da categoria: " );
+            String opcao = lerEntradaObservacao( "Digite o número da categoria: " );
             if (opcao.equals( "0" )) {
                 exibeMensagem( "Pedido cancelado. Nenhum pedido foi armazenado." );
                 return;
@@ -54,7 +54,7 @@ public class PedidoView {
             List<ProdutoEntity> produtos = pedidoService.buscarProdutosPorCategoria( categoria );
             exibeProdutos( categoria, produtos );
 
-            int escolha = lerEntradaInteira( "Digite o número do produto que deseja adicionar (ou 0 para voltar): " );
+            int escolha = lerEntradaDoCancelar( "Digite o número do produto que deseja adicionar (ou 0 para voltar): " );
             if (escolha == 0) {
                 continue;
             }
@@ -67,14 +67,19 @@ public class PedidoView {
             }
         }
 
-        String op = lerEntrada( "Deseja adicionar uma observação ao pedido? (s/n): " );
+        String op = lerEntradaObservacao( "Deseja adicionar uma observação ao pedido? (s/n): " );
         if (op.equalsIgnoreCase( "s" )) {
-            String observacao = lerEntrada( "Digite a observação: " );
+            String observacao = lerEntradaObservacao( "Digite a observação: " );
             pedido.setObservacao( observacao );
         }
 
-        String confirmacao = lerEntrada( "Pedido concluído com sucesso? 1 - sim | 2 - nao: " );
+        String confirmacao = lerEntradaObservacao( "Pedido concluído com sucesso? 1 - sim | 2 - nao: " );
         if (confirmacao.equals( "1" )) {
+            // Verifica se o carrinho está vazio antes de finalizar o pedido
+            if (pedido.getProdutos().isEmpty()) {
+                System.out.println( "Erro: Não é possível finalizar o pedido sem produtos no carrinho." );
+                return;
+            }
             if (pedidoService.salvarPedido( pedido )) {
                 exibeMensagem( "Pedido com status 'FILA' salvo. Histórico atualizado." );
             }
@@ -87,12 +92,12 @@ public class PedidoView {
         System.out.println( mensagem );
     }
 
-    public String lerEntrada(String prompt) {
+    public String lerEntradaObservacao(String prompt) {
         System.out.print( prompt );
         return scanner.nextLine();
     }
 
-    public int lerEntradaInteira(String prompt) {
+    public int lerEntradaDoCancelar(String prompt) {
         System.out.print( prompt );
         int valor = scanner.nextInt();
         scanner.nextLine(); // Consumir a quebra de linha

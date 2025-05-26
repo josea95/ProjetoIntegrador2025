@@ -4,7 +4,6 @@ import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.PedidoService;
 import view.PedidoView;
 
-import java.util.Scanner;
 
 public class PedidoController {
 
@@ -17,7 +16,6 @@ public class PedidoController {
     }
 
     public void iniciarPedido(UsuarioEntity usuarioLogado) {
-        pedidoView.exibeMensagem("Bem-vindo ao sistema de pedidos!");
-        pedidoView.iniciarPedido(usuarioLogado);
+        pedidoView.iniciarPedido( usuarioLogado );
     }
 }
