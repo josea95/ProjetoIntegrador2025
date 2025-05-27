@@ -2,6 +2,7 @@ package org.example.view;
 
 import org.example.controller.PedidoController;
 import org.example.controller.ProdutoController;
+import org.example.controller.UsuarioController;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.ProdutoRepository;
 import org.example.model.services.FilaPedidoService;
@@ -18,34 +19,25 @@ public class Main {
         EntityManager em = CustomizerFactory.getEntityManager();
         Scanner scanner = new Scanner( System.in );
 
-        UsuarioService usuarioService = new UsuarioService( em );
+        UsuarioService usuarioService = new UsuarioService(em);
+        UsuarioView usuarioView = new UsuarioView(scanner);
+        UsuarioController usuarioController = new UsuarioController(usuarioService, usuarioView);
+
+
+
         PedidoService pedidoService = new PedidoService( em );
         FilaPedidoService filaPedidoService = new FilaPedidoService( em, scanner );
 
         PedidoView pedidoView = new PedidoView( scanner, pedidoService );
         PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
 
+
         ProdutoService produtoService = new ProdutoService(new ProdutoRepository(em));
         ProdutoView produtoView = new ProdutoView(scanner, produtoService);
         ProdutoController produtoController = new ProdutoController(produtoService, produtoView);
 
-        UsuarioEntity usuarioLogado = null;
 
-        // Solicita login antes de exibir o menu
-        while (usuarioLogado == null) {
-            System.out.print( "Login: " );
-            String login = scanner.nextLine();
-            System.out.print( "Senha: " );
-            String senha = scanner.nextLine();
-
-            usuarioLogado = usuarioService.login( login, senha );
-            if (usuarioLogado != null) {
-                System.out.println( "✅ Login realizado com sucesso! Bem-vindo, " + usuarioLogado.getNome() );
-            } else {
-                System.out.println( "❌ Login ou senha incorretos. Tente novamente." );
-            }
-        }
-
+        UsuarioEntity usuarioLogado = usuarioController.realizarLogin();
         boolean executando = true;
 
         while (executando) {
