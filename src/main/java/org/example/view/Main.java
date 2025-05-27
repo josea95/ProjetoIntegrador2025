@@ -1,91 +1,53 @@
 package org.example.view;
 
-import org.example.controller.FilaPedidoController;
-import org.example.model.services.FilaPedidoService;
-
-import org.example.controller.PedidoController;
-import org.example.model.services.PedidoService;
-
-import org.example.controller.ProdutoController;
-import org.example.model.repository.ProdutoRepository;
-import org.example.model.services.ProdutoService;
-
-import org.example.controller.UsuarioController;
-import org.example.model.services.UsuarioService;
+import org.example.controller.*;
 import org.example.model.entities.UsuarioEntity;
-
+import org.example.model.repository.ProdutoRepository;
+import org.example.model.services.*;
 import org.example.model.util.CustomizerFactory;
 
 import javax.persistence.EntityManager;
-
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         EntityManager em = CustomizerFactory.getEntityManager();
-        Scanner scanner = new Scanner( System.in );
+        Scanner scanner = new Scanner(System.in);
 
-        UsuarioService usuarioService = new UsuarioService( em );
-        UsuarioView usuarioView = new UsuarioView( scanner );
-        UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
+        // Services
+        UsuarioService usuarioService = new UsuarioService(em);
+        PedidoService pedidoService = new PedidoService(em);
+        ProdutoService produtoService = new ProdutoService(new ProdutoRepository(em));
+        FilaPedidoService filaPedidoService = new FilaPedidoService(em);
 
-        PedidoService pedidoService = new PedidoService( em );
-        PedidoView pedidoView = new PedidoView( scanner, pedidoService );
-        PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
+        // Views
+        UsuarioView usuarioView = new UsuarioView(scanner);
+        PedidoView pedidoView = new PedidoView(scanner, pedidoService);
+        ProdutoView produtoView = new ProdutoView(scanner, produtoService);
+        FilaPedidoView filaPedidoView = new FilaPedidoView(filaPedidoService, scanner);
+        MenuPrincipalView menuView = new MenuPrincipalView(scanner);
 
-        ProdutoService produtoService = new ProdutoService( new ProdutoRepository( em ) );
-        ProdutoView produtoView = new ProdutoView( scanner, produtoService );
-        ProdutoController produtoController = new ProdutoController( produtoService, produtoView );
+        // Controllers
+        UsuarioController usuarioController = new UsuarioController(usuarioService, usuarioView);
+        PedidoController pedidoController = new PedidoController(pedidoService, pedidoView);
+        ProdutoController produtoController = new ProdutoController(produtoService, produtoView);
+        FilaPedidoController filaPedidoController = new FilaPedidoController(filaPedidoService, filaPedidoView, scanner);
 
-        FilaPedidoService filaService = new FilaPedidoService( em );
-        FilaPedidoView filaView = new FilaPedidoView(filaService, scanner );
-        FilaPedidoController filaController = new FilaPedidoController( filaService,filaView ,scanner );
-
+        // Login
         UsuarioEntity usuarioLogado = usuarioController.realizarLogin();
-        boolean executando = true;
 
-        while (executando) {
-            System.out.println( "\n===== MENU PRINCIPAL =====" );
-            System.out.println( "1. Fazer Pedido" );
-            System.out.println( "2. Cancelar Pedido" );
-            System.out.println( "3. Ver Fila de Pedidos" );
-            System.out.println( "4. Cadastrar Produto" );
-            System.out.println( "5. Pesquisar Pedido" );
-            System.out.println( "6. Ver Histórico de Pedidos" );
-            System.out.println( "7. Sair" );
+        // Menu Principal
+        MenuPrincipalController menuController = new MenuPrincipalController(
+                menuView,
+                pedidoController,
+                produtoController,
+                filaPedidoController,
+                usuarioLogado
+        );
+        //Chama o menu principal
+        menuController.executar();
 
-            System.out.print( "Escolha uma opção: " );
-            String opcao = scanner.nextLine();
-
-            switch (opcao) {
-                case "1":
-                    pedidoController.iniciarPedido( usuarioLogado );
-                    break;
-                case "2":
-                    filaController.cancelarPedido();
-                    break;
-                case "3":
-                    filaController.listarPedidos();
-                    break;
-                case "4":
-                    produtoController.iniciarCadastro();
-                    break;
-                case "5":
-                    filaController.pesquisarPedido();
-                    break;
-                case "6":
-                    filaController.verHistoricoPedidos( usuarioLogado );
-                    break;
-                case "7":
-                    executando = false;
-                    System.out.println( "Encerrando o sistema..." );
-                    break;
-                default:
-                    System.out.println( "Opção inválida. Tente novamente." );
-            }
-        }
-
+        // Encerramento
         scanner.close();
         em.close();
         CustomizerFactory.fechar();
