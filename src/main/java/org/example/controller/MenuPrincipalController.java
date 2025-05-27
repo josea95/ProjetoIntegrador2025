@@ -11,6 +11,14 @@ public class MenuPrincipalController {
     private final FilaPedidoController filaController;
     private final UsuarioEntity usuarioLogado;
 
+    /* Constructor para inicializar as dependencias:
+     * - responsável por exibir o menu e ler as opções do usuário
+     * - controla as ações relacionadas a pedidos
+     * - controla as ações relacionadas aos produtos
+     * - controla a fila de pedidos (cancelamento, listagem, historico)
+     * - representa o usuário que fez login no sistema
+     * -> Essas dependências são injetadas no momento da criação do controlador
+    */
     public MenuPrincipalController(
             MenuPrincipalView menuView,
             PedidoController pedidoController,

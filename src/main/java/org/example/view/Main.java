@@ -12,31 +12,39 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         EntityManager em = CustomizerFactory.getEntityManager();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner( System.in );
 
         // Services
-        UsuarioService usuarioService = new UsuarioService(em);
-        PedidoService pedidoService = new PedidoService(em);
-        ProdutoService produtoService = new ProdutoService(new ProdutoRepository(em));
-        FilaPedidoService filaPedidoService = new FilaPedidoService(em);
+        UsuarioService usuarioService = new UsuarioService( em );
+        PedidoService pedidoService = new PedidoService( em );
+        ProdutoService produtoService = new ProdutoService( new ProdutoRepository( em ) );
+        FilaPedidoService filaPedidoService = new FilaPedidoService( em );
 
         // Views
-        UsuarioView usuarioView = new UsuarioView(scanner);
-        PedidoView pedidoView = new PedidoView(scanner, pedidoService);
-        ProdutoView produtoView = new ProdutoView(scanner, produtoService);
-        FilaPedidoView filaPedidoView = new FilaPedidoView(filaPedidoService, scanner);
-        MenuPrincipalView menuView = new MenuPrincipalView(scanner);
+        UsuarioView usuarioView = new UsuarioView( scanner );
+        PedidoView pedidoView = new PedidoView( scanner, pedidoService );
+        ProdutoView produtoView = new ProdutoView( scanner, produtoService );
+        FilaPedidoView filaPedidoView = new FilaPedidoView( filaPedidoService, scanner );
+        MenuPrincipalView menuView = new MenuPrincipalView( scanner );
 
         // Controllers
-        UsuarioController usuarioController = new UsuarioController(usuarioService, usuarioView);
-        PedidoController pedidoController = new PedidoController(pedidoService, pedidoView);
-        ProdutoController produtoController = new ProdutoController(produtoService, produtoView);
-        FilaPedidoController filaPedidoController = new FilaPedidoController(filaPedidoService, filaPedidoView, scanner);
+        UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
+        PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
+        ProdutoController produtoController = new ProdutoController( produtoService, produtoView );
+        FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService, filaPedidoView, scanner );
 
-        // Login
+        /* Login
+         * - Solicita ao controller que execute o login,
+         *   validando as informações inseridas pelo usuário.
+         * - Se as informações forem válidas, retorna uma entidade do tipo UsuarioEntity
+         *   representando o usuário autenticado no sistema.
+         */
         UsuarioEntity usuarioLogado = usuarioController.realizarLogin();
 
-        // Menu Principal
+        /* Menu Principal
+        * - Criando uma instanciação do objeto MenuPrincipalController
+        *   passando as dependências necessárias para controlar o menu principal
+        */
         MenuPrincipalController menuController = new MenuPrincipalController(
                 menuView,
                 pedidoController,
