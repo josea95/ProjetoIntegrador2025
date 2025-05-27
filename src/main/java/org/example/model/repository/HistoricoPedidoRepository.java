@@ -1,52 +1,35 @@
 package org.example.model.repository;
 
 import org.example.model.entities.HistoricoPedidoEntity;
-import org.example.model.util.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 public class HistoricoPedidoRepository {
 
-    private EntityManager em;
+    private final EntityManager em;
 
     public HistoricoPedidoRepository(EntityManager em) {
         this.em = em;
     }
 
     public void salvar(HistoricoPedidoEntity pedido) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-
-        session.persist(pedido);
-
-        tx.commit();
-        session.close();
+        em.getTransaction().begin();
+        em.persist(pedido);
+        em.getTransaction().commit();
     }
 
     public HistoricoPedidoEntity buscarPorId(int id) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        org.example.model.entities.HistoricoPedidoEntity pedido = session.get( org.example.model.entities.HistoricoPedidoEntity.class, id);
-        session.close();
-        return pedido;
+        return em.find(HistoricoPedidoEntity.class, id);
     }
 
     public List<HistoricoPedidoEntity> listarTodos() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        List<org.example.model.entities.HistoricoPedidoEntity> pedidos = session.createQuery("FROM HistoricoPedidoEntity", org.example.model.entities.HistoricoPedidoEntity.class).list();
-        session.close();
-        return pedidos;
+        return em.createQuery("FROM HistoricoPedidoEntity", HistoricoPedidoEntity.class).getResultList();
     }
 
     public void deletar(HistoricoPedidoEntity pedido) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-
-        session.remove(pedido);
-
-        tx.commit();
-        session.close();
+        em.getTransaction().begin();
+        em.remove(em.contains(pedido) ? pedido : em.merge(pedido));
+        em.getTransaction().commit();
     }
 }

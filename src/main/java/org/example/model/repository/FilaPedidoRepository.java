@@ -2,47 +2,37 @@ package org.example.model.repository;
 
 import org.example.model.entities.FilaPedidoEntity;
 import org.example.model.entities.UsuarioEntity;
-import org.example.model.util.HibernateUtil;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-
 import java.util.List;
 
 public class FilaPedidoRepository {
 
-    private EntityManager em;
+    private final EntityManager em;
 
-    // Construtor que recebe o EntityManager
+    // Construtor com EntityManager
     public FilaPedidoRepository(EntityManager em) {
         this.em = em;
     }
 
     public void salvar(FilaPedidoEntity pedido) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-
-        session.persist( pedido );
-
-        tx.commit();
-        session.close();
+        em.getTransaction().begin();
+        em.persist(pedido);
+        em.getTransaction().commit();
     }
 
     public void deletar(FilaPedidoEntity pedido) {
         em.getTransaction().begin();
-        em.remove( em.contains( pedido ) ? pedido : em.merge( pedido ) );
+        em.remove(em.contains(pedido) ? pedido : em.merge(pedido));
         em.getTransaction().commit();
     }
 
     public void atualizar(FilaPedidoEntity pedido) {
         em.getTransaction().begin();
-        em.merge( pedido );
+        em.merge(pedido);
         em.getTransaction().commit();
     }
-
 
     public List<FilaPedidoEntity> listarTodos() {
         TypedQuery<FilaPedidoEntity> query = em.createQuery(
@@ -52,29 +42,34 @@ public class FilaPedidoRepository {
         return query.getResultList();
     }
 
-
     public FilaPedidoEntity buscarPorSenha(String senha) {
-        return em.createQuery( "SELECT f FROM FilaPedidoEntity f WHERE f.senhaPedido = :senha", FilaPedidoEntity.class )
-                .setParameter( "senha", senha )
+        return em.createQuery(
+                        "SELECT f FROM FilaPedidoEntity f WHERE f.senhaPedido = :senha",
+                        FilaPedidoEntity.class
+                )
+                .setParameter("senha", senha)
                 .getResultStream()
                 .findFirst()
-                .orElse( null );
+                .orElse(null);
     }
 
     public List<FilaPedidoEntity> listarPorUsuario(UsuarioEntity usuario) {
-        TypedQuery<FilaPedidoEntity> query = em.createQuery( "SELECT p FROM FilaPedidoEntity p WHERE p.usuario = :usuario", FilaPedidoEntity.class );
-        query.setParameter( "usuario", usuario );
-        return query.getResultList();
+        return em.createQuery(
+                        "SELECT p FROM FilaPedidoEntity p WHERE p.usuario = :usuario",
+                        FilaPedidoEntity.class
+                )
+                .setParameter("usuario", usuario)
+                .getResultList();
     }
 
     public FilaPedidoEntity buscarUltimoPedido() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        FilaPedidoEntity ultimo = session.createQuery(
-                        "FROM FilaPedidoEntity ORDER BY id DESC", FilaPedidoEntity.class )
-                .setMaxResults( 1 )
-                .uniqueResult();
-        session.close();
-        return ultimo;
+        return em.createQuery(
+                        "SELECT f FROM FilaPedidoEntity f ORDER BY f.id DESC",
+                        FilaPedidoEntity.class
+                )
+                .setMaxResults(1)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
     }
-
 }
