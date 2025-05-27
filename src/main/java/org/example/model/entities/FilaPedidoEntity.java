@@ -1,5 +1,5 @@
 
-package org.example.entities;
+package org.example.model.entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.enums.StatusPedido;
+import org.example.model.enums.StatusPedido;
 
 @Entity
 @Table(name = "tb_fila_pedidos")

@@ -1,4 +1,4 @@
-package org.example.entities;
+package org.example.model.entities;
 import javax.validation.constraints.*;
 import javax.persistence.*;
 import java.util.List;

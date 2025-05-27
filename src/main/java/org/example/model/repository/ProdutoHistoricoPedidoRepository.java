@@ -1,5 +1,5 @@
-package org.example.repository;
-import org.example.entities.ProdutoHistoricoPedidoEntity;
+package org.example.model.repository;
+import org.example.model.entities.ProdutoHistoricoPedidoEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
