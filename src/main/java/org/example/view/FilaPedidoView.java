@@ -1,40 +1,5 @@
-//package org.example.view;
-//
-//import org.example.controller.FilaPedidoController;
-//import org.example.model.entities.UsuarioEntity;
-//import org.example.model.services.FilaPedidoService;
-//
-//public class FilaPedidoView {
-//
-//    private final FilaPedidoController controller;
-//    private final FilaPedidoService filaService;
-//
-//    public FilaPedidoView(FilaPedidoController controller, FilaPedidoService filaService) {
-//        this.controller = controller;
-//        this.filaService = filaService;
-//    }
-//
-//    public void listarPedidos() {
-//        controller.listarFilaPedidos();
-//    }
-//
-//    public void pesquisarPedido() {
-//        controller.pesquisarPedido();
-//    }
-//
-//    public void cancelarPedido() {
-//        controller.cancelarPedido();
-//    }
-//
-//    public void verHistoricoPedidos(UsuarioEntity usuarioLogado) {
-//        controller.verHistoricoPedidos( usuarioLogado );
-//    }
-//}
-
-
 package org.example.view;
 
-import org.example.controller.FilaPedidoController;
 import org.example.model.entities.FilaPedidoEntity;
 import org.example.model.entities.ProdutoEntity;
 import org.example.model.entities.ProdutoPedidoEntity;

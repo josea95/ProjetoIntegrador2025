@@ -19,14 +19,10 @@ public class FilaPedidoController {
     }
 
     public void cancelarPedido() {
-        System.out.print("Digite a senha do pedido a cancelar: ");
-        String senha = scanner.nextLine();
         pedidoView.cancelarPedido();
     }
 
     public void pesquisarPedido() {
-        System.out.print("Digite a senha do pedido: ");
-        String senha = scanner.nextLine();
         pedidoView.pesquisarPedido();
     }
 
@@ -35,6 +31,6 @@ public class FilaPedidoController {
     }
 
     public void verHistoricoPedidos(UsuarioEntity usuarioLogado) {
-        pedidoView.verHistoricoPedidos(usuarioLogado);
+        pedidoView.verHistoricoPedidos( usuarioLogado );
     }
 }
