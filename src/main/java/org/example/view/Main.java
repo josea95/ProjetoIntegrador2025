@@ -1,41 +1,46 @@
 package org.example.view;
 
-import org.example.controller.PedidoController;
-import org.example.controller.ProdutoController;
-import org.example.controller.UsuarioController;
-import org.example.model.entities.UsuarioEntity;
-import org.example.model.repository.ProdutoRepository;
+import org.example.controller.FilaPedidoController;
 import org.example.model.services.FilaPedidoService;
+
+import org.example.controller.PedidoController;
 import org.example.model.services.PedidoService;
+
+import org.example.controller.ProdutoController;
+import org.example.model.repository.ProdutoRepository;
 import org.example.model.services.ProdutoService;
+
+import org.example.controller.UsuarioController;
 import org.example.model.services.UsuarioService;
+import org.example.model.entities.UsuarioEntity;
+
 import org.example.model.util.CustomizerFactory;
 
 import javax.persistence.EntityManager;
+
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+
         EntityManager em = CustomizerFactory.getEntityManager();
         Scanner scanner = new Scanner( System.in );
 
-        UsuarioService usuarioService = new UsuarioService(em);
-        UsuarioView usuarioView = new UsuarioView(scanner);
-        UsuarioController usuarioController = new UsuarioController(usuarioService, usuarioView);
-
-
+        UsuarioService usuarioService = new UsuarioService( em );
+        UsuarioView usuarioView = new UsuarioView( scanner );
+        UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
 
         PedidoService pedidoService = new PedidoService( em );
-        FilaPedidoService filaPedidoService = new FilaPedidoService( em, scanner );
-
         PedidoView pedidoView = new PedidoView( scanner, pedidoService );
         PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
 
+        ProdutoService produtoService = new ProdutoService( new ProdutoRepository( em ) );
+        ProdutoView produtoView = new ProdutoView( scanner, produtoService );
+        ProdutoController produtoController = new ProdutoController( produtoService, produtoView );
 
-        ProdutoService produtoService = new ProdutoService(new ProdutoRepository(em));
-        ProdutoView produtoView = new ProdutoView(scanner, produtoService);
-        ProdutoController produtoController = new ProdutoController(produtoService, produtoView);
-
+        FilaPedidoService filaService = new FilaPedidoService( em );
+        FilaPedidoView filaView = new FilaPedidoView(filaService, scanner );
+        FilaPedidoController filaController = new FilaPedidoController( filaService,filaView ,scanner );
 
         UsuarioEntity usuarioLogado = usuarioController.realizarLogin();
         boolean executando = true;
@@ -58,19 +63,19 @@ public class Main {
                     pedidoController.iniciarPedido( usuarioLogado );
                     break;
                 case "2":
-                    filaPedidoService.cancelarPedido();
+                    filaController.cancelarPedido();
                     break;
                 case "3":
-                    filaPedidoService.listarFilaPedidos();
+                    filaController.listarPedidos();
                     break;
                 case "4":
                     produtoController.iniciarCadastro();
                     break;
                 case "5":
-                    filaPedidoService.pesquisarPedido();
+                    filaController.pesquisarPedido();
                     break;
                 case "6":
-                    filaPedidoService.verHistoricoPedidos( usuarioLogado );
+                    filaController.verHistoricoPedidos( usuarioLogado );
                     break;
                 case "7":
                     executando = false;
