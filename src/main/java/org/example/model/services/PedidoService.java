@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Random;
 
 public class PedidoService {
+    // Contador para gerar numero da senha//
+    private static int contador = 1;
 
     private final FilaPedidoRepository pedidoRepo;
     private final ProdutoRepository produtoRepo;
@@ -67,10 +69,9 @@ public class PedidoService {
         return true;
     }
 
-    private String gerarSenha() {
-        Random rand = new Random();
-        int numero = rand.nextInt( 900 ) + 100;
-        return String.valueOf( numero );
+    public String gerarSenha() {
+
+        return String.format("%03d", contador++);
     }
 
     // Thread para atualizar o status do pedido e salvar histórico
