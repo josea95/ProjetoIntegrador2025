@@ -23,14 +23,14 @@ public class Main {
         // Views
         UsuarioView usuarioView = new UsuarioView( scanner );
         PedidoView pedidoView = new PedidoView( scanner, pedidoService );
-        ProdutoView produtoView = new ProdutoView( scanner, produtoService );
+        ProdutoView produtoView = new ProdutoView( scanner );
         FilaPedidoView filaPedidoView = new FilaPedidoView( filaPedidoService, scanner );
         MenuPrincipalView menuView = new MenuPrincipalView( scanner );
 
         // Controllers
         UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
         PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
-        ProdutoController produtoController = new ProdutoController( produtoService, produtoView );
+        ProdutoController produtoController = new ProdutoController( produtoService, produtoView, scanner );
         FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService, filaPedidoView, scanner );
 
         /* Login
@@ -42,15 +42,18 @@ public class Main {
         UsuarioEntity usuarioLogado = usuarioController.realizarLogin();
 
         /* Menu Principal
-        * - Criando uma instanciação do objeto MenuPrincipalController
-        *   passando as dependências necessárias para controlar o menu principal
-        */
+         * - Criando uma instanciação do objeto MenuPrincipalController
+         *   passando as dependências necessárias para controlar o menu principal
+         */
         MenuPrincipalController menuController = new MenuPrincipalController(
                 menuView,
                 pedidoController,
                 produtoController,
                 filaPedidoController,
-                usuarioLogado
+                usuarioLogado,
+                produtoService,
+                produtoView,
+                scanner
         );
         //Chama o menu principal
         menuController.executar();
