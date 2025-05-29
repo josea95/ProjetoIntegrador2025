@@ -5,6 +5,7 @@ import org.example.model.entities.ProdutoEntity;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.PedidoService;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -54,17 +55,26 @@ public class PedidoView {
             List<ProdutoEntity> produtos = pedidoService.buscarProdutosPorCategoria( categoria );
             exibeProdutos( categoria, produtos );
 
-            int escolha = lerEntradaDoCancelar( "Digite o número do produto que deseja adicionar (ou 0 para voltar): " );
-            if (escolha == 0) {
-                continue;
+            //ADicionando try catch para evitar que o programa finalize caso o usuário digite algo diferente de um número
+            while (true) {
+                try {
+                    int escolha = lerEntradaDoCancelar( "Digite o número do produto que deseja adicionar (ou 0 para voltar): " );
+                    if (escolha == 0) {
+                        break; // volta ao menu das categorias sem perder/cancelar o pedido
+                    }
+                    if (escolha < 1 || escolha > produtos.size()) {
+                        exibeMensagem( "Opção inválida." );
+                    } else {
+                        ProdutoEntity produtoEscolhido = produtos.get( escolha - 1 );
+                        pedidoService.adicionarProdutoAoPedido( pedido, produtoEscolhido );
+                        exibeMensagem( "Produto adicionado: " + produtoEscolhido.getNome() );
+                    }
+
+                } catch (InputMismatchException e) {
+                    exibeMensagem( "Digite apenas números válidos. Tente novamente." );
+                }
             }
-            if (escolha < 1 || escolha > produtos.size()) {
-                exibeMensagem( "Opção inválida." );
-            } else {
-                ProdutoEntity produtoEscolhido = produtos.get( escolha - 1 );
-                pedidoService.adicionarProdutoAoPedido( pedido, produtoEscolhido );
-                exibeMensagem( "Produto adicionado: " + produtoEscolhido.getNome() );
-            }
+
         }
 
         String op = lerEntradaObservacao( "Deseja adicionar uma observação ao pedido? (s/n): " );
@@ -97,11 +107,18 @@ public class PedidoView {
         return scanner.nextLine();
     }
 
-    public int lerEntradaDoCancelar(String prompt) {
-        System.out.print( prompt );
-        int valor = scanner.nextInt();
-        scanner.nextLine(); // Consumir a quebra de linha
-        return valor;
+    //ADicionando try catch para evitar que o programa finalize caso o usuário digite algo diferente de um número
+    public int lerEntradaDoCancelar(String mensagem) {
+        Scanner scanner = new Scanner( System.in );
+        while (true) {
+            try {
+                System.out.print( mensagem );
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                exibeMensagem( "Digite apenas números válidos. Tente novamente." );
+                scanner.nextLine();
+            }
+        }
     }
 
     public void exibeMenuCategorias() {
