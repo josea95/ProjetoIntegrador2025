@@ -10,6 +10,8 @@ public class MenuPrincipalController {
     private final ProdutoController produtoController;
     private final FilaPedidoController filaController;
     private final UsuarioEntity usuarioLogado;
+    private final RelatorioController relatorioController;
+
 
     /* Constructor para inicializar as dependencias:
      * - responsável por exibir o menu e ler as opções do usuário
@@ -24,13 +26,15 @@ public class MenuPrincipalController {
             PedidoController pedidoController,
             ProdutoController produtoController,
             FilaPedidoController filaController,
-            UsuarioEntity usuarioLogado) {
+            UsuarioEntity usuarioLogado,
+            RelatorioController relatorioController) {
 
         this.menuView = menuView;
         this.pedidoController = pedidoController;
         this.produtoController = produtoController;
         this.filaController = filaController;
         this.usuarioLogado = usuarioLogado;
+        this.relatorioController = relatorioController;
     }
 
     public void executar() {
@@ -59,7 +63,9 @@ public class MenuPrincipalController {
                 case "6":
                     filaController.verHistoricoPedidos(usuarioLogado);
                     break;
-                case "7":
+                case "7":relatorioController.exibirRelatorioDeHoje();
+                break;
+                case "8":
                     executando = false;
                     System.out.println("Encerrando o sistema...");
                     break;

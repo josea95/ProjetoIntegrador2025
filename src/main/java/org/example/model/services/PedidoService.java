@@ -7,10 +7,7 @@ import org.example.model.entities.ProdutoPedidoEntity;
 import org.example.model.entities.ProdutoHistoricoPedidoEntity;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.enums.StatusPedido;
-import org.example.model.repository.FilaPedidoRepository;
-import org.example.model.repository.HistoricoPedidoRepository;
-import org.example.model.repository.ProdutoHistoricoPedidoRepository;
-import org.example.model.repository.ProdutoRepository;
+import org.example.model.repository.*;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -56,6 +53,7 @@ public class PedidoService {
         ProdutoPedidoEntity produtoPedido = new ProdutoPedidoEntity();
         produtoPedido.setPedido( pedido );
         produtoPedido.setProduto( produtoEscolhido );
+        produtoPedido.setQuantidade(1);
         pedido.getProdutos().add( produtoPedido );
     }
 
@@ -74,7 +72,7 @@ public class PedidoService {
         return String.format("%03d", contador++);
     }
 
-    // Thread para atualizar o status do pedido e salvar histórico
+    // Atualizar o status do pedido e salvar histórico
     private void iniciarMudancaStatus(FilaPedidoEntity pedido) {
         new Thread( () -> {
             try {
@@ -101,12 +99,18 @@ public class PedidoService {
                     historico.setObservacao( pedidoAtual.getObservacao() );
                     historico.setUsuario( pedidoAtual.getUsuario() );
                     historicoRepo.salvar( historico );
+                    // Calcula Valor total //
+                    double valorTotal = calcularValorTotalPedido(pedidoAtual);
+                    historico.setValorPedido(valorTotal);
+
+                    historicoRepo.salvar(historico);
 
                     if (pedidoAtual.getProdutos() != null) {
                         for (ProdutoPedidoEntity produtoPedido : pedidoAtual.getProdutos()) {
                             ProdutoHistoricoPedidoEntity prodHist = new ProdutoHistoricoPedidoEntity();
                             prodHist.setHistoricoPedido( historico );
-                            prodHist.setProduto( produtoPedido.getProduto() );
+                            prodHist.setProduto( produtoPedido.getProduto());
+                            prodHist.setQuantidade(produtoPedido.getQuantidade());
                             produtoHistoricoRepo.salvar( prodHist );
                         }
                     }
@@ -119,4 +123,17 @@ public class PedidoService {
             }
         } ).start();
     }
+    private double calcularValorTotalPedido(FilaPedidoEntity pedido) {
+        double total = 0.0;
+
+        if (pedido.getProdutos() != null) {
+            for (ProdutoPedidoEntity produtoPedido : pedido.getProdutos()) {
+                ProdutoEntity produto = produtoPedido.getProduto();
+                total += produto.getPreco(); // Se tiver quantidade, multiplique por ela
+            }
+        }
+
+        return total;
+    }
+
 }

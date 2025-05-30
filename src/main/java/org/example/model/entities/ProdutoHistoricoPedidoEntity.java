@@ -39,5 +39,20 @@ public class ProdutoHistoricoPedidoEntity {
     public void setId(Long id) {
         this.id = id;
     }
+
+// Adiciona quantidade de produtos que foram pedidos //
+    @Column(nullable = false)
+    private Integer quantidade;
+
+    // Getter e Setter
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+
 }
 

@@ -17,7 +17,8 @@ public class MenuPrincipalView {
         System.out.println("4. Cadastrar Produto");
         System.out.println("5. Pesquisar Pedido");
         System.out.println("6. Ver Histórico de Pedidos");
-        System.out.println("7. Sair");
+        System.out.println("7 - Relatório de Vendas");
+        System.out.println("8. Sair");
     }
 
     public String lerOpcao() {
