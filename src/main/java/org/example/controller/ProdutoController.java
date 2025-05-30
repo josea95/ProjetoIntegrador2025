@@ -25,13 +25,18 @@ public class ProdutoController {
             String opcao = produtoView.lerOpcao();
 
             switch (opcao) {
+                //Case para cadastrar um novo produto
                 case "1":
                     ProdutoEntity novoProduto = produtoView.lerDadosProdutoParaCadastro();
+
+                    if (novoProduto == null) {
+                        break;
+                    }
                     produtoService.cadastrarProduto( novoProduto );
-                    produtoView.exibirMensagem( "Produto cadastrado com sucesso." );
                     break;
+                //Case para atualizar um produto ja existente
                 case "2":
-                    String categoria = produtoView.lerCategoria();  // Reutilizando método de categoria da View
+                    String categoria = produtoView.lerCategoria();
                     List<ProdutoEntity> produtos = produtoService.buscarProdutosPorCategoria( categoria );
 
                     if (produtos.isEmpty()) {
@@ -41,7 +46,7 @@ public class ProdutoController {
 
                     ProdutoEntity produtoSelecionado = produtoView.escolherProdutoParaAtualizacao( produtos );
                     if (produtoSelecionado == null) {
-                        produtoView.exibirMensagem( "Nenhum produto selecionado." );
+                        produtoView.exibirMensagem( "Nenhum produto selecionado. Voltando..." );
                         break;
                     }
 
@@ -56,23 +61,34 @@ public class ProdutoController {
 
                     // Recarrega e exibe a lista atualizada de produtos
                     produtos = produtoService.buscarProdutosPorCategoria( categoria );
-                    produtoView.exibirMensagem( "Produto atualizado com sucesso." );
+
                     produtoView.exibirProdutos( categoria, produtos );
                     break;
 
+                //Case para deletar um produto pelo id
                 case "3":
-                    Long id = produtoView.lerIdProdutoParaDeletar();
-                    if (id == null) {
-                        produtoView.exibirMensagem( "ID inválido. Operação cancelada." );
+                    String categoriaDel = produtoView.lerCategoria();
+                    List<ProdutoEntity> produtosParaDeletar = produtoService.buscarProdutosPorCategoria( categoriaDel );
+
+                    if (produtosParaDeletar.isEmpty()) {
+                        produtoView.exibirMensagem( "Nenhum produto encontrado para essa categoria." );
                         break;
                     }
+
+                    Long id = produtoView.lerIdProdutoParaDeletar( produtosParaDeletar );
+
+                    if (id == null) {
+                        produtoView.exibirMensagem( "Remoção cancelada." );
+                        break;
+                    }
+
                     produtoService.deletarProduto( id );
                     produtoView.exibirMensagem( "Produto removido com sucesso." );
                     break;
 
+                //volar ao menu anterior -> para o menu principal
                 case "0":
                     executando = false;
-                    produtoView.exibirMensagem( "Voltando..." );
                     break;
 
                 default:

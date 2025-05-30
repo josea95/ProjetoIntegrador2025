@@ -56,6 +56,7 @@ public class PedidoView {
             exibeProdutos( categoria, produtos );
 
             //ADicionando try catch para evitar que o programa finalize caso o usuário digite algo diferente de um número
+            //-Inicio: Quando o usuario escolhe a categoria
             while (true) {
                 try {
                     int escolha = lerEntradaDoCancelar( "Digite o número do produto que deseja adicionar (ou 0 para voltar): " );
@@ -75,14 +76,14 @@ public class PedidoView {
                 }
             }
 
-        }
+        } // Fim do loop de adição de produtos
 
         String op = lerEntradaObservacao( "Deseja adicionar uma observação ao pedido? (s/n): " );
         if (op.equalsIgnoreCase( "s" )) {
             String observacao = lerEntradaObservacao( "Digite a observação: " );
             pedido.setObservacao( observacao );
         }
-
+        //Parte para confirmar ou nao o pedido
         String confirmacao = lerEntradaObservacao( "Pedido concluído com sucesso? 1 - sim | 2 - nao: " );
         if (confirmacao.equals( "1" )) {
             // Verifica se o carrinho está vazio antes de finalizar o pedido
@@ -95,7 +96,7 @@ public class PedidoView {
             }
         } else {
             exibeMensagem( "Pedido cancelado. Nenhum pedido foi armazenado." );
-        }
+        }// Fim da parte de confirmação do pedido
     }
 
     public void exibeMensagem(String mensagem) {
@@ -108,6 +109,7 @@ public class PedidoView {
     }
 
     //ADicionando try catch para evitar que o programa finalize caso o usuário digite algo diferente de um número
+    //Metodo para quando o usario deseja voltar usando o 0
     public int lerEntradaDoCancelar(String mensagem) {
         Scanner scanner = new Scanner( System.in );
         while (true) {
@@ -121,6 +123,7 @@ public class PedidoView {
         }
     }
 
+    //Menu para ele escolher a categoria do produto que deseja adicionar ao pedido
     public void exibeMenuCategorias() {
         System.out.println( "\nEscolha a categoria:" );
         System.out.println( "1. Marmitas" );
@@ -130,6 +133,7 @@ public class PedidoView {
         System.out.println( "0. Cancelar pedido" );
     }
 
+    //Exibi todos os produtos disponíveis na categoria selecionada
     public void exibeProdutos(String categoria, List<ProdutoEntity> produtos) {
         if (produtos == null || produtos.isEmpty()) {
             System.out.println( "Nenhum produto encontrado nesta categoria." );
