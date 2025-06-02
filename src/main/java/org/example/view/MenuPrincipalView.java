@@ -14,10 +14,10 @@ public class MenuPrincipalView {
         System.out.println("1. Fazer Pedido");
         System.out.println("2. Cancelar Pedido");
         System.out.println("3. Ver Fila de Pedidos");
-        System.out.println("4. Cadastrar Produto");
+        System.out.println("4. Personalização de Produtos");
         System.out.println("5. Pesquisar Pedido");
         System.out.println("6. Ver Histórico de Pedidos");
-        System.out.println("7 - Relatório de Vendas");
+        System.out.println("7. Relatório de Vendas");
         System.out.println("8. Sair");
     }
 

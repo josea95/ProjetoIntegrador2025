@@ -26,7 +26,7 @@ public class Main {
         // Views
         UsuarioView usuarioView = new UsuarioView( scanner );
         PedidoView pedidoView = new PedidoView( scanner, pedidoService );
-        ProdutoView produtoView = new ProdutoView( scanner, produtoService );
+        ProdutoView produtoView = new ProdutoView( scanner );
         FilaPedidoView filaPedidoView = new FilaPedidoView( filaPedidoService, scanner );
         MenuPrincipalView menuView = new MenuPrincipalView( scanner );
         RelatorioView relatorioView = new RelatorioView(relatorioService);
@@ -34,7 +34,7 @@ public class Main {
         // Controllers
         UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
         PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
-        ProdutoController produtoController = new ProdutoController( produtoService, produtoView );
+        ProdutoController produtoController = new ProdutoController(produtoService, produtoView, scanner);
         FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService, filaPedidoView, scanner );
         RelatorioController relatorioController = new RelatorioController(relatorioView);
         /* Login

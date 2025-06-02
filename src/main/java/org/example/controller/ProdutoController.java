@@ -18,7 +18,7 @@ public class ProdutoController {
         this.scanner = scanner;
     }
 
-    public void executar() {
+    public void iniciarPersonalizacao() {
         boolean executando = true;
         while (executando) {
             produtoView.exibirMenu();
