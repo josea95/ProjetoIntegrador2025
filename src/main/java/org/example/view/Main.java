@@ -5,6 +5,8 @@ import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.ProdutoRepository;
 import org.example.model.services.*;
 import org.example.model.util.CustomizerFactory;
+import org.example.model.repository.ProdutoHistoricoPedidoRepository;
+
 
 import javax.persistence.EntityManager;
 import java.util.Scanner;
@@ -19,20 +21,22 @@ public class Main {
         PedidoService pedidoService = new PedidoService( em );
         ProdutoService produtoService = new ProdutoService( new ProdutoRepository( em ) );
         FilaPedidoService filaPedidoService = new FilaPedidoService( em );
+        RelatorioService relatorioService = new RelatorioService(new ProdutoHistoricoPedidoRepository(em));
 
         // Views
         UsuarioView usuarioView = new UsuarioView( scanner );
         PedidoView pedidoView = new PedidoView( scanner, pedidoService );
-        ProdutoView produtoView = new ProdutoView( scanner, produtoService );
+        ProdutoView produtoView = new ProdutoView( scanner );
         FilaPedidoView filaPedidoView = new FilaPedidoView( filaPedidoService, scanner );
         MenuPrincipalView menuView = new MenuPrincipalView( scanner );
+        RelatorioView relatorioView = new RelatorioView(relatorioService);
 
         // Controllers
         UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
         PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
-        ProdutoController produtoController = new ProdutoController( produtoService, produtoView );
+        ProdutoController produtoController = new ProdutoController(produtoService, produtoView, scanner);
         FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService, filaPedidoView, scanner );
-
+        RelatorioController relatorioController = new RelatorioController(relatorioView);
         /* Login
          * - Solicita ao controller que execute o login,
          *   validando as informações inseridas pelo usuário.
@@ -50,7 +54,8 @@ public class Main {
                 pedidoController,
                 produtoController,
                 filaPedidoController,
-                usuarioLogado
+                usuarioLogado,
+                relatorioController
         );
         //Chama o menu principal
         menuController.executar();

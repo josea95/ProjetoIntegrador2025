@@ -19,12 +19,22 @@ public class ProdutoService {
         }
         produtoRepository.salvar(produto);
     }
-    
+
+    public void atualizarProduto(ProdutoEntity produto) {
+        if (!validarDataCriacao(produto.getDataCriacao())) {
+            throw new IllegalArgumentException("Data de criação inválida.");
+        }
+        produtoRepository.atualizar(produto);
+    }
+
+    public void deletarProduto(Long id) {
+        produtoRepository.deletar(id);
+    }
+
     public boolean validarDataCriacao(LocalDate dataCriacao) {
         return dataCriacao != null;
     }
-    
-    // Consulta os produtos por categoria sem exibição
+
     public List<ProdutoEntity> buscarProdutosPorCategoria(String categoria) {
         return produtoRepository.buscarPorCategoria(categoria);
     }

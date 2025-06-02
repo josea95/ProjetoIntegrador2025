@@ -37,4 +37,19 @@ public class ProdutoPedidoEntity {
     public ProdutoEntity getProduto() {
         return produto;
     }
+
+    // Adicione dentro da classe
+    @Column(nullable = false)
+    private Integer quantidade;
+
+    // Getter
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    // Setter
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
 }

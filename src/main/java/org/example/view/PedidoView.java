@@ -5,6 +5,7 @@ import org.example.model.entities.ProdutoEntity;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.PedidoService;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -54,25 +55,35 @@ public class PedidoView {
             List<ProdutoEntity> produtos = pedidoService.buscarProdutosPorCategoria( categoria );
             exibeProdutos( categoria, produtos );
 
-            int escolha = lerEntradaDoCancelar( "Digite o número do produto que deseja adicionar (ou 0 para voltar): " );
-            if (escolha == 0) {
-                continue;
+            //ADicionando try catch para evitar que o programa finalize caso o usuário digite algo diferente de um número
+            //-Inicio: Quando o usuario escolhe a categoria
+            while (true) {
+                try {
+                    int escolha = lerEntradaDoCancelar( "Digite o número do produto que deseja adicionar (ou 0 para voltar): " );
+                    if (escolha == 0) {
+                        break; // volta ao menu das categorias sem perder/cancelar o pedido
+                    }
+                    if (escolha < 1 || escolha > produtos.size()) {
+                        exibeMensagem( "Opção inválida." );
+                    } else {
+                        ProdutoEntity produtoEscolhido = produtos.get( escolha - 1 );
+                        pedidoService.adicionarProdutoAoPedido( pedido, produtoEscolhido );
+                        exibeMensagem( "Produto adicionado: " + produtoEscolhido.getNome() );
+                    }
+
+                } catch (InputMismatchException e) {
+                    exibeMensagem( "Digite apenas números válidos. Tente novamente." );
+                }
             }
-            if (escolha < 1 || escolha > produtos.size()) {
-                exibeMensagem( "Opção inválida." );
-            } else {
-                ProdutoEntity produtoEscolhido = produtos.get( escolha - 1 );
-                pedidoService.adicionarProdutoAoPedido( pedido, produtoEscolhido );
-                exibeMensagem( "Produto adicionado: " + produtoEscolhido.getNome() );
-            }
-        }
+
+        } // Fim do loop de adição de produtos
 
         String op = lerEntradaObservacao( "Deseja adicionar uma observação ao pedido? (s/n): " );
         if (op.equalsIgnoreCase( "s" )) {
             String observacao = lerEntradaObservacao( "Digite a observação: " );
             pedido.setObservacao( observacao );
         }
-
+        //Parte para confirmar ou nao o pedido
         String confirmacao = lerEntradaObservacao( "Pedido concluído com sucesso? 1 - sim | 2 - nao: " );
         if (confirmacao.equals( "1" )) {
             // Verifica se o carrinho está vazio antes de finalizar o pedido
@@ -85,7 +96,7 @@ public class PedidoView {
             }
         } else {
             exibeMensagem( "Pedido cancelado. Nenhum pedido foi armazenado." );
-        }
+        }// Fim da parte de confirmação do pedido
     }
 
     public void exibeMensagem(String mensagem) {
@@ -97,13 +108,22 @@ public class PedidoView {
         return scanner.nextLine();
     }
 
-    public int lerEntradaDoCancelar(String prompt) {
-        System.out.print( prompt );
-        int valor = scanner.nextInt();
-        scanner.nextLine(); // Consumir a quebra de linha
-        return valor;
+    //ADicionando try catch para evitar que o programa finalize caso o usuário digite algo diferente de um número
+    //Metodo para quando o usario deseja voltar usando o 0
+    public int lerEntradaDoCancelar(String mensagem) {
+        Scanner scanner = new Scanner( System.in );
+        while (true) {
+            try {
+                System.out.print( mensagem );
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                exibeMensagem( "Digite apenas números válidos. Tente novamente." );
+                scanner.nextLine();
+            }
+        }
     }
 
+    //Menu para ele escolher a categoria do produto que deseja adicionar ao pedido
     public void exibeMenuCategorias() {
         System.out.println( "\nEscolha a categoria:" );
         System.out.println( "1. Marmitas" );
@@ -113,6 +133,7 @@ public class PedidoView {
         System.out.println( "0. Cancelar pedido" );
     }
 
+    //Exibi todos os produtos disponíveis na categoria selecionada
     public void exibeProdutos(String categoria, List<ProdutoEntity> produtos) {
         if (produtos == null || produtos.isEmpty()) {
             System.out.println( "Nenhum produto encontrado nesta categoria." );
