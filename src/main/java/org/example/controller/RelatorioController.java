@@ -9,7 +9,7 @@ public class RelatorioController {
         this.relatorioView = relatorioView;
     }
 
-    public void exibirRelatorioDeHoje() {
-        relatorioView.mostrarRelatorioDeHoje();
+    public void exibirResumoPorCategoria() {
+        relatorioView.mostrarResumoVendasPorCategoriaHoje();
     }
 }

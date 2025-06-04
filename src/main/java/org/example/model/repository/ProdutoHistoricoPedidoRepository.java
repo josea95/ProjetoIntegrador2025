@@ -33,15 +33,14 @@ public class ProdutoHistoricoPedidoRepository {
             em.getTransaction().commit();
         }
     }
-    public List<Object[]> gerarRelatorioVendasDoDia(LocalDate data) {
+    public List<Object[]> gerarRelatorioVendasPorCategoria(LocalDate data) {
         return em.createQuery(
-                        "SELECT p.nome, SUM(php.quantidade) " +
+                        "SELECT p.categoria, COUNT(php), SUM(php.quantidade) " +
                                 "FROM ProdutoHistoricoPedidoEntity php " +
                                 "JOIN php.produto p " +
                                 "JOIN php.historicoPedido h " +
                                 "WHERE h.dataPedido = :data " +
-                                "GROUP BY p.nome",
-                        Object[].class
+                                "GROUP BY p.categoria", Object[].class
                 )
                 .setParameter("data", data)
                 .getResultList();
