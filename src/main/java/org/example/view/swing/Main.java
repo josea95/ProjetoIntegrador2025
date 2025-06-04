@@ -1,4 +1,4 @@
-package org.example.view.main;
+package org.example.view.swing;
 
 import org.example.controller.swing.ProdutoSwingController;
 import org.example.model.repository.ProdutoRepository;
