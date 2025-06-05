@@ -1,7 +1,8 @@
 package org.example.controller;
-
 import org.example.model.entities.UsuarioEntity;
+import org.example.model.services.RelatorioService;
 import org.example.view.MenuPrincipalView;
+import org.example.view.RelatorioFrame;
 
 public class MenuPrincipalController {
 
@@ -11,6 +12,7 @@ public class MenuPrincipalController {
     private final FilaPedidoController filaController;
     private final UsuarioEntity usuarioLogado;
     private final RelatorioController relatorioController;
+    private final RelatorioService relatorioService;
 
 
     /* Constructor para inicializar as dependencias:
@@ -27,7 +29,8 @@ public class MenuPrincipalController {
             ProdutoController produtoController,
             FilaPedidoController filaController,
             UsuarioEntity usuarioLogado,
-            RelatorioController relatorioController) {
+            RelatorioController relatorioController,
+            RelatorioService relatorioService) {
 
         this.menuView = menuView;
         this.pedidoController = pedidoController;
@@ -35,6 +38,7 @@ public class MenuPrincipalController {
         this.filaController = filaController;
         this.usuarioLogado = usuarioLogado;
         this.relatorioController = relatorioController;
+        this.relatorioService = relatorioService;
     }
 
     public void executar() {
@@ -64,7 +68,7 @@ public class MenuPrincipalController {
                     filaController.verHistoricoPedidos( usuarioLogado );
                     break;
                 case "7":
-                    relatorioController.exibirResumoPorCategoria();
+                    new RelatorioFrame(relatorioService);
                     break;
                 case "8":
                     executando = false;

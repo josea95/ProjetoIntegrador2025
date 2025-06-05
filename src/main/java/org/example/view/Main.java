@@ -55,7 +55,8 @@ public class Main {
                 produtoController,
                 filaPedidoController,
                 usuarioLogado,
-                relatorioController
+                relatorioController,
+                relatorioService
         );
         //Chama o menu principal
         menuController.executar();
