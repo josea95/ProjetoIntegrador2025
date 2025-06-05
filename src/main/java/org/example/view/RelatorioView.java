@@ -11,9 +11,9 @@ public class RelatorioView {
         this.relatorioService = relatorioService;
     }
 
-    public void mostrarRelatorioDeHoje() {
+    public void mostrarResumoVendasPorCategoriaHoje() {
         LocalDate hoje = LocalDate.now();
-        relatorioService.gerarRelatorioDoDia(hoje);
+        relatorioService.gerarResumoVendasPorCategoria(hoje);
     }
 }
 

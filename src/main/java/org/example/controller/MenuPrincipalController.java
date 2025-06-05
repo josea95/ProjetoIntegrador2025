@@ -64,7 +64,7 @@ public class MenuPrincipalController {
                     filaController.verHistoricoPedidos( usuarioLogado );
                     break;
                 case "7":
-                    relatorioController.exibirRelatorioDeHoje();
+                    relatorioController.exibirResumoPorCategoria();
                     break;
                 case "8":
                     executando = false;

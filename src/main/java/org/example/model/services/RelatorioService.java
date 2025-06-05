@@ -13,21 +13,30 @@ public class RelatorioService {
         this.produtoHistoricoPedidoRepo = produtoHistoricoPedidoRepo;
     }
 
-    public void gerarRelatorioDoDia(LocalDate data) {
-        List<Object[]> resultados = produtoHistoricoPedidoRepo.gerarRelatorioVendasDoDia(data);
+    public void gerarResumoVendasPorCategoria(LocalDate data) {
+        List<Object[]> resultados = produtoHistoricoPedidoRepo.gerarRelatorioVendasPorCategoria(data);
 
-        int totalProdutosVendidos = 0;
+        int totalProdutos = 0;
+        int totalMarmitas = 0;
 
-        System.out.println("📅 Relatório de Vendas - " + data);
+        System.out.println("📋 RESUMO DE VENDAS - " + data);
         for (Object[] linha : resultados) {
-            String nomeProduto = (String) linha[0];
-            Long quantidadeVendida = (Long) linha[1];
-            totalProdutosVendidos += quantidadeVendida;
+            String categoria = (String) linha[0];
+            Long pedidos = (Long) linha[1];
+            Long quantidade = (Long) linha[2];
 
-            System.out.println("🍱 " + nomeProduto + ": " + quantidadeVendida + " unidade(s)");
+            System.out.printf("Categoria: %s | Pedidos: %d | Quantidade Total: %d\n",
+                    categoria, pedidos, quantidade);
+
+            totalProdutos += quantidade;
+
+            if (categoria != null && categoria.trim().toLowerCase().contains("marmita")) {
+                totalMarmitas += quantidade;
+            }
         }
 
-        System.out.println("📦 Total de marmitas vendidas no dia: " + totalProdutosVendidos);
+        System.out.println("✅ Total de produtos vendidos: " + totalProdutos);
+        System.out.println("🥗 Total de **marmitas** vendidas: " + totalMarmitas);
     }
 }
 
