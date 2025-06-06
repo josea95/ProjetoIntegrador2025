@@ -1,5 +1,4 @@
 package org.example.view;
-
 import org.example.controller.*;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.ProdutoRepository;
