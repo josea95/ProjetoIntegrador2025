@@ -114,5 +114,6 @@ public class TelaLoginSwing extends JFrame {
 		passwordField = new JPasswordField();
 		passwordField.setBounds(91, 134, 203, 20);
 		panel.add(passwordField);
+		
 	}
 }
