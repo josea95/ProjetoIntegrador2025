@@ -35,10 +35,10 @@ public class MenuPersonalizacaoSwing extends JFrame {
 
         // Configurações da janela
         setContentPane( painelPrincipal );
-        setSize( 400, 300 );
+        setSize( 700, 500 );
         setTitle( "Menu de Personalização" );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        setLocationRelativeTo( null ); // Centraliza na tela
+        setLocationRelativeTo( null );
         setVisible( true );
 
         // Ações dos botões

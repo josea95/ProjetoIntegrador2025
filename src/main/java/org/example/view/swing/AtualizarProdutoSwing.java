@@ -32,10 +32,10 @@ public class AtualizarProdutoSwing extends JFrame {
 
     // Construtor que inicializa a janela e recebe o serviço como parâmetro
     public AtualizarProdutoSwing(ProdutoService produtoService) {
-        this.produtoService = produtoService;                // Atribui o serviço recebido
-        setTitle( "Atualizar Produto" );                        // Define o título da janela
+        this.produtoService = produtoService;
+        setTitle( "Atualizar Produto" );
         setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );    // Fecha a janela sem encerrar a aplicação inteira
-        setSize( 500, 400 );                                    // Define o tamanho da janela
+        setSize( 700, 500 );                                    // Define o tamanho da janela
         setLocationRelativeTo( null );                          // Centraliza a janela na tela
         initCategoriaPanel();                                 // Inicializa o painel de seleção de categoria
         setVisible( true );                                     // Torna a janela visível
@@ -45,31 +45,30 @@ public class AtualizarProdutoSwing extends JFrame {
     private void initCategoriaPanel() {
         JPanel panel = new JPanel( new BorderLayout( 5, 5 ) );
 
-        // Cria um painel para a seleção da categoria com layout FlowLayout
         JPanel categoriaPanel = new JPanel( new FlowLayout() );
-        // Adiciona um rótulo para indicar que o usuário deve selecionar uma categoria
+
         categoriaPanel.add( new JLabel( "Selecione a Categoria:" ) );
         // Array de categorias disponíveis
         String[] categorias = {"Marmitas", "Bebidas", "Porções"};
-        // Cria o componente JComboBox com as categorias
+
         categoriaCombo = new JComboBox<>( categorias );
         categoriaPanel.add( categoriaCombo );
-        // Cria o botão de busca para produtos
+
         buscarButton = new JButton( "Buscar Produtos" );
         // Associa um evento ao botão que chama o buscarProdutosPorCategoria
         buscarButton.addActionListener( e -> buscarProdutosPorCategoria() );
         categoriaPanel.add( buscarButton );
-        // Adiciona o painel de categoria na parte superior do painel principal
+
         panel.add( categoriaPanel, BorderLayout.NORTH );
 
         // Inicializa o modelo da lista e o componente JList para exibir os produtos
         listModel = new DefaultListModel<>();
         produtosList = new JList<>( listModel );
-        produtosList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION ); // Permite seleção de apenas um item
+        produtosList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION ); // Permite seleção de apenas um item por vez
         // Adiciona a lista dentro do JScrollPane para rolagem
         panel.add( new JScrollPane( produtosList ), BorderLayout.CENTER );
 
-        // Cria um painel para os botões de seleção e retorno
+
         JPanel botoesPanel = new JPanel( new FlowLayout() );
         // Botão para selecionar um produto da lista
         selecionarButton = new JButton( "Selecionar Produto" );
@@ -121,16 +120,16 @@ public class AtualizarProdutoSwing extends JFrame {
         idField.setEditable( false );
         panel.add( idField );
 
-        // Exibe a data de criação do produto (formata a data para padrão ISO_LOCAL_DATE)
+
         panel.add( new JLabel( "Data de Criação:" ) );
         dataCriacaoField = new JTextField( produto.getDataCriacao().format( DateTimeFormatter.ISO_LOCAL_DATE ) );
         dataCriacaoField.setEditable( false );
         panel.add( dataCriacaoField );
 
-        // Exibe a categoria do produto (campo não editável)
+        // Exibe a categoria do produto
         panel.add( new JLabel( "Categoria:" ) );
         categoriaField = new JTextField( produto.getCategoria() );
-        categoriaField.setEditable( false );
+        categoriaField.setEditable( false );// (campo não editável)
         panel.add( categoriaField );
 
         // Campo para atualizar o nome do produto
@@ -207,7 +206,7 @@ public class AtualizarProdutoSwing extends JFrame {
 
             // Exibe mensagem de sucesso para o usuario
             JOptionPane.showMessageDialog( this, "Produto atualizado com sucesso!" );
-            // Retorna para o painel de seleção
+
             initCategoriaPanel();
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog( this, "Preço inválido." );

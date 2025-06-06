@@ -21,7 +21,7 @@ public class DeletarProdutoSwing extends JFrame {
         this.produtoService = produtoService;
         setTitle( "Deletar Produto" );
         setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-        setSize( 500, 400 );
+        setSize( 700, 500 );
         setLocationRelativeTo( null );
         initComponents();
         setVisible( true );
