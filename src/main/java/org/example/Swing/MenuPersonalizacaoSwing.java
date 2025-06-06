@@ -1,16 +1,20 @@
 package org.example.Swing;
 
-import org.example.controller.ProdutoSwingController;
-
 import javax.swing.*;
 import java.awt.*;
+import javax.persistence.EntityManager;
+
+import org.example.model.util.CustomizerFactory;
+import org.example.model.services.PedidoService;
+import org.example.model.entities.UsuarioEntity;
+import org.example.controller.ProdutoSwingController;
 
 public class MenuPersonalizacaoSwing extends JFrame {
 
     private JButton cadastrarProdutoButton;
     private JButton atualizarProdutoButton;
     private JButton deletarButton;
-    private JButton sairButton;
+    private JButton voltarButton;
 
     private ProdutoSwingController controller;
 
@@ -29,7 +33,7 @@ public class MenuPersonalizacaoSwing extends JFrame {
         painelBotoes.add( cadastrarProdutoButton );
         painelBotoes.add( atualizarProdutoButton );
         painelBotoes.add( deletarButton );
-        painelBotoes.add( sairButton );
+        painelBotoes.add( voltarButton );
 
         painelPrincipal.add( painelBotoes, BorderLayout.CENTER );
 
@@ -45,16 +49,19 @@ public class MenuPersonalizacaoSwing extends JFrame {
         cadastrarProdutoButton.addActionListener( e -> controller.abrirCadastro() );
         atualizarProdutoButton.addActionListener( e -> controller.abrirAtualizacao() );
         deletarButton.addActionListener( e -> controller.abrirRemocao() );
-        sairButton.addActionListener( e -> System.exit( 0 ) );
+        voltarButton.addActionListener( e -> {
+            dispose();
+            EntityManager em = CustomizerFactory.getEntityManager();
+            PedidoService pedidoService = new PedidoService( em );
+            UsuarioEntity usuarioLogado = new UsuarioEntity();
+            //new MenuPrincipalSwing( pedidoService, usuarioLogado );
+        } );
     }
 
     private void inicializarBotoes() {
-
         cadastrarProdutoButton = new JButton( "Cadastrar produto" );
         atualizarProdutoButton = new JButton( "Atualizar produto" );
         deletarButton = new JButton( "Deletar produto" );
-        sairButton = new JButton( "Sair" );
-
+        voltarButton = new JButton( "Voltar" );
     }
-
 }
