@@ -7,7 +7,6 @@ import org.example.model.services.*;
 import org.example.model.util.CustomizerFactory;
 import org.example.model.repository.ProdutoHistoricoPedidoRepository;
 
-
 import javax.persistence.EntityManager;
 import java.util.Scanner;
 
@@ -56,6 +55,7 @@ public class Main {
                 filaPedidoController,
                 usuarioLogado,
                 relatorioController,
+                filaPedidoService,
                 relatorioService
         );
         //Chama o menu principal

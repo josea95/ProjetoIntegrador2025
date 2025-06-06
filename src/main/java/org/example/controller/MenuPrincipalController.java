@@ -1,8 +1,10 @@
 package org.example.controller;
 import org.example.model.entities.UsuarioEntity;
+import org.example.model.services.FilaPedidoService;
 import org.example.model.services.RelatorioService;
 import org.example.view.MenuPrincipalView;
-import org.example.view.RelatorioFrame;
+import org.example.Swing.RelatorioSwing;
+import org.example.Swing.FilaPedidosSwing;
 
 public class MenuPrincipalController {
 
@@ -13,6 +15,7 @@ public class MenuPrincipalController {
     private final UsuarioEntity usuarioLogado;
     private final RelatorioController relatorioController;
     private final RelatorioService relatorioService;
+    private final FilaPedidoService filaPedidoService;
 
 
     /* Constructor para inicializar as dependencias:
@@ -30,12 +33,14 @@ public class MenuPrincipalController {
             FilaPedidoController filaController,
             UsuarioEntity usuarioLogado,
             RelatorioController relatorioController,
+            FilaPedidoService filaPedidoService,
             RelatorioService relatorioService) {
 
         this.menuView = menuView;
         this.pedidoController = pedidoController;
         this.produtoController = produtoController;
         this.filaController = filaController;
+        this.filaPedidoService = filaPedidoService;
         this.usuarioLogado = usuarioLogado;
         this.relatorioController = relatorioController;
         this.relatorioService = relatorioService;
@@ -56,7 +61,7 @@ public class MenuPrincipalController {
                     filaController.cancelarPedido();
                     break;
                 case "3":
-                    filaController.listarPedidos();
+                    new FilaPedidosSwing(filaPedidoService);
                     break;
                 case "4":
                     produtoController.iniciarPersonalizacao();
@@ -68,7 +73,7 @@ public class MenuPrincipalController {
                     filaController.verHistoricoPedidos( usuarioLogado );
                     break;
                 case "7":
-                    new RelatorioFrame(relatorioService);
+                    new RelatorioSwing(relatorioService);
                     break;
                 case "8":
                     executando = false;
