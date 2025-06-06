@@ -14,6 +14,7 @@ public class CadastrarProdutoSwing extends JFrame {
     private JComboBox<String> categoriaCombo;
     private JTextField precoField;
     private JTextField dataCriacaoField;
+    private JTextField descricaoField;
     private JButton cadastrarButton;
     private JButton voltarButton;
     private ProdutoService produtoService;
@@ -22,23 +23,23 @@ public class CadastrarProdutoSwing extends JFrame {
         this.produtoService = produtoService;
         setTitle( "Cadastro de Produto" );
         setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-        setSize( 500, 400 );
+        setSize( 700, 500 );
         setLocationRelativeTo( null );
         initComponents();
         setVisible( true );
     }
 
     private void initComponents() {
-        JPanel panel = new JPanel( new GridLayout( 5, 2, 10, 10 ) );
-
-        panel.add( new JLabel( "Nome:" ) );
-        nomeField = new JTextField();
-        panel.add( nomeField );
+        JPanel panel = new JPanel( new GridLayout( 6, 2, 10, 10 ) );
 
         panel.add( new JLabel( "Categoria:" ) );
         String[] categorias = {"Marmitas", "Bebidas", "Porções"};
         categoriaCombo = new JComboBox<>( categorias );
         panel.add( categoriaCombo );
+
+        panel.add( new JLabel( "Nome:" ) );
+        nomeField = new JTextField();
+        panel.add( nomeField );
 
         panel.add( new JLabel( "Preço:" ) );
         precoField = new JTextField();
@@ -47,6 +48,10 @@ public class CadastrarProdutoSwing extends JFrame {
         panel.add( new JLabel( "Data (yyyy-MM-dd):" ) );
         dataCriacaoField = new JTextField();
         panel.add( dataCriacaoField );
+
+        panel.add( new JLabel( "Descrição: " ) );
+        descricaoField = new JTextField();
+        panel.add( descricaoField );
 
         cadastrarButton = new JButton( "Cadastrar" );
         cadastrarButton.addActionListener( e -> cadastrarProduto() );
@@ -65,7 +70,7 @@ public class CadastrarProdutoSwing extends JFrame {
         double preco;
         LocalDate dataCriacao;
 
-        try{
+        try {
             if (nome.isEmpty()) {
                 JOptionPane.showMessageDialog( this, "Nome não pode ser vazio." );
                 return;
