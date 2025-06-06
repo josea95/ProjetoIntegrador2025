@@ -114,12 +114,22 @@ public class FazerPedidoSwing extends JFrame {
         confirmarButton = new JButton( "Confirmar Pedido" );
         confirmarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
         confirmarButton.addActionListener( e -> {
+            //antes de finalizar o pedido aparece uma caixa de dialogo para o usuario colocar uma observacao, pode ser null/vazio
+            String descricao = JOptionPane.showInputDialog(
+                    this,
+                    "Digite uma descrição para o pedido (opcional):"
+            );
+            if (descricao != null && !descricao.trim().isEmpty()) {
+                pedido.setObservacao( descricao );
+            }
+
             String resultado = pedidoController.confirmarPedido( pedido );
             if (resultado.startsWith( "ERRO" )) {
                 JOptionPane.showMessageDialog( this, resultado, "Erro", JOptionPane.ERROR_MESSAGE );
             } else {
-                JOptionPane.showMessageDialog( this, resultado, "Pedido confirmado", JOptionPane.INFORMATION_MESSAGE );
-                dispose();
+                JOptionPane.showMessageDialog( this, resultado, "Pedido confirmado! Sua senha é " + pedido.getSenhaPedido(), JOptionPane.INFORMATION_MESSAGE );
+                carrinhoModel.clear();
+
             }
         } );
         bottomPanel.add( confirmarButton );
