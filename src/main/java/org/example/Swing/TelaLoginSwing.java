@@ -1,8 +1,5 @@
-package org.example.view;
-
-
+package org.example.Swing;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -17,7 +14,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JPasswordField;
-
 public class TelaLoginSwing extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -41,12 +37,9 @@ public class TelaLoginSwing extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public TelaLoginSwing() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 700, 500);
 		contentPane = new JPanel();
 		contentPane.setForeground(new Color(128, 128, 0));
 		contentPane.setBackground(new Color(16, 19, 44));
