@@ -8,8 +8,4 @@ public class RelatorioController {
     public RelatorioController(RelatorioView relatorioView) {
         this.relatorioView = relatorioView;
     }
-
-    public void exibirResumoPorCategoria() {
-        relatorioView.mostrarResumoVendasPorCategoriaHoje();
-    }
 }
