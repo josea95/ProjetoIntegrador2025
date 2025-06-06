@@ -1,6 +1,6 @@
-package org.example.view.swing;
+package org.example.Swing;
 
-import org.example.controller.swing.ProdutoSwingController;
+import org.example.controller.ProdutoSwingController;
 import org.example.model.repository.ProdutoRepository;
 import org.example.model.services.ProdutoService;
 import org.example.model.util.CustomizerFactory;

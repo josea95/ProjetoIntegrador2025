@@ -1,4 +1,4 @@
-package org.example.view.swing;
+package org.example.Swing;
 
 import org.example.controller.PedidoController;
 

@@ -1,10 +1,10 @@
-package org.example.controller.swing;
+package org.example.controller;
 
 import org.example.model.services.ProdutoService;
-import org.example.view.swing.AtualizarProdutoSwing;
-import org.example.view.swing.CadastrarProdutoSwing;
-import org.example.view.swing.DeletarProdutoSwing;
-import org.example.view.swing.MenuPersonalizacaoSwing;
+import org.example.Swing.AtualizarProdutoSwing;
+import org.example.Swing.CadastrarProdutoSwing;
+import org.example.Swing.DeletarProdutoSwing;
+import org.example.Swing.MenuPersonalizacaoSwing;
 
 public class ProdutoSwingController {
 

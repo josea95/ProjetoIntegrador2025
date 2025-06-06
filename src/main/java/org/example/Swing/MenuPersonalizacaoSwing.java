@@ -1,6 +1,6 @@
-package org.example.view.swing;
+package org.example.Swing;
 
-import org.example.controller.swing.ProdutoSwingController;
+import org.example.controller.ProdutoSwingController;
 
 import javax.swing.*;
 import java.awt.*;
