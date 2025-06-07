@@ -17,6 +17,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JPasswordField;
+import javax.swing.JOptionPane;
 
 public class TelaLoginSwing extends JFrame {
 
@@ -95,13 +96,28 @@ public class TelaLoginSwing extends JFrame {
 		JButton btnNewButton = new JButton("Entrar");
 		
 		btnNewButton.addActionListener(new ActionListener() {
-			
 
-			
+
+
 			public void actionPerformed(ActionEvent e) {
-			
-				
+				String usuario = textField.getText();
+				String senha = new String(passwordField.getPassword());
+
+				if (usuario.isEmpty() || senha.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Preencha usuário e senha.", "Erro", JOptionPane.ERROR_MESSAGE);
+				} else {
+					// Aqui você poderia validar com banco de dados, mas para teste:
+					if (usuario.equals("admin") && senha.equals("1234")) {
+						JOptionPane.showMessageDialog(null, "Login realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+						// Aqui você pode abrir a próxima tela, por exemplo:
+						// new TelaPrincipal().setVisible(true);
+						// this.dispose(); // fecha a tela de login
+					} else {
+						JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos.", "Erro", JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
+
 		});
 		//btnNewButton.setFocusable(Color.YELLOW );
 		btnNewButton.setBackground(new Color(45,67,87));
