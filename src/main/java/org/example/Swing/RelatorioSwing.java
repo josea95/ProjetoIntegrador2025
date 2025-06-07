@@ -34,6 +34,13 @@ public class RelatorioSwing extends JFrame {
 
         JPanel painelInferior = new JPanel();
         painelInferior.add(btnAtualizar);
+
+        // Botão Voltar
+        JButton btnVoltar = new JButton("Voltar ao Menu Principal");
+        btnVoltar.addActionListener(e -> {
+            dispose();// Fecha a tela atual
+        });
+        painelInferior.add(btnVoltar);
         add(painelInferior, BorderLayout.SOUTH);
 
         // Mostra relatório ao abrir
