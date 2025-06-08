@@ -44,19 +44,19 @@ public class TelaLoginSwing extends JFrame {
 
 		JLabel lblLogin = new JLabel("Login");
 		lblLogin.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblLogin.setForeground(new Color(75, 99, 107));
+		lblLogin.setForeground(new Color(29, 50, 196));
 		lblLogin.setBounds(150, 43, 73, 20);
 		panel.add(lblLogin);
 
 		textField = new JTextField();
-		textField.setForeground(new Color(72, 141, 183));
+		textField.setForeground(new Color(111, 124, 148));
 		textField.setBackground(Color.WHITE);
 		textField.setBounds(91, 62, 203, 20);
 		panel.add(textField);
 		textField.setColumns(10);
 
 		JLabel lblSenha = new JLabel("Senha");
-		lblSenha.setForeground(new Color(75, 99, 107));
+		lblSenha.setForeground(new Color(24, 73, 160));
 		lblSenha.setFont(new Font("Arial Black", Font.BOLD, 12));
 		lblSenha.setBounds(150, 118, 46, 14);
 		panel.add(lblSenha);
@@ -66,7 +66,7 @@ public class TelaLoginSwing extends JFrame {
 		panel.add(passwordField);
 
 		JButton btnEntrar = new JButton("Entrar");
-		btnEntrar.setBackground(new Color(45, 67, 87));
+		btnEntrar.setBackground(new Color(170, 147, 173));
 		btnEntrar.setFont(new Font("Malgun Gothic Semilight", Font.BOLD, 13));
 		btnEntrar.setBounds(136, 182, 96, 27);
 		panel.add(btnEntrar);
