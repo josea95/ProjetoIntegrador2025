@@ -1,20 +1,26 @@
-// java
 package org.example.controller;
 
 import org.example.model.entities.FilaPedidoEntity;
 import org.example.model.services.PedidoService;
 import org.example.model.entities.UsuarioEntity;
+import org.example.view.PedidoView;
 
 public class PedidoController {
 
     private final PedidoService pedidoService;
+    private final PedidoView pedidoView;
 
-    public PedidoController(PedidoService pedidoService) {
+    public PedidoController(PedidoService pedidoService, PedidoView pedidoView) {
         this.pedidoService = pedidoService;
+        this.pedidoView = pedidoView;
     }
 
     public void iniciarPedido(UsuarioEntity usuarioLogado) {
-        FilaPedidoEntity pedido = pedidoService.fazerPedido( usuarioLogado );
+        // Cria o pedido
+        FilaPedidoEntity pedido = pedidoService.fazerPedido(usuarioLogado);
+
+        // Passa o pedido para a view conduzir o processo (adicionar produtos, confirmar, etc.)
+        pedidoView.iniciarPedido(pedido.getUsuario());
     }
 
     public String confirmarPedido(FilaPedidoEntity pedido) {
@@ -23,7 +29,7 @@ public class PedidoController {
         }
 
         try {
-            pedidoService.salvarPedido( pedido );
+            pedidoService.salvarPedido(pedido);
             return "Pedido confirmado com sucesso!";
         } catch (Exception e) {
             e.printStackTrace();
