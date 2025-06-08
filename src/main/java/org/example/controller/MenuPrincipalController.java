@@ -1,4 +1,5 @@
 package org.example.controller;
+import org.example.Swing.MenuPrincipalSwing;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.FilaPedidoService;
 import org.example.model.services.RelatorioService;
@@ -7,7 +8,7 @@ import org.example.Swing.RelatorioSwing;
 import org.example.Swing.FilaPedidosSwing;
 
 public class MenuPrincipalController {
-
+    private final MenuPrincipalSwing menuPrincipalSwing;
     private final MenuPrincipalView menuView;
     private final PedidoController pedidoController;
     private final ProdutoController produtoController;
@@ -27,6 +28,7 @@ public class MenuPrincipalController {
      * -> Essas dependências são injetadas no momento da criação do controlador
      */
     public MenuPrincipalController(
+            MenuPrincipalSwing menuPrincipalSwing,
             MenuPrincipalView menuView,
             PedidoController pedidoController,
             ProdutoController produtoController,
@@ -36,6 +38,7 @@ public class MenuPrincipalController {
             FilaPedidoService filaPedidoService,
             RelatorioService relatorioService) {
 
+        this.menuPrincipalSwing = menuPrincipalSwing;
         this.menuView = menuView;
         this.pedidoController = pedidoController;
         this.produtoController = produtoController;
@@ -50,7 +53,7 @@ public class MenuPrincipalController {
         boolean executando = true;
 
         while (executando) {
-            menuView.exibirMenu();
+            menuPrincipalSwing.exibirMenu();
             String opcao = menuView.lerOpcao();
 
             switch (opcao) {

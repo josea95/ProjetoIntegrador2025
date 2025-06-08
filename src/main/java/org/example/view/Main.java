@@ -1,11 +1,11 @@
 package org.example.view;
+import org.example.Swing.MenuPrincipalSwing;
 import org.example.controller.*;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.ProdutoRepository;
 import org.example.model.services.*;
 import org.example.model.util.CustomizerFactory;
 import org.example.model.repository.ProdutoHistoricoPedidoRepository;
-
 import javax.persistence.EntityManager;
 import java.util.Scanner;
 
@@ -31,7 +31,7 @@ public class Main {
 
         // Controllers
         UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
-        PedidoController pedidoController = new PedidoController( pedidoService, pedidoView );
+        PedidoController pedidoController = new PedidoController(pedidoService);
         ProdutoController produtoController = new ProdutoController(produtoService, produtoView, scanner);
         FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService, filaPedidoView, scanner );
         RelatorioController relatorioController = new RelatorioController(relatorioView);
@@ -47,7 +47,11 @@ public class Main {
         * - Criando uma instanciação do objeto MenuPrincipalController
         *   passando as dependências necessárias para controlar o menu principal
         */
+
+        MenuPrincipalSwing menuSwing = new MenuPrincipalSwing(pedidoService, usuarioLogado);
+
         MenuPrincipalController menuController = new MenuPrincipalController(
+                menuSwing,
                 menuView,
                 pedidoController,
                 produtoController,

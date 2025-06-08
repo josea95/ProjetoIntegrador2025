@@ -11,8 +11,7 @@ import javax.persistence.EntityManager;
 import javax.swing.*;
 import java.awt.*;
 
-public class MenuPrincipalSwing {
-
+public class MenuPrincipalSwing extends JFrame {
 
     private final PedidoService pedidoService;
     private final UsuarioEntity usuarioLogado;
@@ -20,60 +19,63 @@ public class MenuPrincipalSwing {
     public MenuPrincipalSwing(PedidoService pedidoService, UsuarioEntity usuarioLogado) {
         this.pedidoService = pedidoService;
         this.usuarioLogado = usuarioLogado;
-        teste();
+
+        inicializarTela();
     }
 
-    private void teste() {
-        JFrame frmMenuPrincipal = new JFrame();
-        frmMenuPrincipal.setBackground( new Color( 255, 255, 255 ) );
-        frmMenuPrincipal.setTitle( "Menu Principal" );
-        frmMenuPrincipal.getContentPane().setLayout( new GridLayout( 4, 2, 3, 3 ) );
-        frmMenuPrincipal.setSize( 700, 500 );
-        frmMenuPrincipal.setLocationRelativeTo( null );
+    private void inicializarTela() {
+        setTitle("Menu Principal");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(700, 500);
+        setLocationRelativeTo(null);
+        getContentPane().setLayout(new GridLayout(4, 2, 3, 3));
+        getContentPane().setBackground(Color.WHITE);
 
         EntityManager em = CustomizerFactory.getEntityManager();
-        ProdutoRepository produtoRepository = new ProdutoRepository( em );
-        ProdutoService produtoService = new ProdutoService( produtoRepository );
-        ProdutoSwingController produtoController = new ProdutoSwingController( produtoService );
+        ProdutoRepository produtoRepository = new ProdutoRepository(em);
+        ProdutoService produtoService = new ProdutoService(produtoRepository);
+        ProdutoSwingController produtoController = new ProdutoSwingController(produtoService);
 
-        JButton fazerPedidoButton = new JButton( "1. Fazer Pedido" );
-        fazerPedidoButton.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
-        fazerPedidoButton.addActionListener( e -> new FazerPedidoSwing( pedidoService, usuarioLogado ) );
-        frmMenuPrincipal.getContentPane().add( fazerPedidoButton );
+        JButton fazerPedidoButton = new JButton("1. Fazer Pedido");
+        fazerPedidoButton.setFont(new Font("Verdana", Font.PLAIN, 12));
+        fazerPedidoButton.addActionListener(e -> new FazerPedidoSwing(pedidoService, usuarioLogado));
+        getContentPane().add(fazerPedidoButton);
 
-        JButton btnNewButton_2 = new JButton( "2. Cancelar Pedido" );
-        frmMenuPrincipal.getContentPane().add( btnNewButton_2 );
+        JButton btnCancelarPedido = new JButton("2. Cancelar Pedido");
+        getContentPane().add(btnCancelarPedido);
 
-        JButton btnNewButton_3 = new JButton( "3. Ver Fila de Pedidos" );
-        frmMenuPrincipal.getContentPane().add( btnNewButton_3 );
+        JButton btnVerFila = new JButton("3. Ver Fila de Pedidos");
+        getContentPane().add(btnVerFila);
 
-        JButton personalizacaoProdutoButton = new JButton( "4. Personalização de Produtos" );
-        personalizacaoProdutoButton.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
-        personalizacaoProdutoButton.addActionListener( e -> produtoController.iniciar() );
-        frmMenuPrincipal.getContentPane().add( personalizacaoProdutoButton );
+        JButton btnPersonalizacao = new JButton("4. Personalização de Produtos");
+        btnPersonalizacao.setFont(new Font("Verdana", Font.PLAIN, 12));
+        btnPersonalizacao.addActionListener(e -> produtoController.iniciar());
+        getContentPane().add(btnPersonalizacao);
 
-        JButton btnNewButton_5 = new JButton( "5. Pesquisar Pedido" );
-        frmMenuPrincipal.getContentPane().add( btnNewButton_5 );
+        JButton btnPesquisarPedido = new JButton("5. Pesquisar Pedido");
+        getContentPane().add(btnPesquisarPedido);
 
-        JButton btnNewButton_6 = new JButton( "6. Ver Histórico de Pedidos" );
-        frmMenuPrincipal.getContentPane().add( btnNewButton_6 );
+        JButton btnHistorico = new JButton("6. Ver Histórico de Pedidos");
+        getContentPane().add(btnHistorico);
 
-        JButton btnNewButton_7 = new JButton( "7. Relatório de Vendas" );
-        frmMenuPrincipal.getContentPane().add( btnNewButton_7 );
+        JButton btnRelatorio = new JButton("7. Relatório de Vendas");
+        getContentPane().add(btnRelatorio);
 
-        JButton btnNewButton_8 = new JButton( "8. Sair" );
-        btnNewButton_8.addActionListener( e -> System.exit( 0 ) );
-        frmMenuPrincipal.getContentPane().add( btnNewButton_8 );
+        JButton btnSair = new JButton("8. Sair");
+        btnSair.addActionListener(e -> System.exit(0));
+        getContentPane().add(btnSair);
 
-        frmMenuPrincipal.setVisible( true );
+        setVisible(true);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater( () -> {
-            EntityManager em = CustomizerFactory.getEntityManager();
-            PedidoService pedidoService = new PedidoService( em );
-            UsuarioEntity usuarioLogado = new UsuarioEntity(); //simulando para nao dar erro na hora de "finalizar" o pedido
-            new MenuPrincipalSwing( pedidoService, usuarioLogado );
-        } );
+    public void exibirMenu() {
+        System.out.println("\n===== MENU PRINCIPAL =====");
+        System.out.println("1. Fazer Pedido");
+        System.out.println("2. Cancelar Pedido");
+        System.out.println("3. Ver Fila de Pedidos");
+        System.out.println("4. Personalização de Produtos");
+        System.out.println("5. Pesquisar Pedido");
+        System.out.println("6. Ver Histórico de Pedidos");
+        System.out.println("7. Relatório de Vendas");
+        System.out.println("8. Sair");
     }
 }
