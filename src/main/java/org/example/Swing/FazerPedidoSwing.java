@@ -30,7 +30,9 @@ public class FazerPedidoSwing extends JFrame {
     private JButton voltarButton;
 
     private PedidoService pedidoService;
-    private PedidoController pedidoController;
+
+    private PedidoController pedidoController; // metodo pra puxar o 'confirmarPedido'
+
     private UsuarioEntity usuarioLogado;
     private FilaPedidoEntity pedido;
 
@@ -124,6 +126,7 @@ public class FazerPedidoSwing extends JFrame {
             }
 
             String resultado = pedidoController.confirmarPedido( pedido );
+
             if (resultado.startsWith( "ERRO" )) {
                 JOptionPane.showMessageDialog( this, resultado, "Erro", JOptionPane.ERROR_MESSAGE );
             } else {

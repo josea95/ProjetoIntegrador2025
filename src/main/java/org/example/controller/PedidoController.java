@@ -1,4 +1,3 @@
-// java
 package org.example.controller;
 
 import org.example.model.entities.FilaPedidoEntity;
@@ -9,6 +8,7 @@ public class PedidoController {
 
     private final PedidoService pedidoService;
 
+    //Construtor padrao
     public PedidoController(PedidoService pedidoService) {
         this.pedidoService = pedidoService;
     }
