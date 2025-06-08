@@ -30,7 +30,7 @@ public class Main {
         FilaPedidoView filaPedidoView = new FilaPedidoView( filaPedidoService, scanner );
         MenuPrincipalView menuView = new MenuPrincipalView( scanner );
         RelatorioView relatorioView = new RelatorioView(relatorioService);
-        TelaLoginSwing tela = new TelaLoginSwing();
+        TelaLoginSwing tela = new TelaLoginSwing(usuarioService);
         tela.setVisible(true);
         tela.setLocationRelativeTo(null);
         // Controllers
