@@ -15,7 +15,8 @@ public class TelaLoginSwing extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	private UsuarioService usuarioService; // serviço para login
+	private UsuarioService usuarioService;
+	private UsuarioEntity usuarioLogado;
 
 	public TelaLoginSwing(UsuarioService usuarioService) {
 		this.usuarioService = usuarioService;
@@ -34,6 +35,12 @@ public class TelaLoginSwing extends JFrame {
 		panel.setBackground(new Color(223, 239, 242));
 		contentPane.add(panel);
 		panel.setLayout(null);
+
+		JLabel lblTitulo = new JLabel("Sistema Marmitch");
+		lblTitulo.setForeground(Color.BLACK);
+		lblTitulo.setFont(new Font("Goudy Old Style", Font.ITALIC, 26));
+		lblTitulo.setBounds(91, 0, 179, 38);
+		panel.add(lblTitulo);
 
 		JLabel lblLogin = new JLabel("Login");
 		lblLogin.setFont(new Font("Arial Black", Font.PLAIN, 14));
@@ -58,12 +65,6 @@ public class TelaLoginSwing extends JFrame {
 		passwordField.setBounds(91, 137, 203, 20);
 		panel.add(passwordField);
 
-		JLabel lblTitulo = new JLabel("Sistema Marmitch");
-		lblTitulo.setForeground(Color.BLACK);
-		lblTitulo.setFont(new Font("Goudy Old Style", Font.ITALIC, 26));
-		lblTitulo.setBounds(91, 0, 179, 38);
-		panel.add(lblTitulo);
-
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.setBackground(new Color(45, 67, 87));
 		btnEntrar.setFont(new Font("Malgun Gothic Semilight", Font.BOLD, 13));
@@ -72,24 +73,32 @@ public class TelaLoginSwing extends JFrame {
 
 		btnEntrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String usuario = textField.getText();
+				String login = textField.getText();
 				String senha = new String(passwordField.getPassword());
 
-				if (usuario.isEmpty() || senha.isEmpty()) {
+				if (login.isEmpty() || senha.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Preencha usuário e senha.", "Erro", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
+				UsuarioEntity usuarioAutenticado = usuarioService.login(login, senha);
 
-				UsuarioEntity usuarioLogado = usuarioService.login(usuario, senha);
+				if (usuarioAutenticado != null) {
+					JOptionPane.showMessageDialog(null, "Login realizado com sucesso! Bem-vindo, " + usuarioAutenticado.getNome(), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					usuarioLogado = usuarioAutenticado;
+					dispose(); // Fecha a tela de login
 
-				if (usuarioLogado != null) {
-					JOptionPane.showMessageDialog(null, "Login realizado com sucesso! Bem-vindo, " + usuarioLogado.getNome(), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					// Aqui você pode abrir a próxima tela do sistema
+					// Exemplo: new TelaPrincipal().setVisible(true);
 
 				} else {
 					JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos.", "Erro", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
+	}
+
+	public UsuarioEntity getUsuarioLogado() {
+		return usuarioLogado;
 	}
 }
