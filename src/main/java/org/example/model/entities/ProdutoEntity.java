@@ -20,6 +20,12 @@ public class ProdutoEntity {
 
     }
 
+    //Para exibir os produtos no BD e o preco na hora de listar os produtos por categoria
+    @Override
+    public String toString() {
+        return nome + " - R$" + preco;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

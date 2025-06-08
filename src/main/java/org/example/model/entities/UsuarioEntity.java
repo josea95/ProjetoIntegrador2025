@@ -87,4 +87,3 @@ public class UsuarioEntity {
         this.login = login;
     }
 }
-

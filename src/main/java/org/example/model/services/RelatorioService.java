@@ -39,4 +39,3 @@ public class RelatorioService {
         System.out.println("🥗 Total de **marmitas** vendidas: " + totalMarmitas);
     }
 }
-

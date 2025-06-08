@@ -40,7 +40,7 @@ public class ProdutoHistoricoPedidoEntity {
         this.id = id;
     }
 
-// Adiciona quantidade de produtos que foram pedidos //
+    // Adiciona quantidade de produtos que foram pedidos //
     @Column(nullable = false)
     private Integer quantidade;
 
@@ -55,4 +55,3 @@ public class ProdutoHistoricoPedidoEntity {
 
 
 }
-

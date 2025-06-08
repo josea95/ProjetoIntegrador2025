@@ -1,4 +1,4 @@
-package org.example.view;
+package org.example.Swing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,12 +7,12 @@ import java.io.PrintStream;
 import java.time.LocalDate;
 import org.example.model.services.RelatorioService;
 
-public class RelatorioFrame extends JFrame {
+public class RelatorioSwing extends JFrame {
 
     private final RelatorioService relatorioService;
     private final JTextArea texto;
 
-    public RelatorioFrame(RelatorioService relatorioService) {
+    public RelatorioSwing(RelatorioService relatorioService) {
         this.relatorioService = relatorioService;
 
         // Título da janela
@@ -34,6 +34,13 @@ public class RelatorioFrame extends JFrame {
 
         JPanel painelInferior = new JPanel();
         painelInferior.add(btnAtualizar);
+
+        // Botão Voltar
+        JButton btnVoltar = new JButton("Voltar ao Menu Principal");
+        btnVoltar.addActionListener(e -> {
+            dispose();// Fecha a tela atual
+        });
+        painelInferior.add(btnVoltar);
         add(painelInferior, BorderLayout.SOUTH);
 
         // Mostra relatório ao abrir
