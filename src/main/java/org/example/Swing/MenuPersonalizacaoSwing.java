@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import org.example.model.util.CustomizerFactory;
 import org.example.model.services.PedidoService;
 import org.example.model.entities.UsuarioEntity;
-import org.example.controller.ProdutoSwingController;
+import org.example.controller.MenuPersonalizacaoProdutoController;
 
 public class MenuPersonalizacaoSwing extends JFrame {
 
@@ -16,9 +16,9 @@ public class MenuPersonalizacaoSwing extends JFrame {
     private JButton deletarButton;
     private JButton voltarButton;
 
-    private ProdutoSwingController controller;
-
-    public MenuPersonalizacaoSwing(ProdutoSwingController controller) {
+    private MenuPersonalizacaoProdutoController controller;
+                                    //alterado nome do Controller para MenuPersonalizacaoProdutoController
+    public MenuPersonalizacaoSwing(MenuPersonalizacaoProdutoController controller) {
         this.controller = controller;
 
         inicializarBotoes();
