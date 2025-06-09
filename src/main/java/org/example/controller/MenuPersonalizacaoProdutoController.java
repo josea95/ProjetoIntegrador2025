@@ -6,11 +6,12 @@ import org.example.Swing.CadastrarProdutoSwing;
 import org.example.Swing.DeletarProdutoSwing;
 import org.example.Swing.MenuPersonalizacaoSwing;
 
-public class ProdutoSwingController {
+//Alterado nome do Controller para MenuPersonalizacaoProdutoController
+public class MenuPersonalizacaoProdutoController {
 
     private ProdutoService produtoService;
 
-    public ProdutoSwingController(ProdutoService produtoService) {
+    public MenuPersonalizacaoProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
 
