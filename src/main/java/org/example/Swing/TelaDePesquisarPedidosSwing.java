@@ -7,6 +7,8 @@ public class TelaDePesquisarPedidosSwing extends JFrame {
 	private JTextField textField;
 	public TelaDePesquisarPedidosSwing() {
 		getContentPane().setLayout(null);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setSize( 700,500 );
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(128, 128, 128));
