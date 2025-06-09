@@ -28,7 +28,8 @@ public class HistoricoPedidoEntity {
     private LocalTime horaPedido;
 
     @Column(name = "valor_pedido")
-    private double valorPedido;
+    private Double valorPedido;
+
 
     @Column(name = "senha_pedido")
     private String senhaPedido;
@@ -80,13 +81,14 @@ public class HistoricoPedidoEntity {
         this.horaPedido = horaPedido;
     }
 
-    public double getValorPedido() {
+    public Double getValorPedido() {
         return valorPedido;
     }
 
-    public void setValorPedido(double valorPedido) {
+    public void setValorPedido(Double valorPedido) {
         this.valorPedido = valorPedido;
     }
+
 
     public String getSenhaPedido() {
         return senhaPedido;
