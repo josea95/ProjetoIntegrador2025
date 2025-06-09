@@ -2,6 +2,7 @@ package org.example.controller;
 import org.example.Swing.MenuPrincipalSwing;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.FilaPedidoService;
+import org.example.model.services.PedidoService;
 import org.example.model.services.RelatorioService;
 import org.example.view.MenuPrincipalView;
 import org.example.Swing.RelatorioSwing;
@@ -17,6 +18,8 @@ public class MenuPrincipalController {
     private final RelatorioController relatorioController;
     private final RelatorioService relatorioService;
     private final FilaPedidoService filaPedidoService;
+    private final PedidoService pedidoService;
+    private final MenuPersonalizacaoProdutoController menuPersonalizacaoProdutoController; // Adicionando o controller de personalização de produtos
 
 
     /* Constructor para inicializar as dependencias:
@@ -35,25 +38,30 @@ public class MenuPrincipalController {
             FilaPedidoController filaController,
             UsuarioEntity usuarioLogado,
             RelatorioController relatorioController,
+            PedidoService pedidoService,
             FilaPedidoService filaPedidoService,
-            RelatorioService relatorioService) {
+            RelatorioService relatorioService,
+            // Adicionando o controller de personalização de produtos
+            MenuPersonalizacaoProdutoController menuPersonalizacaoProdutoController) {
 
         this.menuPrincipalSwing = menuPrincipalSwing;
         this.menuView = menuView;
         this.pedidoController = pedidoController;
         this.produtoController = produtoController;
         this.filaController = filaController;
+        this.pedidoService = pedidoService;
         this.filaPedidoService = filaPedidoService;
         this.usuarioLogado = usuarioLogado;
         this.relatorioController = relatorioController;
         this.relatorioService = relatorioService;
+        this.menuPersonalizacaoProdutoController = menuPersonalizacaoProdutoController; //Adicionando o controller de personalização de produtos
+
     }
 
     public void executar() {
         boolean executando = true;
-
         while (executando) {
-            menuPrincipalSwing.exibirMenu();
+
             String opcao = menuView.lerOpcao();
 
             switch (opcao) {
