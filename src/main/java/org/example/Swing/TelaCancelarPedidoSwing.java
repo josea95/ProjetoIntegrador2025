@@ -37,10 +37,4 @@ public class TelaCancelarPedidoSwing extends JFrame {
         btnVoltar.addActionListener(e -> dispose());
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            TelaCancelarPedidoSwing tela = new TelaCancelarPedidoSwing();
-            tela.setVisible(true); // IMPORTANTE: apenas aqui!
-        });
-    }
 }
