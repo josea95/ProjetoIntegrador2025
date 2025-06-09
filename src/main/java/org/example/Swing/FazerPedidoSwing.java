@@ -146,30 +146,4 @@ public class FazerPedidoSwing extends JFrame {
         setContentPane( mainPanel );
     }
 
-    public static void main(String[] args) {
-        EntityManager em = CustomizerFactory.getEntityManager();
-        //Pasando informacoes de teste para o usuario, para rodar o programa e nao ficar dando erro na hora de finalizar um pedido
-        UsuarioRepository usuarioRepo = new UsuarioRepository( em );
-        String email = "exemplo@exemplo.com";
-        UsuarioEntity usuarioTeste = usuarioRepo.buscarPorLoginESenha( "admin Teste", "admin123" );
-
-        if (usuarioTeste == null) {
-            usuarioTeste = new UsuarioEntity();
-            usuarioTeste.setNome( "Usuário Teste" );
-            usuarioTeste.setLogin( "admin Teste" );
-            usuarioTeste.setSenha( "admin123" );
-            usuarioTeste.setEmail( email );
-
-            em.getTransaction().begin();
-            em.persist( usuarioTeste );
-            em.getTransaction().commit();
-        }
-
-        PedidoService pedidoService = new PedidoService( em );
-
-        final UsuarioEntity usuarioFinal = usuarioTeste;
-        final PedidoService pedidoFinal = pedidoService;
-
-        SwingUtilities.invokeLater( () -> new FazerPedidoSwing( pedidoFinal, usuarioFinal ) );
-    }
 }
