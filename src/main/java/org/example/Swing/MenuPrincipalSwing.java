@@ -181,47 +181,25 @@ public class MenuPrincipalSwing extends JFrame {
 
         btnCancelarPedido = new JButton( "Cancelar Pedido" );
         btnCancelarPedido.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
+        //Falta implementar o metodo de cancelamento de pedidos e passar os parametros necessários
         btnCancelarPedido.addActionListener( e -> {
-            String idPedidoStr = JOptionPane.showInputDialog( MenuPrincipalSwing.this,
-                    "Digite o ID do pedido a cancelar:" );
-            if (idPedidoStr != null && !idPedidoStr.trim().isEmpty()) {
-                try {
-                    boolean canceladoComSucesso = filaPedidoService.cancelarPedido( idPedidoStr );
-                    if (canceladoComSucesso) {
-                        JOptionPane.showMessageDialog( MenuPrincipalSwing.this,
-                                "Pedido " + idPedidoStr + " cancelado com sucesso." );
-                    } else {
-                        JOptionPane.showMessageDialog( MenuPrincipalSwing.this,
-                                "Não foi possível cancelar o pedido " + idPedidoStr +
-                                        ". Verifique se o ID está correto ou o status do pedido.",
-                                "Erro de Cancelamento", JOptionPane.WARNING_MESSAGE );
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog( MenuPrincipalSwing.this,
-                            "Erro ao cancelar pedido: " + ex.getMessage(),
-                            "Erro", JOptionPane.ERROR_MESSAGE );
-                    ex.printStackTrace();
-                }
-            } else {
-                JOptionPane.showMessageDialog( MenuPrincipalSwing.this,
-                        "Operação de cancelamento abortada." );
-            }
+            TelaCancelarPedidoSwing telaCancelar = new TelaCancelarPedidoSwing( );
+            telaCancelar.setVisible( true );
         } );
         getContentPane().add( btnCancelarPedido );
-
         btnPersonalizacao = new JButton( "Personalização de Produtos" );
         btnPersonalizacao.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
         btnPersonalizacao.addActionListener( e -> menuPersonalizacaoProdutoController.iniciar() );
         getContentPane().add( btnPersonalizacao );
 
-        btnPesquisarPedido = new JButton("Pesquisar Pedido");
-        btnPesquisarPedido.setFont(new Font("Verdana", Font.PLAIN, 12));
+        btnPesquisarPedido = new JButton( "Pesquisar Pedido" );
+        btnPesquisarPedido.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
 
-        btnPesquisarPedido.addActionListener(e -> {
+        btnPesquisarPedido.addActionListener( e -> {
             TelaDePesquisarPedidosSwing telaPesquisar = new TelaDePesquisarPedidosSwing();
-            telaPesquisar.setVisible(true);
-        });
-        getContentPane().add(btnPesquisarPedido);
+            telaPesquisar.setVisible( true );
+        } );
+        getContentPane().add( btnPesquisarPedido );
 
         btnHistorico = new JButton( "Ver Histórico de Pedidos" );
         btnHistorico.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
