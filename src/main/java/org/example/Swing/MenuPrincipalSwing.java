@@ -1,112 +1,3 @@
-//package org.example.Swing;
-//
-//import org.example.controller.FilaPedidoController;
-//import org.example.controller.ProdutoSwingController;
-//import org.example.model.entities.UsuarioEntity;
-//import org.example.model.repository.ProdutoRepository;
-//
-//import org.example.controller.HistoricoPedidoController;
-//import org.example.model.services.HistoricoPedidoService;
-//
-//import org.example.model.services.PedidoService;
-//import org.example.model.services.ProdutoService;
-//import org.example.model.services.FilaPedidoService;
-//import org.example.model.util.CustomizerFactory;
-//import org.example.view.FilaPedidoView;
-//
-//import javax.persistence.EntityManager;
-//import javax.swing.*;
-//import java.awt.*;
-//import java.util.Scanner;
-//
-//public class MenuPrincipalSwing extends JFrame {
-//
-//    private final PedidoService pedidoService;
-//    private final UsuarioEntity usuarioLogado;
-//    private FilaPedidoController filaPedidoController;
-//    private HistoricoPedidoController historicoPedidoController;
-//
-//    public MenuPrincipalSwing(PedidoService pedidoService, UsuarioEntity usuarioLogado) {
-//        this.pedidoService = pedidoService;
-//        this.usuarioLogado = usuarioLogado;
-//        inicializarTela();
-//    }
-//
-//    private void inicializarTela() {
-//
-//        EntityManager em = CustomizerFactory.getEntityManager();
-//        Scanner scanner = new Scanner( System.in );
-//
-//        ProdutoRepository produtoRepository = new ProdutoRepository( em );
-//        ProdutoService produtoService = new ProdutoService( produtoRepository );
-//        ProdutoSwingController produtoController = new ProdutoSwingController( produtoService );
-//
-//        HistoricoPedidoService historicoPedidoService = new HistoricoPedidoService( em );
-//        historicoPedidoController = new HistoricoPedidoController( historicoPedidoService );
-//
-//        FilaPedidoService filaPedidoService = new FilaPedidoService( em );
-//        filaPedidoController = new FilaPedidoController(
-//                filaPedidoService,
-//                new FilaPedidoView( filaPedidoService, scanner ),
-//                scanner
-//        );
-//
-//        setTitle( "Menu Principal" );
-//        setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-//        setSize( 700, 500 );
-//        setLocationRelativeTo( null );
-//        getContentPane().setLayout( new GridLayout( 4, 2, 3, 3 ) );
-//        getContentPane().setBackground( Color.WHITE );
-//
-//        JButton fazerPedidoButton = new JButton( "Fazer Pedido" );
-//        fazerPedidoButton.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
-//        fazerPedidoButton.addActionListener( e -> new FazerPedidoSwing( pedidoService, usuarioLogado ) );
-//        getContentPane().add( fazerPedidoButton );
-//
-//        JButton btnCancelarPedido = new JButton( " Cancelar Pedido" );
-//        getContentPane().add( btnCancelarPedido );
-//
-//        JButton btnVerFila = new JButton( " Ver Fila de Pedidos" );
-//        getContentPane().add( btnVerFila );
-//
-//        JButton btnPersonalizacao = new JButton( " Personalização de Produtos" );
-//        btnPersonalizacao.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
-//        btnPersonalizacao.addActionListener( e -> produtoController.iniciar() );
-//        getContentPane().add( btnPersonalizacao );
-//
-//        JButton btnPesquisarPedido = new JButton( "Pesquisar Pedido" );
-//        getContentPane().add( btnPesquisarPedido );
-//
-//        JButton btnHistorico = new JButton( " Ver Histórico de Pedidos" );
-//        btnHistorico.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
-//        btnHistorico.addActionListener( e -> {
-//            historicoPedidoController.verHistoricoPedidos( usuarioLogado );
-//        } );
-//        getContentPane().add( btnHistorico );
-//
-//        JButton btnRelatorio = new JButton( "Relatório de Vendas" );
-//        getContentPane().add( btnRelatorio );
-//
-//        JButton btnSair = new JButton( " Sair" );
-//        btnSair.addActionListener( e -> System.exit( 0 ) );
-//        getContentPane().add( btnSair );
-//
-//        setVisible( true );
-//    }
-//
-//    public void exibirMenu() {
-//        System.out.println( "\n===== MENU PRINCIPAL =====" );
-//        System.out.println( "1. Fazer Pedido" );
-//        System.out.println( "2. Cancelar Pedido" );
-//        System.out.println( "3. Ver Fila de Pedidos" );
-//        System.out.println( "4. Personalização de Produtos" );
-//        System.out.println( "5. Pesquisar Pedido" );
-//        System.out.println( "6. Ver Histórico de Pedidos" );
-//        System.out.println( "7. Relatório de Vendas" );
-//        System.out.println( "8. Sair" );
-//    }
-//}
-
 package org.example.Swing;
 
 import org.example.controller.HistoricoPedidoController;
@@ -114,16 +5,16 @@ import org.example.controller.PedidoController;
 import org.example.controller.MenuPersonalizacaoProdutoController;
 
 import org.example.model.entities.UsuarioEntity;
-import org.example.model.services.PedidoService;
-import org.example.model.services.FilaPedidoService;
-import org.example.model.services.HistoricoPedidoService;
-import org.example.model.services.RelatorioService;
+import org.example.model.repository.ProdutoRepository;
+import org.example.model.services.*;
+import org.example.model.util.CustomizerFactory;
 
+import javax.persistence.EntityManager;
 import javax.swing.*;
 import java.awt.*;
 
 public class MenuPrincipalSwing extends JFrame {
-
+    EntityManager em = CustomizerFactory.getEntityManager();
     private final PedidoService pedidoService;
     private final UsuarioEntity usuarioLogado;
     private final FilaPedidoService filaPedidoService;
@@ -154,8 +45,9 @@ public class MenuPrincipalSwing extends JFrame {
         this.historicoPedidoService = historicoPedidoService;
         this.relatorioService = relatorioService;
 
-        this.pedidoController = new PedidoController( pedidoService );
-        this.menuPersonalizacaoProdutoController = new MenuPersonalizacaoProdutoController( null );
+        this.pedidoController = new PedidoController( pedidoService );                      /*Arrumado aqui, não pode ser null pq se for chamar qualquer metodo de pernsonalização e ele estiver como null dará erro
+                                                                                              porque ele sempre vai retornar null no produtoService.*/
+        this.menuPersonalizacaoProdutoController = new MenuPersonalizacaoProdutoController( new ProdutoService( new ProdutoRepository( em ) ) );
         this.historicoPedidoController = new HistoricoPedidoController( historicoPedidoService );
 
         inicializarTela();
@@ -183,7 +75,7 @@ public class MenuPrincipalSwing extends JFrame {
         btnCancelarPedido.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
         //Falta implementar o metodo de cancelamento de pedidos e passar os parametros necessários
         btnCancelarPedido.addActionListener( e -> {
-            TelaCancelarPedidoSwing telaCancelar = new TelaCancelarPedidoSwing( );
+            TelaCancelarPedidoSwing telaCancelar = new TelaCancelarPedidoSwing();
             telaCancelar.setVisible( true );
         } );
         getContentPane().add( btnCancelarPedido );
