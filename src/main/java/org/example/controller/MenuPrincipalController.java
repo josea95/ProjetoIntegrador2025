@@ -66,25 +66,25 @@ public class MenuPrincipalController {
 
             switch (opcao) {
                 case "1":
-                    pedidoController.iniciarPedido( usuarioLogado );
+                    //pedidoController.iniciarPedido( usuarioLogado );
                     break;
                 case "2":
-                    filaController.cancelarPedido();
+                    //filaController.cancelarPedido();
                     break;
                 case "3":
-                    new FilaPedidosSwing(filaPedidoService);
+                   // new FilaPedidosSwing(filaPedidoService);
                     break;
                 case "4":
-                    produtoController.iniciarPersonalizacao();
+                    //produtoController.iniciarPersonalizacao();
                     break;
                 case "5":
-                    filaController.pesquisarPedido();
+                    //filaController.pesquisarPedido(senhaPedido);
                     break;
                 case "6":
-                    filaController.verHistoricoPedidos( usuarioLogado );
+                    //filaController.verHistoricoPedidos( usuarioLogado );
                     break;
                 case "7":
-                    new RelatorioSwing(relatorioService);
+                    //new RelatorioSwing(relatorioService);
                     break;
                 case "8":
                     executando = false;

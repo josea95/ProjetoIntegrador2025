@@ -28,7 +28,7 @@ public class Main {
         UsuarioView usuarioView = new UsuarioView( scanner );
         PedidoView pedidoView = new PedidoView( scanner, pedidoService );
         ProdutoView produtoView = new ProdutoView( scanner );
-        FilaPedidoView filaPedidoView = new FilaPedidoView( filaPedidoService, scanner );
+        //Removido o FilaPedidoView -> FilaPedidoView filaPedidoView = new FilaPedidoView( filaPedidoService, scanner );
         MenuPrincipalView menuView = new MenuPrincipalView( scanner );
         RelatorioView relatorioView = new RelatorioView( relatorioService );
 
@@ -36,7 +36,7 @@ public class Main {
         UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
         PedidoController pedidoController = new PedidoController(pedidoService);
         ProdutoController produtoController = new ProdutoController(produtoService, produtoView, scanner);
-        FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService, filaPedidoView, scanner );
+        FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService);// Removido o scanner e o filaPedidoView
         RelatorioController relatorioController = new RelatorioController( relatorioView );
         //Criei o controller de personalização de produtos
         MenuPersonalizacaoProdutoController menuPersonalizacaoProdutoController = new MenuPersonalizacaoProdutoController( produtoService );
