@@ -3,10 +3,9 @@ package org.example.model.services;
 import org.example.model.entities.ProdutoEntity;
 import org.example.model.repository.ProdutoRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 
-public class ProdutoService {
+public class ProdutoService{
     private final ProdutoRepository produtoRepository;
 
     public ProdutoService(ProdutoRepository produtoRepository) {
@@ -14,32 +13,18 @@ public class ProdutoService {
     }
 
     public void cadastrarProduto(ProdutoEntity produto) {
-        if (!validarDataCriacao(produto.getDataCriacao())) {
-            throw new IllegalArgumentException("Data de criação inválida.");
-        }
-        produtoRepository.salvar(produto);
+        produtoRepository.salvar( produto );
     }
 
     public void atualizarProduto(ProdutoEntity produto) {
-        if (!validarDataCriacao(produto.getDataCriacao())) {
-            throw new IllegalArgumentException("Data de criação inválida.");
-        }
-        produtoRepository.atualizar(produto);
+       produtoRepository.atualizar( produto );
     }
 
     public void deletarProduto(Long id) {
-        produtoRepository.deletar(id);
-    }
-
-    public boolean validarDataCriacao(LocalDate dataCriacao) {
-        return dataCriacao != null;
+        produtoRepository.deletar( id );
     }
 
     public List<ProdutoEntity> buscarProdutosPorCategoria(String categoria) {
-        return produtoRepository.buscarPorCategoria(categoria);
-    }
-
-    public ProdutoRepository getProdutoRepository() {
-        return produtoRepository;
+        return produtoRepository.buscarPorCategoria( categoria );
     }
 }

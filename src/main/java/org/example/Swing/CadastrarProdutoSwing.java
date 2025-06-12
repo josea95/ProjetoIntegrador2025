@@ -6,14 +6,12 @@ import org.example.model.services.ProdutoService;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 public class CadastrarProdutoSwing extends JFrame {
 
     private JTextField nomeField;
     private JComboBox<String> categoriaCombo;
     private JTextField precoField;
-    private JTextField dataCriacaoField;
     private JTextField descricaoField;
     private JButton cadastrarButton;
     private JButton voltarButton;
@@ -30,7 +28,7 @@ public class CadastrarProdutoSwing extends JFrame {
     }
 
     private void initComponents() {
-        JPanel panel = new JPanel( new GridLayout( 6, 2, 10, 10 ) );
+        JPanel panel = new JPanel( new GridLayout( 5, 2, 10, 10 ) );
 
         panel.add( new JLabel( "Categoria:" ) );
         String[] categorias = {"Marmitas", "Bebidas", "Porções"};
@@ -44,10 +42,6 @@ public class CadastrarProdutoSwing extends JFrame {
         panel.add( new JLabel( "Preço:" ) );
         precoField = new JTextField();
         panel.add( precoField );
-
-        panel.add( new JLabel( "Data (yyyy-MM-dd):" ) );
-        dataCriacaoField = new JTextField();
-        panel.add( dataCriacaoField );
 
         panel.add( new JLabel( "Descrição: " ) );
         descricaoField = new JTextField();
@@ -65,21 +59,27 @@ public class CadastrarProdutoSwing extends JFrame {
     }
 
     private void cadastrarProduto() {
-        String nome = nomeField.getText().trim();
-        String categoria = (String) categoriaCombo.getSelectedItem();
-        double preco;
-        LocalDate dataCriacao;
+        LocalDate dataCriacao = LocalDate.now();
+        ProdutoEntity produto = new ProdutoEntity();
 
-        try {
-            if (nome.isEmpty()) {
-                JOptionPane.showMessageDialog( this, "Nome não pode ser vazio." );
-                return;
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog( this, "Erro ao validar nome: " + ex.getMessage() );
+        String categoria = (String) categoriaCombo.getSelectedItem();
+        produto.setCategoria( categoria );
+
+        String nome = nomeField.getText().trim();
+        if (nome.isEmpty()) {
+            JOptionPane.showMessageDialog( this, "Nome não pode ser vazio." );
             return;
         }
+        produto.setNome( nome );
 
+        String descricao = descricaoField.getText().trim();
+        if (descricao.isEmpty()) {
+            JOptionPane.showMessageDialog( this, "Descrição não pode ser vazia." );
+            return;
+        }
+        produto.setDescricao( descricao );
+
+        double preco;
         try {
             preco = Double.parseDouble( precoField.getText().trim() );
             if (preco <= 0) {
@@ -90,28 +90,17 @@ public class CadastrarProdutoSwing extends JFrame {
             JOptionPane.showMessageDialog( this, "Preço inválido. Informe um número." );
             return;
         }
-
-        try {
-            dataCriacao = LocalDate.parse( dataCriacaoField.getText().trim() );
-        } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog( this, "Data inválida. Use o formato yyyy-MM-dd." );
-            return;
-        }
-
-        ProdutoEntity produto = new ProdutoEntity();
-        produto.setNome( nome );
-        produto.setCategoria( categoria );
         produto.setPreco( preco );
+
         produto.setDataCriacao( dataCriacao );
 
-        // Salva o produto no banco, através da camada service
+        // Salva o produto no banco
         produtoService.cadastrarProduto( produto );
-
         JOptionPane.showMessageDialog( this, "Produto cadastrado com sucesso!" );
 
         // Limpa os campos após o cadastro
         nomeField.setText( "" );
         precoField.setText( "" );
-        dataCriacaoField.setText( "" );
+        descricaoField.setText( "" );
     }
 }
