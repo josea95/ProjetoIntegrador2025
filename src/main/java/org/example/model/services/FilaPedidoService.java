@@ -4,6 +4,7 @@ import org.example.model.entities.FilaPedidoEntity;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.enums.StatusPedido;
 import org.example.model.repository.FilaPedidoRepository;
+import org.example.model.util.CustomizerFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -44,8 +45,7 @@ public class FilaPedidoService {
     }
 
     public void atualizarStatusPedido(Long idPedido, StatusPedido novoStatus) {
-        EntityManager em = filaRepo.getEntityManager();
-
+        EntityManager em = CustomizerFactory.getEntityManager();
         try {
             em.getTransaction().begin();
             FilaPedidoEntity pedido = em.find(FilaPedidoEntity.class, idPedido);
@@ -62,6 +62,7 @@ public class FilaPedidoService {
             em.close();
         }
     }
+
 
 }
 

@@ -77,26 +77,4 @@ public class FilaPedidoRepository {
                 .orElse(null);
     }
 
-    public void atualizarStatusPedido(Long idPedido, StatusPedido novoStatus) {
-        EntityManager em = CustomizerFactory.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-
-        try {
-            tx.begin();
-
-            FilaPedidoEntity pedido = em.find(FilaPedidoEntity.class, idPedido);
-            if (pedido != null) {
-                pedido.setStatusPedido(novoStatus);
-            }
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx.isActive()) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
 }
