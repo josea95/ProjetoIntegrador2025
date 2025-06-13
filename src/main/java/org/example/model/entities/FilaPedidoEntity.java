@@ -16,6 +16,9 @@ public class FilaPedidoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    public  long getId(){
+        return id;
+    }
 
     @Column(name = "data_pedido")
     private LocalDate dataPedido;

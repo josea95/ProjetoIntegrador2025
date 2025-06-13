@@ -14,7 +14,6 @@ public class FilaPedidoService {
 
     public FilaPedidoService(EntityManager em) {
         this.filaRepo = new FilaPedidoRepository(em);
-
     }
 
     public List<FilaPedidoEntity> listarFilaPedidos() {
@@ -43,5 +42,26 @@ public class FilaPedidoService {
     public List<FilaPedidoEntity> verHistoricoPedidos(UsuarioEntity usuarioLogado) {
         return filaRepo.listarPorUsuario(usuarioLogado);
     }
+
+    public void atualizarStatusPedido(Long idPedido, StatusPedido novoStatus) {
+        EntityManager em = filaRepo.getEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            FilaPedidoEntity pedido = em.find(FilaPedidoEntity.class, idPedido);
+            if (pedido != null) {
+                pedido.setStatusPedido(novoStatus);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
 }
 
