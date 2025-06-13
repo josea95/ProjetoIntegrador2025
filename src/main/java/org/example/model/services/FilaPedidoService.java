@@ -18,7 +18,14 @@ public class FilaPedidoService {
     }
 
     public List<FilaPedidoEntity> listarFilaPedidos() {
-        return filaRepo.listarTodos();
+        EntityManager em = CustomizerFactory.getEntityManager();
+
+        try {
+            return em.createQuery("SELECT f FROM FilaPedidoEntity f", FilaPedidoEntity.class)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     public FilaPedidoEntity pesquisarPedido(String senha) {
