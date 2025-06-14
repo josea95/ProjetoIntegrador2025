@@ -13,12 +13,10 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Random;
 
 public class PedidoService {
     // Contador para gerar numero da senha//
     private static int contador = 1;
-
     private final FilaPedidoRepository pedidoRepo;
     private final ProdutoRepository produtoRepo;
     private final HistoricoPedidoRepository historicoRepo;
@@ -63,7 +61,6 @@ public class PedidoService {
             return false;
         }
         pedidoRepo.salvar( pedido );
-        iniciarMudancaStatus( pedido );
         return true;
     }
 
@@ -72,57 +69,6 @@ public class PedidoService {
         return String.format("%03d", contador++);
     }
 
-    // Atualizar o status do pedido e salvar histórico
-    private void iniciarMudancaStatus(FilaPedidoEntity pedido) {
-        new Thread( () -> {
-            try {
-                Thread.sleep( 1 * 60 * 1000 ); // Espera 1 minuto
-                FilaPedidoEntity pedidoAtual = pedidoRepo.buscarPorSenha( pedido.getSenhaPedido() );
-                if (pedidoAtual != null && pedidoAtual.getStatusPedido() == StatusPedido.FILA) {
-                    pedidoAtual.setStatusPedido( StatusPedido.PREPARANDO );
-                    pedidoRepo.atualizar( pedidoAtual );
-                } else {
-                    return;
-                }
-                Thread.sleep( 1 * 60 * 1000 ); // Espera mais 1 minuto
-                pedidoAtual = pedidoRepo.buscarPorSenha( pedido.getSenhaPedido() );
-                if (pedidoAtual != null && pedidoAtual.getStatusPedido() == StatusPedido.PREPARANDO) {
-                    pedidoAtual.setStatusPedido( StatusPedido.FINALIZADO );
-                    pedidoRepo.atualizar( pedidoAtual );
-
-                    // Cria e salva o histórico
-                    HistoricoPedidoEntity historico = new HistoricoPedidoEntity();
-                    historico.setSenhaPedido( pedidoAtual.getSenhaPedido() );
-                    historico.setDataPedido( pedidoAtual.getDataPedido() );
-                    historico.setHoraPedido( pedidoAtual.getHoraPedido() );
-                    historico.setStatusPedido( StatusPedido.FINALIZADO );
-                    historico.setObservacao( pedidoAtual.getObservacao() );
-                    historico.setUsuario( pedidoAtual.getUsuario() );
-                    historicoRepo.salvar( historico );
-                    // Calcula Valor total //
-                    double valorTotal = calcularValorTotalPedido(pedidoAtual);
-                    historico.setValorPedido(valorTotal);
-
-                    historicoRepo.salvar(historico);
-
-                    if (pedidoAtual.getProdutos() != null) {
-                        for (ProdutoPedidoEntity produtoPedido : pedidoAtual.getProdutos()) {
-                            ProdutoHistoricoPedidoEntity prodHist = new ProdutoHistoricoPedidoEntity();
-                            prodHist.setHistoricoPedido( historico );
-                            prodHist.setProduto( produtoPedido.getProduto());
-                            prodHist.setQuantidade(produtoPedido.getQuantidade());
-                            produtoHistoricoRepo.salvar( prodHist );
-                        }
-                    }
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); //marca a thread como interrompida
-                e.printStackTrace();
-            } catch (Exception e) { //pega qualquer outra exceção
-                e.printStackTrace();
-            }
-        } ).start();
-    }
     private double calcularValorTotalPedido(FilaPedidoEntity pedido) {
         double total = 0.0;
 
