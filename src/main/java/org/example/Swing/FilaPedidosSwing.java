@@ -45,13 +45,22 @@ public class FilaPedidosSwing extends JFrame {
 
 				for (int i = 0; i < rowCount; i++) {
 					String senhaPedido = model.getValueAt(i, 0).toString();
-					String novoStatus = model.getValueAt(i, 5).toString();
+					Object valorStatus = model.getValueAt(i, 4);
+					if (valorStatus == null) continue;
+
+					String novoStatus = valorStatus.toString();
 
 					// Busca o pedido pela senha e atualiza o status
 					FilaPedidoEntity pedido = filaPedidoService.pesquisarPedido(senhaPedido);
 					if (pedido != null && !pedido.getStatusPedido().toString().equals(novoStatus)) {
 						filaPedidoService.atualizarStatusPedido(pedido.getId(), StatusPedido.valueOf(novoStatus));
 					}
+					if (novoStatus.equals("FINALIZADO")) {
+						filaPedidoService.finalizarPedido(pedido);
+					} else {
+						filaPedidoService.atualizarStatusPedido(pedido.getId(), StatusPedido.valueOf(novoStatus));
+					}
+
 				}
 
 				JOptionPane.showMessageDialog(null, "Pedidos atualizados com sucesso!");
@@ -91,7 +100,7 @@ public class FilaPedidosSwing extends JFrame {
 			sb.append(prod.getProduto().getNome())
 					.append(" x").append(prod.getQuantidade());
 
-			String observacao = prod.getPedido().getObservacao(); // ou prod.getObs() dependendo do nome no seu model
+			String observacao = prod.getPedido().getObservacao();
 			if (observacao != null && !observacao.trim().isEmpty()) {
 				sb.append(" (").append(observacao.trim()).append(")");
 			}
@@ -108,19 +117,15 @@ public class FilaPedidosSwing extends JFrame {
 	private void carregarDadosDaFila() {
 		List<FilaPedidoEntity> pedidos = filaPedidoService.listarFilaPedidos();
 
-		String[] colunas = {"Senha","Produto","Observação", "Data", "Hora", "Status", "Usuário","Novo Status"};
+		String[] colunas = {"Senha","Produto","Observação", "Status","Novo Status"};
 		Object[][] dados = new Object[pedidos.size()][colunas.length];
 
 		for (int i = 0; i < pedidos.size(); i++) {
 			FilaPedidoEntity p = pedidos.get(i);
 			dados[i][0] = p.getSenhaPedido();
-			dados[i][1] = formatarProdutos(p.getProdutos());
+			dados[i][1] = 	formatarProdutos(p.getProdutos());
 			dados[i][2] = p.getObservacao();
-			dados[i][3] = p.getDataPedido();
-			dados[i][4] = p.getHoraPedido();
-			dados[i][5] = p.getStatusPedido().toString();
-			dados[i][6] = p.getUsuario().getNome();
-			dados[i][7] = p.getStatusPedido().toString();
+			dados[i][3] = p.getStatusPedido().toString();
 		}
 
 		DefaultTableModel model = new DefaultTableModel(dados, colunas);
@@ -128,7 +133,7 @@ public class FilaPedidosSwing extends JFrame {
 		String[] statusOptions = {"FILA", "PREPARANDO", "FINALIZADO"};
 		JComboBox<String> comboBox = new JComboBox<>(statusOptions);
 
-		TableColumn novaColuna = table.getColumnModel().getColumn(5);
+		TableColumn novaColuna = table.getColumnModel().getColumn(4);
 		novaColuna.setCellEditor(new DefaultCellEditor(comboBox));
 	}
 }
