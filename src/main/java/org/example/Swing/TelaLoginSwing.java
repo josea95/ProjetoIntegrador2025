@@ -1,43 +1,28 @@
 package org.example.Swing;
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import org.example.model.entities.UsuarioEntity;
+import org.example.model.repository.ProdutoHistoricoPedidoRepository;
+import org.example.model.services.*;
+import org.example.model.util.CustomizerFactory;
+
+import javax.persistence.EntityManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.JPasswordField;
+
 public class TelaLoginSwing extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaLoginSwing frame = new TelaLoginSwing();
-					frame.setVisible(true);
-                  frame.setLocationRelativeTo(null);				
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	public TelaLoginSwing() {
+
+	public  TelaLoginSwing() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
 		contentPane = new JPanel();
@@ -86,17 +71,8 @@ public class TelaLoginSwing extends JFrame {
 		panel.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("Entrar");
-		
-		btnNewButton.addActionListener(new ActionListener() {
-			
+		btnNewButton.addActionListener(e -> fazerLogin());
 
-			
-			public void actionPerformed(ActionEvent e) {
-			
-				
-			}
-		});
-		//btnNewButton.setFocusable(Color.YELLOW );
 		btnNewButton.setBackground(new Color(45,67,87));
 		btnNewButton.setFont(new Font("Malgun Gothic Semilight", Font.BOLD, 13));
 		btnNewButton.setBackground(new Color(41, 26, 64));
@@ -108,5 +84,38 @@ public class TelaLoginSwing extends JFrame {
 		passwordField.setBounds(91, 134, 203, 20);
 		panel.add(passwordField);
 		
+	}
+	// Metodo  para fazer login //
+	private void fazerLogin() {
+		String login = textField.getText();
+		String senha = new String(passwordField.getPassword());
+
+		UsuarioService usuarioService = new UsuarioService(CustomizerFactory.getEntityManager());
+		UsuarioEntity usuario = usuarioService.autenticar(login, senha);
+
+		if (usuario != null) {
+			JOptionPane.showMessageDialog(this, "Login bem-sucedido!");
+
+			// Instancia os services necessários
+			EntityManager em = CustomizerFactory.getEntityManager();
+			PedidoService pedidoService = new PedidoService(em);
+			FilaPedidoService filaPedidoService = new FilaPedidoService(em);
+			HistoricoPedidoService historicoPedidoService = new HistoricoPedidoService(em);
+			ProdutoHistoricoPedidoRepository produtoHistoricoPedidoRepo = new ProdutoHistoricoPedidoRepository(em);
+			RelatorioService relatorioService = new RelatorioService(produtoHistoricoPedidoRepo);
+
+
+			// Abre a tela principal com os parâmetros corretos
+			dispose(); // fecha tela de login
+			new MenuPrincipalSwing(
+					pedidoService,
+					usuario,
+					filaPedidoService,
+					historicoPedidoService,
+					relatorioService
+			).setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(this, "Login ou senha inválidos.");
+		}
 	}
 }

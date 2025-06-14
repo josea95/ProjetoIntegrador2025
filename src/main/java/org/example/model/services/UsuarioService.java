@@ -2,8 +2,10 @@ package org.example.model.services;
 
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.UsuarioRepository;
+import org.example.model.util.CustomizerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class UsuarioService {
@@ -11,8 +13,24 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     public UsuarioService(EntityManager em) {
+
         this.usuarioRepository = new UsuarioRepository(em);
     }
+
+    public UsuarioEntity autenticar(String login, String senha) {
+        EntityManager em = CustomizerFactory.getEntityManager();
+        try {
+            return em.createQuery("SELECT u FROM UsuarioEntity u WHERE u.login = :login AND u.senha = :senha", UsuarioEntity.class)
+                    .setParameter("login", login)
+                    .setParameter("senha", senha)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
 
     public void criarUsuario(String nome, String email, String login, String senha) {
         UsuarioEntity usuario = new UsuarioEntity();
@@ -25,6 +43,7 @@ public class UsuarioService {
     }
 
     public UsuarioEntity buscarPorId(int id) {
+
         return usuarioRepository.buscarPorId(id);
     }
 
