@@ -19,9 +19,10 @@ public class FilaPedidoService {
 
     public List<FilaPedidoEntity> listarFilaPedidos() {
         EntityManager em = CustomizerFactory.getEntityManager();
-
         try {
-            return em.createQuery("SELECT f FROM FilaPedidoEntity f", FilaPedidoEntity.class)
+            return em.createQuery(
+                            "SELECT DISTINCT f FROM FilaPedidoEntity f LEFT JOIN FETCH f.produtos",
+                            FilaPedidoEntity.class)
                     .getResultList();
         } finally {
             em.close();

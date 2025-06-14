@@ -53,42 +53,52 @@ public class FilaPedidoEntity {
     }
 
     public UsuarioEntity getUsuario() {
+
         return usuario;
     }
 
     public void setSenhaPedido(String senhaPedido) {
+
         this.senhaPedido = senhaPedido;
     }
 
     public String getSenhaPedido() {
+
         return senhaPedido;
     }
 
     public StatusPedido getStatusPedido() {
+
         return statusPedido;
     }
 
     public void setStatusPedido(StatusPedido statusPedido) {
+
         this.statusPedido = statusPedido;
     }
 
     public void setObservacao(String observacao) {
+
         this.observacao = observacao;
     }
 
     public String getObservacao() {
+
         return observacao;
     }
 
     public void setDataPedido(LocalDate dataPedido) {
+
         this.dataPedido = dataPedido;
     }
 
     public LocalDate getDataPedido() {
+
         return dataPedido;
     }
 
     public void setHoraPedido(LocalTime horaPedido) {
+
         this.horaPedido = horaPedido;
     }
 

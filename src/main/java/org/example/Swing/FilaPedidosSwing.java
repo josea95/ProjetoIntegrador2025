@@ -2,6 +2,7 @@ package org.example.Swing;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import org.example.model.entities.FilaPedidoEntity;
+import org.example.model.entities.ProdutoPedidoEntity;
 import org.example.model.services.FilaPedidoService;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -82,20 +83,44 @@ public class FilaPedidosSwing extends JFrame {
 		});
 	}
 
+	private String formatarProdutos(List<ProdutoPedidoEntity> produtos) {
+		if (produtos == null || produtos.isEmpty()) return "";
+
+		StringBuilder sb = new StringBuilder();
+		for (ProdutoPedidoEntity prod : produtos) {
+			sb.append(prod.getProduto().getNome())
+					.append(" x").append(prod.getQuantidade());
+
+			String observacao = prod.getPedido().getObservacao(); // ou prod.getObs() dependendo do nome no seu model
+			if (observacao != null && !observacao.trim().isEmpty()) {
+				sb.append(" (").append(observacao.trim()).append(")");
+			}
+
+			sb.append(", ");
+		}
+
+		// remove a última vírgula e espaço
+		if (sb.length() > 2) sb.setLength(sb.length() - 2);
+		return sb.toString();
+	}
+
+
 	private void carregarDadosDaFila() {
 		List<FilaPedidoEntity> pedidos = filaPedidoService.listarFilaPedidos();
 
-		String[] colunas = {"Senha", "Data", "Hora", "Status", "Usuário","Novo Status"};
+		String[] colunas = {"Senha","Produto","Observação", "Data", "Hora", "Status", "Usuário","Novo Status"};
 		Object[][] dados = new Object[pedidos.size()][colunas.length];
 
 		for (int i = 0; i < pedidos.size(); i++) {
 			FilaPedidoEntity p = pedidos.get(i);
 			dados[i][0] = p.getSenhaPedido();
-			dados[i][1] = p.getDataPedido();
-			dados[i][2] = p.getHoraPedido();
-			dados[i][3] = p.getStatusPedido().toString();
-			dados[i][4] = p.getUsuario().getNome();
+			dados[i][1] = formatarProdutos(p.getProdutos());
+			dados[i][2] = p.getObservacao();
+			dados[i][3] = p.getDataPedido();
+			dados[i][4] = p.getHoraPedido();
 			dados[i][5] = p.getStatusPedido().toString();
+			dados[i][6] = p.getUsuario().getNome();
+			dados[i][7] = p.getStatusPedido().toString();
 		}
 
 		DefaultTableModel model = new DefaultTableModel(dados, colunas);
