@@ -1,7 +1,7 @@
 package org.example.Swing;
 
+import org.example.controller.ProdutoController;
 import org.example.model.entities.ProdutoEntity;
-import org.example.model.services.ProdutoService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,26 +27,21 @@ public class AtualizarProdutoSwing extends JFrame {
     private JButton atualizarButton;
     private JButton voltarButton;
 
+    private ProdutoController produtoController;
 
-    private ProdutoService produtoService;
-
-    // Construtor que inicializa a janela e recebe o serviço como parâmetro
-    public AtualizarProdutoSwing(ProdutoService produtoService) {
-        this.produtoService = produtoService;
+    public AtualizarProdutoSwing(ProdutoController produtoController) {
+        this.produtoController = produtoController;
         setTitle( "Atualizar Produto" );
-        setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );    // Fecha a janela sem encerrar a aplicação inteira
-        setSize( 700, 500 );                                    // Define o tamanho da janela
-        setLocationRelativeTo( null );                          // Centraliza a janela na tela
-        initCategoriaPanel();                                 // Inicializa o painel de seleção de categoria
-        setVisible( true );                                     // Torna a janela visível
+        setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+        setSize( 700, 500 );
+        setLocationRelativeTo( null );
+        initCategoriaPanel();
+        setVisible( true );
     }
 
-    // Metodo para criar e configurar o painel inicial, onde se escolhe a categoria e busca os produtos
     private void initCategoriaPanel() {
         JPanel panel = new JPanel( new BorderLayout( 5, 5 ) );
-
         JPanel categoriaPanel = new JPanel( new FlowLayout() );
-
         categoriaPanel.add( new JLabel( "Selecione a Categoria:" ) );
         // Array de categorias disponíveis
         String[] categorias = {"Marmitas", "Bebidas", "Porções"};
@@ -82,48 +77,29 @@ public class AtualizarProdutoSwing extends JFrame {
             }
         } );
         botoesPanel.add( selecionarButton );
-        // Botão para voltar/fechar a janela atual
         voltarButton = new JButton( "Voltar" );
         voltarButton.addActionListener( e -> dispose() );
         botoesPanel.add( voltarButton );
         panel.add( botoesPanel, BorderLayout.SOUTH );
 
-        // Define o conteúdo da janela para o painel criado e atualiza a interface
         setContentPane( panel );
         revalidate();
         repaint();
     }
 
-    // Metodo para buscar os produtos pela categoria selecionada no JComboBox
-    private void buscarProdutosPorCategoria() {
-        // Obtém a categoria selecionada
-        String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
-        // Chama o serviço para buscar os produtos da categoria
-        List<ProdutoEntity> filtrados = produtoService.buscarProdutosPorCategoria( categoriaSelecionada );
-        listModel.clear(); // Limpa a lista atual
-        if (filtrados == null || filtrados.isEmpty()) {
-            // Exibe mensagem se nenhum produto for encontrado
-            JOptionPane.showMessageDialog( this, "Nenhum produto encontrado para a categoria " + categoriaSelecionada );
-        } else {
-            // Adiciona cada produto encontrado ao modelo da lista
-            filtrados.forEach( listModel::addElement );
-        }
-    }
 
-    // Metodo para criar o painel de atualização do produto selecionado
     private void initAtualizacaoPanel(ProdutoEntity produto) {
         JPanel panel = new JPanel( new GridLayout( 8, 2, 10, 10 ) );
 
-        // Exibe o ID do produto (campo não editável)
         panel.add( new JLabel( "ID do Produto:" ) );
         idField = new JTextField( String.valueOf( produto.getId() ) );
-        idField.setEditable( false );
+        idField.setEditable( false );// (campo não editável)
         panel.add( idField );
 
 
         panel.add( new JLabel( "Data de Criação:" ) );
         dataCriacaoField = new JTextField( produto.getDataCriacao().format( DateTimeFormatter.ISO_LOCAL_DATE ) );
-        dataCriacaoField.setEditable( false );
+        dataCriacaoField.setEditable( false );// (campo não editável)
         panel.add( dataCriacaoField );
 
         // Exibe a categoria do produto
@@ -152,64 +128,58 @@ public class AtualizarProdutoSwing extends JFrame {
         atualizarButton.addActionListener( this::atualizarProduto );
         panel.add( atualizarButton );
 
-        // Botão para voltar à tela de seleção de categoria
         voltarButton = new JButton( "Voltar" );
         voltarButton.addActionListener( e -> initCategoriaPanel() );
         panel.add( voltarButton );
 
-        // Define o painel de atualização como conteúdo da janela e atualiza a interface
         setContentPane( panel );
         revalidate();
         repaint();
     }
 
-    private void atualizarProduto(ActionEvent e) {
-        // Coleta os dados informados pelo usuário nos campos do formulário
-        String novoNome = nomeField.getText().trim();
-        String precoText = precoField.getText().trim();
-        String novaDescricao = descricaoField.getText().trim();
-
-        // Verifica se algum campo obrigatório está vazio
-        if (novoNome.isEmpty() || precoText.isEmpty() || novaDescricao.isEmpty()) {
-            JOptionPane.showMessageDialog( this, "Todos os campos devem ser preenchidos." );
-            return;
+    // Metodo para buscar os produtos pela categoria selecionada no JComboBox
+    private void buscarProdutosPorCategoria() {
+        String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
+        // Chama o controller para buscar os produtos da categoria
+        List<ProdutoEntity> filtrados = produtoController.buscarPorCategoria( categoriaSelecionada );
+        listModel.clear(); // Limpa a lista atual
+        if (filtrados == null || filtrados.isEmpty()) {
+            JOptionPane.showMessageDialog( this, "Nenhum produto encontrado para a categoria " + categoriaSelecionada );
+        } else {
+            // Adiciona cada produto encontrado ao modelo da lista
+            filtrados.forEach( listModel::addElement );
         }
+    }
 
+    private void atualizarProduto(ActionEvent e) {
         try {
-            // Converte o valor do preço para double e valida se é positivo
-            double novoPreco = Double.parseDouble( precoText );
-            if (novoPreco <= 0) {
-                JOptionPane.showMessageDialog( this, "O preço deve ser maior que zero." );
-                return;
-            }
-            // Converte o valor do ID para Long
-            Long id = Long.parseLong( idField.getText() );
-            // Cria uma nova instância de ProdutoEntity e atualiza os atributos
+            Long id = Long.parseLong( idField.getText().trim() );
+            String nome = nomeField.getText().trim();
+            String precoText = precoField.getText().trim();
+            String descricao = descricaoField.getText().trim();
+            double preco = Double.parseDouble( precoText );
+
             ProdutoEntity produtoAtualizado = new ProdutoEntity();
             produtoAtualizado.setId( id );
-            produtoAtualizado.setNome( novoNome );
-            produtoAtualizado.setPreco( novoPreco );
-            produtoAtualizado.setDescricao( novaDescricao );
-
-            // Atualizo a data de criação a partir do campo
+            produtoAtualizado.setNome( nome );
+            produtoAtualizado.setPreco( preco );
+            produtoAtualizado.setDescricao( descricao );
             produtoAtualizado.setDataCriacao(
                     java.time.LocalDate.parse( dataCriacaoField.getText(), DateTimeFormatter.ISO_LOCAL_DATE )
             );
-            // Reatribui a categoria do produto
             produtoAtualizado.setCategoria( categoriaField.getText() );
+            produtoController.atualizarProduto( produtoAtualizado );
 
-            // Define a data de atualização como a data atual
-            produtoAtualizado.setDataAtualizacao( java.time.LocalDate.now() );
-
-            // Chama o serviço para persistir a atualização do produto
-            produtoService.atualizarProduto( produtoAtualizado );
-
-            // Exibe mensagem de sucesso para o usuario
             JOptionPane.showMessageDialog( this, "Produto atualizado com sucesso!" );
-
             initCategoriaPanel();
+
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog( this, "Preço inválido." );
+            JOptionPane.showMessageDialog( this, "Preço inválido. Informe um número válido." );
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog( this, ex.getMessage() );
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog( this, "Erro ao atualizar: " + ex.getMessage() );
+            ex.printStackTrace();
         }
     }
 }

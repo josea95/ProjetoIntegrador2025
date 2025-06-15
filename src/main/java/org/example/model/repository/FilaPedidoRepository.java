@@ -1,12 +1,11 @@
 package org.example.model.repository;
+
 import org.example.model.entities.FilaPedidoEntity;
 import org.example.model.entities.UsuarioEntity;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
-import org.example.model.enums.StatusPedido;
-import org.example.model.util.CustomizerFactory;
-import javax.persistence.EntityTransaction;
 
 public class FilaPedidoRepository {
 
@@ -15,9 +14,6 @@ public class FilaPedidoRepository {
     // Construtor com EntityManager
     public FilaPedidoRepository(EntityManager em) {
         this.em = em;
-    }
-    public EntityManager getEntityManager() {
-        return em;
     }
 
     public void salvar(FilaPedidoEntity pedido) {
@@ -76,5 +72,4 @@ public class FilaPedidoRepository {
                 .findFirst()
                 .orElse(null);
     }
-
 }

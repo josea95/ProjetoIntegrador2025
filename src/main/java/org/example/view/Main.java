@@ -1,5 +1,6 @@
 package org.example.view;
 
+import org.example.Swing.AtualizarProdutoSwing;
 import org.example.Swing.MenuPrincipalSwing;
 import org.example.controller.*;
 import org.example.model.entities.UsuarioEntity;
@@ -34,12 +35,14 @@ public class Main {
 
         // Controllers
         UsuarioController usuarioController = new UsuarioController( usuarioService, usuarioView );
-        PedidoController pedidoController = new PedidoController(pedidoService);
-        ProdutoController produtoController = new ProdutoController(produtoService, produtoView, scanner);
-        FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService);// Removido o scanner e o filaPedidoView
+        PedidoController pedidoController = new PedidoController( pedidoService );
+
+        ProdutoController produtoController = new ProdutoController();
+
+        FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService );// Removido o scanner e o filaPedidoView
         RelatorioController relatorioController = new RelatorioController( relatorioView );
-        //Criei o controller de personalização de produtos
-        MenuPersonalizacaoProdutoController menuPersonalizacaoProdutoController = new MenuPersonalizacaoProdutoController( produtoService );
+
+        MenuPersonalizacaoProdutoController menuPersonalizacaoProdutoController = new MenuPersonalizacaoProdutoController( produtoController );//Alterando para o parametro para controller, estava service
         /* Login
          * - Solicita ao controller que execute o login,
          *   validando as informações inseridas pelo usuário.

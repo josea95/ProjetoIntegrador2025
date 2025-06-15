@@ -4,8 +4,12 @@ import org.example.controller.HistoricoPedidoController;
 import org.example.controller.PedidoController;
 import org.example.controller.MenuPersonalizacaoProdutoController;
 
+import org.example.controller.ProdutoController;
 import org.example.model.entities.UsuarioEntity;
-import org.example.model.repository.ProdutoRepository;
+import org.example.model.repository.FilaPedidoRepository;
+import org.example.model.repository.HistoricoPedidoRepository;
+import org.example.model.repository.ProdutoHistoricoPedidoRepository;
+
 import org.example.model.services.*;
 import org.example.model.util.CustomizerFactory;
 
@@ -24,6 +28,10 @@ public class MenuPrincipalSwing extends JFrame {
     private final MenuPersonalizacaoProdutoController menuPersonalizacaoProdutoController;
     private final HistoricoPedidoController historicoPedidoController;
     private final PedidoController pedidoController;
+    private final FilaPedidoRepository filaPedidoRepository = new FilaPedidoRepository( em );
+
+    private HistoricoPedidoRepository historicoPedidoRepository = new HistoricoPedidoRepository( em );
+    private ProdutoHistoricoPedidoRepository produtoHistoricoRepository = new ProdutoHistoricoPedidoRepository( em );
 
     private JButton btnFazerPedido;
     private JButton btnVerFilaPedidos;
@@ -47,8 +55,14 @@ public class MenuPrincipalSwing extends JFrame {
 
         this.pedidoController = new PedidoController( pedidoService );                      /*Arrumado aqui, não pode ser null pq se for chamar qualquer metodo de pernsonalização e ele estiver como null dará erro
                                                                                               porque ele sempre vai retornar null no produtoService.*/
-        this.menuPersonalizacaoProdutoController = new MenuPersonalizacaoProdutoController( new ProdutoService( new ProdutoRepository( em ) ) );
+//        this.menuPersonalizacaoProdutoController = new MenuPersonalizacaoProdutoController( new ProdutoService( new ProdutoRepository( em ) ) );
+
+        //Adptando para o novo controller de MenuPersonalizacaoProdutoController e ProdutoController
+        this.menuPersonalizacaoProdutoController = new MenuPersonalizacaoProdutoController( new ProdutoController() );
+
         this.historicoPedidoController = new HistoricoPedidoController( historicoPedidoService );
+        this.historicoPedidoRepository = new HistoricoPedidoRepository( em );
+        this.produtoHistoricoRepository = new ProdutoHistoricoPedidoRepository( em );
 
         inicializarTela();
     }

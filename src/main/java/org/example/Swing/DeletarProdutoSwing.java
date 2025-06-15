@@ -1,7 +1,7 @@
 package org.example.Swing;
 
+import org.example.controller.ProdutoController;
 import org.example.model.entities.ProdutoEntity;
-import org.example.model.services.ProdutoService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +15,11 @@ public class DeletarProdutoSwing extends JFrame {
     private JList<ProdutoEntity> produtosList;
     private JButton deletarButton;
     private JButton voltarButton;
-    private ProdutoService produtoService;
 
-    public DeletarProdutoSwing(ProdutoService produtoService) {
-        this.produtoService = produtoService;
+    private ProdutoController produtoController;
+
+    public DeletarProdutoSwing(ProdutoController produtoController) {
+        this.produtoController = produtoController;
         setTitle( "Deletar Produto" );
         setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
         setSize( 700, 500 );
@@ -64,7 +65,7 @@ public class DeletarProdutoSwing extends JFrame {
 
     private void buscarProdutosPorCategoria() {
         String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
-        List<ProdutoEntity> produtos = produtoService.buscarProdutosPorCategoria( categoriaSelecionada );
+        List<ProdutoEntity> produtos = produtoController.buscarPorCategoria( categoriaSelecionada );
         listModel.clear();
         if (produtos == null || produtos.isEmpty()) {
             JOptionPane.showMessageDialog( this, "Nenhum produto encontrado para a categoria " + categoriaSelecionada );
@@ -83,9 +84,16 @@ public class DeletarProdutoSwing extends JFrame {
                 "Tem certeza que deseja deletar o produto: " + produtoSelecionado.getNome() + "?",
                 "Confirmação", JOptionPane.YES_NO_OPTION );
         if (resposta == JOptionPane.YES_OPTION) {
-            produtoService.deletarProduto( produtoSelecionado.getId() );
-            JOptionPane.showMessageDialog( this, "Produto deletado com sucesso!" );
-            listModel.removeElement( produtoSelecionado );
+            try {
+                produtoController.deletarProduto( produtoSelecionado.getId() );
+                JOptionPane.showMessageDialog( this, "Produto deletado com sucesso!" );
+                buscarProdutosPorCategoria();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog( this, ex.getMessage() );
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog( this, "Erro ao deletar produto: " + ex.getMessage() );
+                ex.printStackTrace();
+            }
         }
     }
 }

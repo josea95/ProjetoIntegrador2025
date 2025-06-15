@@ -1,11 +1,11 @@
 package org.example.Swing;
 
+import org.example.controller.ProdutoController;
 import org.example.model.entities.ProdutoEntity;
 import org.example.model.services.ProdutoService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDate;
 
 public class CadastrarProdutoSwing extends JFrame {
 
@@ -15,10 +15,12 @@ public class CadastrarProdutoSwing extends JFrame {
     private JTextField descricaoField;
     private JButton cadastrarButton;
     private JButton voltarButton;
+
+    private ProdutoController produtoController;
     private ProdutoService produtoService;
 
-    public CadastrarProdutoSwing(ProdutoService produtoService) {
-        this.produtoService = produtoService;
+    public CadastrarProdutoSwing(ProdutoController produtoController) {
+        this.produtoController = produtoController;
         setTitle( "Cadastro de Produto" );
         setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
         setSize( 700, 500 );
@@ -59,48 +61,38 @@ public class CadastrarProdutoSwing extends JFrame {
     }
 
     private void cadastrarProduto() {
-        LocalDate dataCriacao = LocalDate.now();
-        ProdutoEntity produto = new ProdutoEntity();
-
-        String categoria = (String) categoriaCombo.getSelectedItem();
-        produto.setCategoria( categoria );
-
-        String nome = nomeField.getText().trim();
-        if (nome.isEmpty()) {
-            JOptionPane.showMessageDialog( this, "Nome não pode ser vazio." );
-            return;
-        }
-        produto.setNome( nome );
-
-        String descricao = descricaoField.getText().trim();
-        if (descricao.isEmpty()) {
-            JOptionPane.showMessageDialog( this, "Descrição não pode ser vazia." );
-            return;
-        }
-        produto.setDescricao( descricao );
-
-        double preco;
         try {
-            preco = Double.parseDouble( precoField.getText().trim() );
-            if (preco <= 0) {
-                JOptionPane.showMessageDialog( this, "Preço deve ser maior que zero." );
-                return;
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog( this, "Preço inválido. Informe um número." );
-            return;
+            String nome = nomeField.getText().trim();
+            String categoria = (String) categoriaCombo.getSelectedItem();
+            String descricao = descricaoField.getText().trim();
+            String precoText = precoField.getText().trim();
+
+            double preco = Double.parseDouble( precoText );
+
+            ProdutoEntity produto = new ProdutoEntity();
+            produto.setNome( nome );
+            produto.setCategoria( categoria );
+            produto.setDescricao( descricao );
+            produto.setPreco( preco );
+
+            produtoController.cadastrarProduto( produto );
+
+            JOptionPane.showMessageDialog( this, "Produto cadastrado com sucesso!" );
+            limparCampos();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog( this, "Preço inválido. Informe um número válido." );
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog( this, e.getMessage() );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog( this, "Erro inesperado: " + e.getMessage() );
         }
-        produto.setPreco( preco );
+    }
 
-        produto.setDataCriacao( dataCriacao );
-
-        // Salva o produto no banco
-        produtoService.cadastrarProduto( produto );
-        JOptionPane.showMessageDialog( this, "Produto cadastrado com sucesso!" );
-
-        // Limpa os campos após o cadastro
+    private void limparCampos() {
         nomeField.setText( "" );
         precoField.setText( "" );
         descricaoField.setText( "" );
     }
+
 }
