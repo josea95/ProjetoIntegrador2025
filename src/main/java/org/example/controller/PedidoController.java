@@ -22,12 +22,14 @@ public class PedidoController {
         }
         try {
             pedidoService.gerarESetSenhaPedido( pedido );
-            pedidoService.salvarPedido( pedido );
+            boolean salvo = pedidoService.salvarPedido( pedido );
+            if (!salvo) {
+                return "ERRO: Não foi possível salvar o pedido. O carrinho está vazio.";
+            }
             return "Pedido confirmado com sucesso! Sua senha é " + pedido.getSenhaPedido();
         } catch (Exception e) {
             e.printStackTrace();
             return "ERRO: Ocorreu um erro ao salvar o pedido. Tente novamente.";
         }
     }
-
 }
