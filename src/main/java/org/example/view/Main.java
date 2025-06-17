@@ -2,6 +2,7 @@ package org.example.view;
 
 import org.example.Swing.AtualizarProdutoSwing;
 import org.example.Swing.MenuPrincipalSwing;
+import org.example.Swing.TelaLoginSwing;
 import org.example.controller.*;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.repository.ProdutoRepository;
@@ -10,10 +11,16 @@ import org.example.model.util.CustomizerFactory;
 import org.example.model.repository.ProdutoHistoricoPedidoRepository;
 
 import javax.persistence.EntityManager;
+import javax.swing.*;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new TelaLoginSwing().setVisible(true);
+        });
+
+
         EntityManager em = CustomizerFactory.getEntityManager();
         Scanner scanner = new Scanner( System.in );
 

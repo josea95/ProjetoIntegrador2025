@@ -42,13 +42,14 @@ public class MenuPrincipalSwing extends JFrame {
     private JButton btnRelatorio;
     private JButton btnSair;
 
-    public MenuPrincipalSwing(PedidoService pedidoService, UsuarioEntity usuarioEntity,
+    public MenuPrincipalSwing(PedidoService pedidoService, UsuarioEntity usuarioLogado,
                               FilaPedidoService filaPedidoService,
                               HistoricoPedidoService historicoPedidoService,
                               RelatorioService relatorioService) {
 
         this.pedidoService = pedidoService;
-        this.usuarioLogado = usuarioEntity;
+        this.usuarioLogado = usuarioLogado;
+        setTitle("Menu Principal - Usuário: " + usuarioLogado.getNome());
         this.filaPedidoService = filaPedidoService;
         this.historicoPedidoService = historicoPedidoService;
         this.relatorioService = relatorioService;
