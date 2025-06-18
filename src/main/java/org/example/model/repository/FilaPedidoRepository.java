@@ -56,11 +56,22 @@ public class FilaPedidoRepository {
                 )
                 .setParameter( "hoje", LocalDate.now() )
                 .getSingleResult();
+
+        Integer ultimaNoHistorico = em.createQuery(
+                "SELECT MAX(CAST(h.senhaPedido AS integer)) FROM HistoricoPedidoEntity h",
+                Integer.class
+        ).getSingleResult();
+
         /* Se 'ultimaSenha' não for nula, retorna ela mesmo.
+         se historico  nao for nulo, retorna ela mesma.
          Se for nula (ou seja, não há nenhuma senha salva ainda), retorna 0 como valor padrão.*/
-        return ultimaSenha != null ? ultimaSenha : 0; //condição ? valor_se_verdadeiro : valor_se_falso;
+
+        int fila = ultimaSenha != null ? ultimaSenha : 0;
+        int historico = ultimaNoHistorico != null ? ultimaNoHistorico : 0;
 
 
+        // retorna o maior valor entre as variáveis fila e historico.//
+        return Math.max(fila, historico);
     }
 
     public Integer buscarUltimaSenhaAposHorario(LocalDate data, LocalTime horario) {

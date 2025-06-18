@@ -17,8 +17,4 @@ public class HistoricoPedidoService {
     public List<HistoricoPedidoEntity> verHistoricoPedidos(UsuarioEntity usuario) {
         return historicoRepo.listarHistoricoPorUsuario(usuario);
     }
-
-    public void salvarHistorico(HistoricoPedidoEntity historico) {
-        historicoRepo.salvar(historico);
-    }
 }
