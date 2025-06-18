@@ -41,8 +41,8 @@ public class HistoricoPedidoEntity {
     @JoinColumn(name = "id_usuario", nullable = false)
     private UsuarioEntity usuario;
 
-    @OneToMany(mappedBy = "historicoPedido")
-    private List<ProdutoPedidoEntity> produtos;
+    @OneToMany(mappedBy = "historicoPedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProdutoHistoricoPedidoEntity> produtos;
 
     @ManyToOne
     @JoinColumn(name = "id_historico")
@@ -114,11 +114,11 @@ public class HistoricoPedidoEntity {
         this.usuario = usuario;
     }
 
-    public List<ProdutoPedidoEntity> getProdutos() {
+    public List<ProdutoHistoricoPedidoEntity> getProdutos() {
         return produtos;
     }
 
-    public void setProdutos(List<ProdutoPedidoEntity> produtos) {
+    public void setProdutos(List<ProdutoHistoricoPedidoEntity> produtos) {
         this.produtos = produtos;
     }
 

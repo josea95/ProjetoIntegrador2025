@@ -7,6 +7,7 @@ import org.example.model.util.CustomizerFactory;
 
 import javax.persistence.EntityManager;
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilaPedidoService {
@@ -99,13 +100,16 @@ public class FilaPedidoService {
 
             // Se tiver produtos
             if (pedido.getProdutos() != null) {
+                List<ProdutoHistoricoPedidoEntity> listaProdutosHistorico = new ArrayList<>();
                 for (ProdutoPedidoEntity produto : pedido.getProdutos()) {
                     ProdutoHistoricoPedidoEntity produtoHistorico = new ProdutoHistoricoPedidoEntity();
                     produtoHistorico.setHistoricoPedido( historico );
                     produtoHistorico.setProduto( produto.getProduto() );
                     produtoHistorico.setQuantidade( produto.getQuantidade() );
                     em.persist( produtoHistorico );
+                    listaProdutosHistorico.add(produtoHistorico);
                 }
+                historico.setProdutos(listaProdutosHistorico);
             }
 
             // Remove o pedido da fila

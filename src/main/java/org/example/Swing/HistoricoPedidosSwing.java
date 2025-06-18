@@ -1,68 +1,18 @@
-//package org.example.Swing;
-//
-//import org.example.model.entities.HistoricoPedidoEntity;
-//import org.example.model.entities.UsuarioEntity;
-//import org.example.model.services.HistoricoPedidoService;
-//
-//import javax.swing.*;
-//import java.util.List;
-//
-//public class HistoricoPedidosSwing {
-//
-//    private final HistoricoPedidoService historicoService;
-//
-//    public HistoricoPedidosSwing(HistoricoPedidoService historicoService) {
-//        this.historicoService = historicoService;
-//    }
-//
-//    public void verHistoricoPedidosSwing(UsuarioEntity usuarioLogado) {
-//        List<HistoricoPedidoEntity> pedidos = historicoService.verHistoricoPedidos(usuarioLogado);
-//        StringBuilder sb = new StringBuilder();
-//
-//        if (pedidos.isEmpty()) {
-//            sb.append("Nenhum pedido FINALIZADO encontrado.\n");
-//        } else {
-//            for (HistoricoPedidoEntity pedido : pedidos) {
-//                sb.append(getPedidoTexto(pedido));
-//            }
-//        }
-//
-//        exibirTexto(sb.toString(), "Histórico de Pedidos");
-//    }
-//
-//    private String getPedidoTexto(HistoricoPedidoEntity pedido) {
-//        return String.format(
-//                "Senha: %s\nData: %s\nHora: %s\nStatus: %s\nUsuário: %s\nObservação: %s\nValor: %.2f\n\n",
-//                pedido.getSenhaPedido(),
-//                pedido.getDataPedido(),
-//                pedido.getHoraPedido(),
-//                pedido.getStatusPedido(),
-//                pedido.getUsuario().getNome(),
-//                pedido.getObservacao(),
-//                pedido.getValorPedido()
-//        );
-//    }
-//
-//    private void exibirTexto(String texto, String titulo) {
-//        JTextArea textArea = new JTextArea(texto);
-//        textArea.setEditable(false);
-//        JScrollPane scrollPane = new JScrollPane(textArea);
-//        scrollPane.setPreferredSize(new java.awt.Dimension(600, 400));
-//        JOptionPane.showMessageDialog(null, scrollPane, titulo, JOptionPane.INFORMATION_MESSAGE);
-//    }
-//}
-package org.example.Swing;
 
+package org.example.Swing;
 import org.example.model.entities.HistoricoPedidoEntity;
+import org.example.model.entities.ProdutoHistoricoPedidoEntity;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.HistoricoPedidoService;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+
+import static org.example.model.util.FormatadorUtils.formatarProdutos;
+import static org.example.model.util.FormatadorUtils.formatarProdutosHistorico;
 
 public class HistoricoPedidosSwing extends JFrame {
 
@@ -120,18 +70,19 @@ public class HistoricoPedidosSwing extends JFrame {
     private void carregarDadosHistorico() {
         List<HistoricoPedidoEntity> pedidos = historicoService.verHistoricoPedidos( usuarioLogado );
 
-        String[] colunas = {"Senha", "Data", "Hora", "Status", "Usuário", "Observação", "Valor"};
+        String[] colunas = {"Senha", "Data","Produto", "Hora", "Status", "Usuário", "Observação", "Valor"};
         Object[][] dados = new Object[pedidos.size()][colunas.length];
 
         for (int i = 0; i < pedidos.size(); i++) {
             HistoricoPedidoEntity p = pedidos.get( i );
             dados[i][0] = p.getSenhaPedido();
             dados[i][1] = p.getDataPedido();
-            dados[i][2] = p.getHoraPedido();
-            dados[i][3] = p.getStatusPedido();
-            dados[i][4] = p.getUsuario().getNome();
-            dados[i][5] = p.getObservacao();
-            dados[i][6] = String.format( "%.2f", p.getValorPedido() );
+            dados[i][2] = 	formatarProdutosHistorico(p.getProdutos());
+            dados[i][3] = p.getHoraPedido();
+            dados[i][4] = p.getStatusPedido();
+            dados[i][5] = p.getUsuario().getNome();
+            dados[i][6] = p.getObservacao();
+            dados[i][7] = String.format( "%.2f", p.getValorPedido() );
         }
 
         DefaultTableModel model = new DefaultTableModel( dados, colunas ) {
