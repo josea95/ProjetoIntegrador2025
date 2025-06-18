@@ -35,20 +35,6 @@ public class FilaPedidoService {
         return filaRepo.buscarPorSenha( senha );
     }
 
-    public void cancelarPedido(String senha) {
-        FilaPedidoEntity pedido = filaRepo.buscarPorSenha( senha );
-        if (pedido.getSenhaPedido() != null && pedido.getStatusPedido() == StatusPedido.FILA) {
-            filaRepo.deletar( pedido );
-            pedido.setStatusPedido( StatusPedido.CANCELADO );
-            filaRepo.atualizar( pedido );
-            JOptionPane.showMessageDialog( null, "Pedido cancelado com sucesso!" );
-        }
-
-        if (pedido.getStatusPedido() != StatusPedido.FILA) {
-            JOptionPane.showMessageDialog( null, "Pedido não pode ser cancelado, pois já está em preparo ou finalizado." );
-        }
-    }
-
     public List<FilaPedidoEntity> verHistoricoPedidos(UsuarioEntity usuarioLogado) {
         return filaRepo.listarPorUsuario( usuarioLogado );
     }
@@ -115,6 +101,59 @@ public class FilaPedidoService {
         } catch (Exception e) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
             e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void cancelarPedido(String senha) {
+        EntityManager em = CustomizerFactory.getEntityManager();
+        try {
+            em.getTransaction().begin();// Inicia a transação
+
+            FilaPedidoEntity pedido = em.createQuery(
+                            "SELECT f FROM FilaPedidoEntity f WHERE f.senhaPedido = :senha",
+                            FilaPedidoEntity.class )
+                    .setParameter( "senha", senha )
+                    .getSingleResult();
+
+            if (pedido == null || pedido.getStatusPedido() != StatusPedido.FILA) {
+                JOptionPane.showMessageDialog( null, "Pedido não pode ser cancelado." );
+                em.getTransaction().rollback(); // Reverte a transação se não for possível cancelar. Garante que o banco de dados não seja afetado pelas operações realizadas dentro daquela transação
+                return;
+            }
+            pedido.setStatusPedido( StatusPedido.CANCELADO );
+
+            HistoricoPedidoEntity historico = new HistoricoPedidoEntity();
+            historico.setSenhaPedido( pedido.getSenhaPedido() );
+            historico.setDataPedido( pedido.getDataPedido() );
+            historico.setHoraPedido( pedido.getHoraPedido() );
+            historico.setStatusPedido( StatusPedido.CANCELADO );
+            historico.setObservacao( "Pedido cancelado" );
+            historico.setUsuario( pedido.getUsuario() );
+
+            // Persiste o histórico
+            em.persist( historico );
+
+            if (pedido.getProdutos() != null) {
+                for (ProdutoPedidoEntity produto : pedido.getProdutos()) {
+                    ProdutoHistoricoPedidoEntity prodHist = new ProdutoHistoricoPedidoEntity();
+                    prodHist.setHistoricoPedido( historico );
+                    prodHist.setProduto( produto.getProduto() );
+                    prodHist.setQuantidade( produto.getQuantidade() );
+                    em.persist( prodHist );
+                }
+            }
+            em.remove( (pedido) ); // Remove o pedido da fila
+            em.getTransaction().commit();// Commit da transação -> confirma as alterações no banco de dados
+            JOptionPane.showMessageDialog( null, "Pedido cancelado com sucesso!" );
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                //Se uma transação estiver ativa, ela é revertida até o ponto do erro
+                em.getTransaction().rollback();
+            }
+            e.printStackTrace();
+            JOptionPane.showMessageDialog( null, "Erro ao cancelar pedido." );
         } finally {
             em.close();
         }
