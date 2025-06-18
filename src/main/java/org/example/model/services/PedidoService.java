@@ -1,11 +1,6 @@
 package org.example.model.services;
 
-import org.example.model.entities.FilaPedidoEntity;
-import org.example.model.entities.HistoricoPedidoEntity;
-import org.example.model.entities.ProdutoEntity;
-import org.example.model.entities.ProdutoPedidoEntity;
-import org.example.model.entities.ProdutoHistoricoPedidoEntity;
-import org.example.model.entities.UsuarioEntity;
+import org.example.model.entities.*;
 import org.example.model.enums.StatusPedido;
 import org.example.model.repository.*;
 
@@ -13,18 +8,14 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Random;
 
 public class PedidoService {
-    // Contador para gerar numero da senha//
-    private static int contador = 1;
-
     private final FilaPedidoRepository pedidoRepo;
     private final ProdutoRepository produtoRepo;
     private final HistoricoPedidoRepository historicoRepo;
     private final ProdutoHistoricoPedidoRepository produtoHistoricoRepo;
+    private static final LocalTime HORA_RESET = LocalTime.of( 19, 50 );
 
-    // Construtor sem Scanner, pois a 'view' gerencia apenas as entradas do usuário
     public PedidoService(EntityManager em) {
         this.pedidoRepo = new FilaPedidoRepository( em );
         this.produtoRepo = new ProdutoRepository( em );
@@ -32,108 +23,66 @@ public class PedidoService {
         this.produtoHistoricoRepo = new ProdutoHistoricoPedidoRepository( em );
     }
 
-    // Cria o pedido sem realizar exibições
     public FilaPedidoEntity fazerPedido(UsuarioEntity usuarioLogado) {
         FilaPedidoEntity pedido = new FilaPedidoEntity();
         pedido.setDataPedido( LocalDate.now() );
         pedido.setHoraPedido( LocalTime.now() );
         pedido.setStatusPedido( StatusPedido.FILA );
         pedido.setUsuario( usuarioLogado );
-        pedido.setSenhaPedido( gerarSenha() );
         return pedido;
     }
 
-    // Busca os produtos de uma categoria
+    /**
+     * Gera a proxima senha sequencial do pedido com base na última senha registrada no dia atual.
+     * Se o horário atual for antes do horário de reset (definido em HORA_RESET), a senha continua do dia atual.
+     * Caso contrario, começa uma nova contagem após o horário de reset.
+     * Retorna -> uma String representando a nova senha no formato "001", "002", etc.
+     */
+    private String gerarProximaSenha() {
+        LocalDate hoje = LocalDate.now();
+        LocalTime agora = LocalTime.now();
+        Integer ultimaSenha;
+
+        //Verifica se o horário atual é antes do horário de reset
+        if (agora.isBefore( HORA_RESET )) {
+            // Busca a última senha gerada no dia atual antes do horário limite
+            ultimaSenha = pedidoRepo.buscarUltimaSenhaDoDia();
+        } else { // Busca a última senha considerando pedidos após o horário limite
+            ultimaSenha = pedidoRepo.buscarUltimaSenhaAposHorario( hoje, HORA_RESET );
+        }
+
+        // se ultimaSenha for nula ou 0 ela começa em 1, senão soma +1
+        int proximaSenha = (ultimaSenha != null ? ultimaSenha : 0) + 1;
+        return String.format( "%03d", proximaSenha );
+    }
+
+    /**
+     * Gera uma nova senha utilizando o metodo gerarProximaSenha()
+     * e define essa senha no pedido informado.
+     * parametro -> FilaPedidoEntity pedido que recebera a nova senha gerada.
+     */
+    public void gerarESetSenhaPedido(FilaPedidoEntity pedido) {
+        String novaSenha = gerarProximaSenha();
+        pedido.setSenhaPedido( novaSenha );
+    }
+
     public List<ProdutoEntity> buscarProdutosPorCategoria(String categoria) {
         return produtoRepo.buscarPorCategoria( categoria );
     }
 
-    // Adiciona o produto selecionado ao pedido
-    public void adicionarProdutoAoPedido(FilaPedidoEntity pedido, ProdutoEntity produtoEscolhido) {
-        ProdutoPedidoEntity produtoPedido = new ProdutoPedidoEntity();
-        produtoPedido.setPedido( pedido );
-        produtoPedido.setProduto( produtoEscolhido );
-        produtoPedido.setQuantidade(1);
-        pedido.getProdutos().add( produtoPedido );
-    }
-
-    // Salva o pedido e dispara a thread de atualização dos status
     public boolean salvarPedido(FilaPedidoEntity pedido) {
         if (pedido.getProdutos().isEmpty()) {
             return false;
         }
         pedidoRepo.salvar( pedido );
-        iniciarMudancaStatus( pedido );
         return true;
     }
 
-    public String gerarSenha() {
-
-        return String.format("%03d", contador++);
+    public void adicionarProdutoAoPedido(FilaPedidoEntity pedido, ProdutoEntity produtoEscolhido) {
+        ProdutoPedidoEntity produtoPedido = new ProdutoPedidoEntity();
+        produtoPedido.setPedido( pedido );
+        produtoPedido.setProduto( produtoEscolhido );
+        produtoPedido.setQuantidade( 1 );
+        pedido.getProdutos().add( produtoPedido );
     }
-
-    // Atualizar o status do pedido e salvar histórico
-    private void iniciarMudancaStatus(FilaPedidoEntity pedido) {
-        new Thread( () -> {
-            try {
-                Thread.sleep( 1 * 60 * 1000 ); // Espera 1 minuto
-                FilaPedidoEntity pedidoAtual = pedidoRepo.buscarPorSenha( pedido.getSenhaPedido() );
-                if (pedidoAtual != null && pedidoAtual.getStatusPedido() == StatusPedido.FILA) {
-                    pedidoAtual.setStatusPedido( StatusPedido.PREPARANDO );
-                    pedidoRepo.atualizar( pedidoAtual );
-                } else {
-                    return;
-                }
-                Thread.sleep( 1 * 60 * 1000 ); // Espera mais 1 minuto
-                pedidoAtual = pedidoRepo.buscarPorSenha( pedido.getSenhaPedido() );
-                if (pedidoAtual != null && pedidoAtual.getStatusPedido() == StatusPedido.PREPARANDO) {
-                    pedidoAtual.setStatusPedido( StatusPedido.FINALIZADO );
-                    pedidoRepo.atualizar( pedidoAtual );
-
-                    // Cria e salva o histórico
-                    HistoricoPedidoEntity historico = new HistoricoPedidoEntity();
-                    historico.setSenhaPedido( pedidoAtual.getSenhaPedido() );
-                    historico.setDataPedido( pedidoAtual.getDataPedido() );
-                    historico.setHoraPedido( pedidoAtual.getHoraPedido() );
-                    historico.setStatusPedido( StatusPedido.FINALIZADO );
-                    historico.setObservacao( pedidoAtual.getObservacao() );
-                    historico.setUsuario( pedidoAtual.getUsuario() );
-                    historicoRepo.salvar( historico );
-                    // Calcula Valor total //
-                    double valorTotal = calcularValorTotalPedido(pedidoAtual);
-                    historico.setValorPedido(valorTotal);
-
-                    historicoRepo.salvar(historico);
-
-                    if (pedidoAtual.getProdutos() != null) {
-                        for (ProdutoPedidoEntity produtoPedido : pedidoAtual.getProdutos()) {
-                            ProdutoHistoricoPedidoEntity prodHist = new ProdutoHistoricoPedidoEntity();
-                            prodHist.setHistoricoPedido( historico );
-                            prodHist.setProduto( produtoPedido.getProduto());
-                            prodHist.setQuantidade(produtoPedido.getQuantidade());
-                            produtoHistoricoRepo.salvar( prodHist );
-                        }
-                    }
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); //marca a thread como interrompida
-                e.printStackTrace();
-            } catch (Exception e) { //pega qualquer outra exceção
-                e.printStackTrace();
-            }
-        } ).start();
-    }
-    private double calcularValorTotalPedido(FilaPedidoEntity pedido) {
-        double total = 0.0;
-
-        if (pedido.getProdutos() != null) {
-            for (ProdutoPedidoEntity produtoPedido : pedido.getProdutos()) {
-                ProdutoEntity produto = produtoPedido.getProduto();
-                total += produto.getPreco(); // Se tiver quantidade, multiplique por ela
-            }
-        }
-
-        return total;
-    }
-
 }

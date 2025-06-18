@@ -14,32 +14,51 @@ public class ProdutoService {
     }
 
     public void cadastrarProduto(ProdutoEntity produto) {
-        if (!validarDataCriacao(produto.getDataCriacao())) {
-            throw new IllegalArgumentException("Data de criação inválida.");
+        if (produto.getNome() == null || produto.getNome().isBlank()) {
+            throw new IllegalArgumentException( "O nome não pode ser vazio." );
         }
-        produtoRepository.salvar(produto);
+        if (produto.getPreco() == null || produto.getPreco() <= 0) {
+            throw new IllegalArgumentException( "O preço deve ser maior que zero." );
+        }
+        if (produto.getDescricao() == null || produto.getDescricao().isBlank()) {
+            throw new IllegalArgumentException( "A descrição não pode ser vazia." );
+        }
+        if (produto.getCategoria() == null || produto.getCategoria().isBlank()) {
+            throw new IllegalArgumentException( "A categoria não pode ser vazia." );
+        }
+
+        produto.setDataCriacao( LocalDate.now() );
+        produtoRepository.salvar( produto );
     }
 
     public void atualizarProduto(ProdutoEntity produto) {
-        if (!validarDataCriacao(produto.getDataCriacao())) {
-            throw new IllegalArgumentException("Data de criação inválida.");
+        if (produto.getNome() == null || produto.getNome().isBlank()) {
+            throw new IllegalArgumentException( "O nome do produto não pode ser vazio." );
         }
-        produtoRepository.atualizar(produto);
+        if (produto.getPreco() <= 0) {
+            throw new IllegalArgumentException( "O preço deve ser maior que zero." );
+        }
+        ProdutoEntity existente = produtoRepository.buscarPorId( produto.getId() );
+        if (existente == null) {
+            throw new IllegalArgumentException( "Produto não encontrado para atualização." );
+        }
+        produto.setDataAtualizacao( LocalDate.now() );
+        produtoRepository.atualizar( produto );
     }
 
     public void deletarProduto(Long id) {
-        produtoRepository.deletar(id);
+        ProdutoEntity produto = produtoRepository.buscarPorId( id );
+        if (produto == null) {
+            throw new IllegalArgumentException( "Produto não encontrado para deletar." );
+        }
+        produtoRepository.deletar( id );
     }
 
-    public boolean validarDataCriacao(LocalDate dataCriacao) {
-        return dataCriacao != null;
-    }
-
+    // Buscar produtos por categoria
     public List<ProdutoEntity> buscarProdutosPorCategoria(String categoria) {
-        return produtoRepository.buscarPorCategoria(categoria);
-    }
-
-    public ProdutoRepository getProdutoRepository() {
-        return produtoRepository;
+        if (categoria == null || categoria.trim().isEmpty()) {
+            throw new IllegalArgumentException( "Categoria não pode ser vazia." );
+        }
+        return produtoRepository.buscarPorCategoria( categoria );
     }
 }

@@ -1,5 +1,4 @@
 package org.example.controller;
-
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.UsuarioService;
 import org.example.view.UsuarioView;
