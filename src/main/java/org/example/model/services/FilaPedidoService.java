@@ -45,7 +45,7 @@ public class FilaPedidoService {
             JOptionPane.showMessageDialog( null, "Pedido cancelado com sucesso!" );
         }
 
-        if (pedido.getStatusPedido() != StatusPedido.FILA) {
+        if (pedido.getStatusPedido() == StatusPedido.PREPARANDO) {
             JOptionPane.showMessageDialog( null, "Pedido não pode ser cancelado, pois já está em preparo ou finalizado." );
         }
     }
