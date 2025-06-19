@@ -91,15 +91,3 @@ public class Main {
     }
 }
 
-// //ESTOU TENSTANDO POR ENQUANTO, para chamar a tela de login Swing, esta funcionando mais não sei se é a melhor forma de fazer isso, depois posso tentar melhorar
-//package org.example.view;
-//
-//import org.example.Swing.TelaLoginSwing;
-//
-//
-//public class Main {
-//    public static void main(String[] args) {
-//        TelaLoginSwing.main(args);
-//    }
-//}
-//

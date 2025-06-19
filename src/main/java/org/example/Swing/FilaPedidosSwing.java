@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import org.example.model.enums.StatusPedido;
 import javax.swing.table.TableColumn;
 import java.util.List;
+import static org.example.model.util.FormatadorUtils.formatarProdutos;
 
 public class FilaPedidosSwing extends JFrame {
 	private JTable table;
@@ -91,28 +92,6 @@ public class FilaPedidosSwing extends JFrame {
 			}
 		});
 	}
-
-	private String formatarProdutos(List<ProdutoPedidoEntity> produtos) {
-		if (produtos == null || produtos.isEmpty()) return "";
-
-		StringBuilder sb = new StringBuilder();
-		for (ProdutoPedidoEntity prod : produtos) {
-			sb.append(prod.getProduto().getNome())
-					.append(" x").append(prod.getQuantidade());
-
-			String observacao = prod.getPedido().getObservacao();
-			if (observacao != null && !observacao.trim().isEmpty()) {
-				sb.append(" (").append(observacao.trim()).append(")");
-			}
-
-			sb.append(", ");
-		}
-
-		// remove a última vírgula e espaço
-		if (sb.length() > 2) sb.setLength(sb.length() - 2);
-		return sb.toString();
-	}
-
 
 	private void carregarDadosDaFila() {
 		List<FilaPedidoEntity> pedidos = filaPedidoService.listarFilaPedidos();
