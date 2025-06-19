@@ -60,7 +60,7 @@ public class FilaPedidoService {
             em.getTransaction().begin();
             FilaPedidoEntity pedido = em.find( FilaPedidoEntity.class, idPedido );
             if (pedido != null) {
-                pedido.setStatusPedido( novoStatus );
+                pedido.setStatusPedido(novoStatus);
             }
             em.getTransaction().commit();
         } catch (Exception e) {
