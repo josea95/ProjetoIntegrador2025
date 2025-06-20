@@ -38,20 +38,20 @@ public class FilaPedidoService {
 
     public void cancelarPedido(String senha) {
         FilaPedidoEntity pedido = filaRepo.buscarPorSenha( senha );
+        if (pedido == null) { // Verifica se o pedido existe
+            JOptionPane.showMessageDialog( null, "Pedido não encontrado ou já finalizado." );
+            return;
+        }
+
         if (pedido.getSenhaPedido() != null && pedido.getStatusPedido() == StatusPedido.FILA) {
             filaRepo.deletar( pedido );
             pedido.setStatusPedido( StatusPedido.CANCELADO );
             filaRepo.atualizar( pedido );
             JOptionPane.showMessageDialog( null, "Pedido cancelado com sucesso!" );
-        }
-
-        if (pedido.getStatusPedido() == StatusPedido.PREPARANDO) {
+        } else if (pedido.getStatusPedido() == StatusPedido.PREPARANDO ||
+                pedido.getStatusPedido() == StatusPedido.FINALIZADO) {
             JOptionPane.showMessageDialog( null, "Pedido não pode ser cancelado, pois já está em preparo ou finalizado." );
         }
-    }
-
-    public List<FilaPedidoEntity> verHistoricoPedidos(UsuarioEntity usuarioLogado) {
-        return filaRepo.listarPorUsuario( usuarioLogado );
     }
 
     public void atualizarStatusPedido(Long idPedido, StatusPedido novoStatus) {
@@ -60,7 +60,7 @@ public class FilaPedidoService {
             em.getTransaction().begin();
             FilaPedidoEntity pedido = em.find( FilaPedidoEntity.class, idPedido );
             if (pedido != null) {
-                pedido.setStatusPedido(novoStatus);
+                pedido.setStatusPedido( novoStatus );
             }
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -107,9 +107,9 @@ public class FilaPedidoService {
                     produtoHistorico.setProduto( produto.getProduto() );
                     produtoHistorico.setQuantidade( produto.getQuantidade() );
                     em.persist( produtoHistorico );
-                    listaProdutosHistorico.add(produtoHistorico);
+                    listaProdutosHistorico.add( produtoHistorico );
                 }
-                historico.setProdutos(listaProdutosHistorico);
+                historico.setProdutos( listaProdutosHistorico );
             }
 
             // Remove o pedido da fila
@@ -134,4 +134,3 @@ public class FilaPedidoService {
         return total;
     }
 }
-
