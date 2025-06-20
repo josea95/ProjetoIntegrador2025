@@ -7,7 +7,6 @@ import org.example.model.util.CustomizerFactory;
 
 import javax.persistence.EntityManager;
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilaPedidoService {
@@ -36,22 +35,9 @@ public class FilaPedidoService {
         return filaRepo.buscarPorSenha( senha );
     }
 
-    public void cancelarPedido(String senha) {
-        FilaPedidoEntity pedido = filaRepo.buscarPorSenha( senha );
-        if (pedido == null) { // Verifica se o pedido existe
-            JOptionPane.showMessageDialog( null, "Pedido não encontrado ou já finalizado." );
-            return;
-        }
 
-        if (pedido.getSenhaPedido() != null && pedido.getStatusPedido() == StatusPedido.FILA) {
-            filaRepo.deletar( pedido );
-            pedido.setStatusPedido( StatusPedido.CANCELADO );
-            filaRepo.atualizar( pedido );
-            JOptionPane.showMessageDialog( null, "Pedido cancelado com sucesso!" );
-        } else if (pedido.getStatusPedido() == StatusPedido.PREPARANDO ||
-                pedido.getStatusPedido() == StatusPedido.FINALIZADO) {
-            JOptionPane.showMessageDialog( null, "Pedido não pode ser cancelado, pois já está em preparo ou finalizado." );
-        }
+    public List<FilaPedidoEntity> verHistoricoPedidos(UsuarioEntity usuarioLogado) {
+        return filaRepo.listarPorUsuario( usuarioLogado );
     }
 
     public void atualizarStatusPedido(Long idPedido, StatusPedido novoStatus) {
@@ -100,16 +86,13 @@ public class FilaPedidoService {
 
             // Se tiver produtos
             if (pedido.getProdutos() != null) {
-                List<ProdutoHistoricoPedidoEntity> listaProdutosHistorico = new ArrayList<>();
                 for (ProdutoPedidoEntity produto : pedido.getProdutos()) {
                     ProdutoHistoricoPedidoEntity produtoHistorico = new ProdutoHistoricoPedidoEntity();
                     produtoHistorico.setHistoricoPedido( historico );
                     produtoHistorico.setProduto( produto.getProduto() );
                     produtoHistorico.setQuantidade( produto.getQuantidade() );
                     em.persist( produtoHistorico );
-                    listaProdutosHistorico.add( produtoHistorico );
                 }
-                historico.setProdutos( listaProdutosHistorico );
             }
 
             // Remove o pedido da fila
@@ -119,6 +102,53 @@ public class FilaPedidoService {
         } catch (Exception e) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
             e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void cancelarPedido(String senha) {
+        EntityManager em = CustomizerFactory.getEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            FilaPedidoRepository repository = new FilaPedidoRepository( em );
+            FilaPedidoEntity pedido = repository.buscarPorSenha( senha );
+            if (pedido == null || pedido.getStatusPedido() != StatusPedido.FILA) {
+                JOptionPane.showMessageDialog( null, "Pedido não pode ser cancelado." );
+                em.getTransaction().rollback();
+                return;
+            }
+            pedido.setStatusPedido( StatusPedido.CANCELADO );
+
+            HistoricoPedidoEntity historico = new HistoricoPedidoEntity();
+            historico.setSenhaPedido( pedido.getSenhaPedido() );
+            historico.setDataPedido( pedido.getDataPedido() );
+            historico.setHoraPedido( pedido.getHoraPedido() );
+            historico.setStatusPedido( StatusPedido.CANCELADO );
+            historico.setObservacao( "Pedido cancelado" );
+            historico.setUsuario( pedido.getUsuario() );
+            em.persist( historico );
+
+            if (pedido.getProdutos() != null) {
+                for (ProdutoPedidoEntity produto : pedido.getProdutos()) {
+                    ProdutoHistoricoPedidoEntity prodHist = new ProdutoHistoricoPedidoEntity();
+                    prodHist.setHistoricoPedido( historico );
+                    prodHist.setProduto( produto.getProduto() );
+                    prodHist.setQuantidade( produto.getQuantidade() );
+                    em.persist( prodHist );
+                }
+            }
+            em.remove( pedido ); // Remove o pedido da fila
+
+            em.getTransaction().commit();
+            JOptionPane.showMessageDialog( null, "Pedido cancelado com sucesso!" );
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            e.printStackTrace();
+            JOptionPane.showMessageDialog( null, "Erro ao cancelar pedido." );
         } finally {
             em.close();
         }
