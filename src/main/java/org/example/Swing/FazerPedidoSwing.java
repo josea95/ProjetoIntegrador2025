@@ -1,10 +1,10 @@
 package org.example.Swing;
 
-import org.example.controller.PedidoController;
-
 import org.example.model.entities.FilaPedidoEntity;
 import org.example.model.entities.ProdutoEntity;
 import org.example.model.entities.UsuarioEntity;
+
+import org.example.controller.PedidoController;
 
 import org.example.model.services.PedidoService;
 
@@ -26,13 +26,11 @@ public class FazerPedidoSwing extends JFrame {
     private JButton confirmarButton;
     private JButton voltarButton;
 
-    private PedidoService pedidoService;
-    private PedidoController pedidoController;
     private UsuarioEntity usuarioLogado;
     private FilaPedidoEntity filaPedidoEntityPedido;
+    private PedidoController pedidoController;
 
     public FazerPedidoSwing(PedidoService pedidoService, UsuarioEntity usuarioLogado) {
-        this.pedidoService = pedidoService;
         this.usuarioLogado = usuarioLogado;
         this.pedidoController = new PedidoController( pedidoService );
         this.filaPedidoEntityPedido = pedidoController.iniciarPedido( usuarioLogado );
@@ -58,7 +56,7 @@ public class FazerPedidoSwing extends JFrame {
         buscarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
         buscarButton.addActionListener( e -> {
             String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
-            List<ProdutoEntity> produtos = pedidoService.buscarProdutosPorCategoria( categoriaSelecionada );
+            List<ProdutoEntity> produtos = pedidoController.buscarProdutosPorCategoria( categoriaSelecionada );
             produtosModel.clear();
             for (ProdutoEntity produto : produtos) {
                 produtosModel.addElement( produto );
@@ -87,7 +85,7 @@ public class FazerPedidoSwing extends JFrame {
             ProdutoEntity produtoEscolhido = produtosList.getSelectedValue();
             if (produtoEscolhido != null) {
                 carrinhoModel.addElement( produtoEscolhido );
-                pedidoService.adicionarProdutoAoPedido( filaPedidoEntityPedido, produtoEscolhido );
+                pedidoController.adicionarProdutoAoPedido( filaPedidoEntityPedido, produtoEscolhido );
             } else {
                 JOptionPane.showMessageDialog( this, "Selecione um produto para adicionar." );
             }
@@ -110,29 +108,32 @@ public class FazerPedidoSwing extends JFrame {
         confirmarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
         confirmarButton.addActionListener( e -> {
             if (filaPedidoEntityPedido == null || filaPedidoEntityPedido.getProdutos().isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
+                JOptionPane.showMessageDialog( this,
                         "O carrinho está vazio. Adicione produtos antes de confirmar.",
                         "Erro",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        JOptionPane.ERROR_MESSAGE );
                 return;
             }
-            String descricao = JOptionPane.showInputDialog(
-                    this,
-                    "Digite uma descrição para o pedido (opcional):"
-            );
+            String descricao = JOptionPane.showInputDialog( this,
+                    "Digite uma descrição para o pedido (opcional):" );
             if (descricao != null && !descricao.trim().isEmpty()) {
                 filaPedidoEntityPedido.setObservacao( descricao );
             }
-            String resultado = pedidoController.confirmarPedido( filaPedidoEntityPedido );
 
-            if (resultado.startsWith( "ERRO" )) {
-                JOptionPane.showMessageDialog( this, resultado, "Erro", JOptionPane.ERROR_MESSAGE );
+
+            boolean confirmado = pedidoController.confirmarPedido( filaPedidoEntityPedido );
+            if (!confirmado) {
+                JOptionPane.showMessageDialog( this,
+                        "Erro ao confirmar pedido. Verifique se há produtos no carrinho.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE );
             } else {
-                JOptionPane.showMessageDialog( this, resultado, "Pedido confirmado", JOptionPane.INFORMATION_MESSAGE );
+                JOptionPane.showMessageDialog( this,
+                        "Pedido confirmado com sucesso! Sua senha é " + filaPedidoEntityPedido.getSenhaPedido(),
+                        "Pedido confirmado",
+                        JOptionPane.INFORMATION_MESSAGE );
                 carrinhoModel.clear();
-                filaPedidoEntityPedido = pedidoService.fazerPedido( usuarioLogado );
+                filaPedidoEntityPedido = pedidoController.iniciarPedido( usuarioLogado );
             }
         } );
         bottomPanel.add( confirmarButton );
@@ -144,5 +145,4 @@ public class FazerPedidoSwing extends JFrame {
         mainPanel.add( bottomPanel, BorderLayout.SOUTH );
         setContentPane( mainPanel );
     }
-
 }

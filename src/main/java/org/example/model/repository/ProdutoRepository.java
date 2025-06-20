@@ -46,29 +46,10 @@ public class ProdutoRepository {
     public List<ProdutoEntity> buscarTodos() {
         return em.createQuery( "SELECT p FROM ProdutoEntity p", ProdutoEntity.class ).getResultList();
     }
-
-    //metodo para buscar o produto pelo nome
-    public ProdutoEntity buscarPorNome(String nome) {
-        return em.createQuery( "SELECT p FROM ProdutoEntity p WHERE p.nome = :nome", ProdutoEntity.class )
-                .setParameter( "nome", nome ) // definindo o valor do parametro 'nome'
-                .getResultStream() // executa a consulta e retorna um stream de resultados
-                .findFirst() // se tiver um elemento no stream, retorna o primeiro
-                .orElse( null ); // se nao tiver retorna null
-    }
-
     //metodo para buscar o produto pela categoria que ele estiver cadastrado
     public List<ProdutoEntity> buscarPorCategoria(String categoria) {
         return em.createQuery( "SELECT p FROM ProdutoEntity p WHERE p.categoria = :categoria", ProdutoEntity.class )
                 .setParameter( "categoria", categoria ) // definindo o valor do parametro 'categoria'
                 .getResultList(); // executa a consulta e retorna uma lista de resultados
     }
-
-
-    //metodo para exibir os produtos que foram vendidos
-    public List<ProdutoEntity> listarProdutosVendidos() {
-        return em.createQuery( "SELECT DISTINCT p FROM ProdutoEntity p JOIN p.produtosPedidos pp", ProdutoEntity.class )
-                .getResultList(); // executa a consulta e retorna uma lista de produtos que foram vendidos
-    }
-
-
 }

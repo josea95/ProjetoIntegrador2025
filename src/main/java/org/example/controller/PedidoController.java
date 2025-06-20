@@ -1,9 +1,11 @@
 package org.example.controller;
 
 import org.example.model.entities.FilaPedidoEntity;
+import org.example.model.entities.ProdutoEntity;
 import org.example.model.services.PedidoService;
 import org.example.model.entities.UsuarioEntity;
 
+import java.util.List;
 public class PedidoController {
 
     private final PedidoService pedidoService;
@@ -16,20 +18,24 @@ public class PedidoController {
         return pedidoService.fazerPedido( usuarioLogado );
     }
 
-    public String confirmarPedido(FilaPedidoEntity pedido) {
+    public boolean confirmarPedido(FilaPedidoEntity pedido) {
         if (pedido.getProdutos() == null || pedido.getProdutos().isEmpty()) {
-            return "ERRO: O carrinho está vazio. Adicione produtos antes de confirmar.";
+            return false;
         }
         try {
             pedidoService.gerarESetSenhaPedido( pedido );
-            boolean salvo = pedidoService.salvarPedido( pedido );
-            if (!salvo) {
-                return "ERRO: Não foi possível salvar o pedido. O carrinho está vazio.";
-            }
-            return "Pedido confirmado com sucesso! Sua senha é " + pedido.getSenhaPedido();
+            return pedidoService.salvarPedido( pedido );
         } catch (Exception e) {
             e.printStackTrace();
-            return "ERRO: Ocorreu um erro ao salvar o pedido. Tente novamente.";
+            return false;
         }
+    }
+
+    public List<ProdutoEntity> buscarProdutosPorCategoria(String categoria) {
+        return pedidoService.buscarProdutosPorCategoria( categoria );
+    }
+
+    public void adicionarProdutoAoPedido(FilaPedidoEntity pedido, ProdutoEntity produtoEscolhido) {
+        pedidoService.adicionarProdutoAoPedido( pedido, produtoEscolhido );
     }
 }
