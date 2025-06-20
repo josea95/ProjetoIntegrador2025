@@ -71,7 +71,7 @@ public class FilaPedidoRepository {
 
 
         // retorna o maior valor entre as variáveis fila e historico.//
-        return Math.max(fila, historico);
+        return Math.max( fila, historico );
     }
 
     public Integer buscarUltimaSenhaAposHorario(LocalDate data, LocalTime horario) {

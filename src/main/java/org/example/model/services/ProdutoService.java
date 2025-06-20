@@ -26,7 +26,6 @@ public class ProdutoService {
         if (produto.getCategoria() == null || produto.getCategoria().isBlank()) {
             throw new IllegalArgumentException( "A categoria não pode ser vazia." );
         }
-
         produto.setDataCriacao( LocalDate.now() );
         produtoRepository.salvar( produto );
     }
@@ -42,6 +41,12 @@ public class ProdutoService {
         if (existente == null) {
             throw new IllegalArgumentException( "Produto não encontrado para atualização." );
         }
+        if (existente.getPreco().doubleValue() != produto.getPreco().doubleValue()) {
+            if (produtoRepository.existeProdutoEmFilaPedidos( existente )) {
+                throw new IllegalStateException(
+                        "O produto não pode ser atualizado, pois possui pedidos em andamento." );
+            }
+        }
         produto.setDataAtualizacao( LocalDate.now() );
         produtoRepository.atualizar( produto );
     }
@@ -54,7 +59,6 @@ public class ProdutoService {
         produtoRepository.deletar( id );
     }
 
-    // Buscar produtos por categoria
     public List<ProdutoEntity> buscarProdutosPorCategoria(String categoria) {
         if (categoria == null || categoria.trim().isEmpty()) {
             throw new IllegalArgumentException( "Categoria não pode ser vazia." );
