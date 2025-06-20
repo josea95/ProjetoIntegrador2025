@@ -4,6 +4,7 @@ import org.example.controller.ProdutoController;
 import org.example.model.entities.ProdutoEntity;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,10 @@ public class AtualizarProdutoSwing extends JFrame {
 
     private ProdutoController produtoController;
 
+    // Definindo a fonte e cor de fundo
+    private final Font fonte = new Font( "Arial", Font.BOLD, 14 );
+    private final Color fundo = new Color( 220, 220, 220 );
+
     public AtualizarProdutoSwing(ProdutoController produtoController) {
         this.produtoController = produtoController;
         setTitle( "Atualizar Produto" );
@@ -41,33 +46,39 @@ public class AtualizarProdutoSwing extends JFrame {
 
     private void initCategoriaPanel() {
         JPanel panel = new JPanel( new BorderLayout( 5, 5 ) );
-        JPanel categoriaPanel = new JPanel( new FlowLayout() );
-        categoriaPanel.add( new JLabel( "Selecione a Categoria:" ) );
-        // Array de categorias disponíveis
-        String[] categorias = {"Marmitas", "Bebidas", "Porções"};
+        panel.setBackground( fundo );
+        panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
 
+        JPanel categoriaPanel = new JPanel( new FlowLayout() );
+        categoriaPanel.setBackground( fundo );
+        JLabel categoriaLabel = new JLabel( "Selecione a Categoria:" );
+        categoriaLabel.setFont( fonte );
+        categoriaPanel.add( categoriaLabel );
+
+        String[] categorias = {"Marmitas", "Bebidas", "Porções"};
         categoriaCombo = new JComboBox<>( categorias );
+        categoriaCombo.setFont( fonte );
         categoriaPanel.add( categoriaCombo );
 
         buscarButton = new JButton( "Buscar Produtos" );
-        // Associa um evento ao botão que chama o buscarProdutosPorCategoria
+        buscarButton.setFont( fonte );
+        buscarButton.setBackground( fundo );
         buscarButton.addActionListener( e -> buscarProdutosPorCategoria() );
         categoriaPanel.add( buscarButton );
 
         panel.add( categoriaPanel, BorderLayout.NORTH );
 
-        // Inicializa o modelo da lista e o componente JList para exibir os produtos
         listModel = new DefaultListModel<>();
         produtosList = new JList<>( listModel );
-        produtosList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION ); // Permite seleção de apenas um item por vez
-        // Adiciona a lista dentro do JScrollPane para rolagem
+        produtosList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        produtosList.setFont( fonte );
         panel.add( new JScrollPane( produtosList ), BorderLayout.CENTER );
 
-
         JPanel botoesPanel = new JPanel( new FlowLayout() );
-        // Botão para selecionar um produto da lista
+        botoesPanel.setBackground( fundo );
         selecionarButton = new JButton( "Selecionar Produto" );
-        // Evento do botão que verifica se algum produto foi selecionado, se sim chama o painel de atualização
+        selecionarButton.setFont( fonte );
+        selecionarButton.setBackground( fundo );
         selecionarButton.addActionListener( e -> {
             ProdutoEntity produtoSelecionado = produtosList.getSelectedValue();
             if (produtoSelecionado != null) {
@@ -78,6 +89,8 @@ public class AtualizarProdutoSwing extends JFrame {
         } );
         botoesPanel.add( selecionarButton );
         voltarButton = new JButton( "Voltar" );
+        voltarButton.setFont( fonte );
+        voltarButton.setBackground( fundo );
         voltarButton.addActionListener( e -> dispose() );
         botoesPanel.add( voltarButton );
         panel.add( botoesPanel, BorderLayout.SOUTH );
@@ -87,33 +100,32 @@ public class AtualizarProdutoSwing extends JFrame {
         repaint();
     }
 
-
     private void initAtualizacaoPanel(ProdutoEntity produto) {
         JPanel panel = new JPanel( new GridLayout( 8, 2, 10, 10 ) );
+        panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
+        panel.setBackground( fundo);
 
         panel.add( new JLabel( "ID do Produto:" ) );
+        JLabel idLabel = new JLabel( String.valueOf( produto.getId() ) );
+        idLabel.setFont( fonte );
+        panel.add( idLabel );
         idField = new JTextField( String.valueOf( produto.getId() ) );
-        idField.setEditable( false );// (campo não editável)
-        panel.add( idField );
-
+        idField.setEditable( false );
 
         panel.add( new JLabel( "Data de Criação:" ) );
         dataCriacaoField = new JTextField( produto.getDataCriacao().format( DateTimeFormatter.ISO_LOCAL_DATE ) );
-        dataCriacaoField.setEditable( false );// (campo não editável)
+        dataCriacaoField.setEditable( false );
         panel.add( dataCriacaoField );
 
-        // Exibe a categoria do produto
         panel.add( new JLabel( "Categoria:" ) );
         categoriaField = new JTextField( produto.getCategoria() );
-        categoriaField.setEditable( false );// (campo não editável)
+        categoriaField.setEditable( false );
         panel.add( categoriaField );
 
-        // Campo para atualizar o nome do produto
         panel.add( new JLabel( "Novo Nome:" ) );
         nomeField = new JTextField( produto.getNome() );
         panel.add( nomeField );
 
-        // Campo para atualizar o preço do produto
         panel.add( new JLabel( "Novo Preço:" ) );
         precoField = new JTextField( String.valueOf( produto.getPreco() ) );
         panel.add( precoField );
@@ -123,12 +135,15 @@ public class AtualizarProdutoSwing extends JFrame {
         descricaoField = new JTextField( produto.getDescricao() == null ? "" : produto.getDescricao() );
         panel.add( descricaoField );
 
-        // Botão para confirmar a atualização
         atualizarButton = new JButton( "Atualizar" );
+        atualizarButton.setFont( fonte );
+        atualizarButton.setBackground( new Color( 220, 220, 220 ) );
         atualizarButton.addActionListener( this::atualizarProduto );
         panel.add( atualizarButton );
 
         voltarButton = new JButton( "Voltar" );
+        voltarButton.setFont( fonte );
+        voltarButton.setBackground( new Color( 220, 220, 220 ) );
         voltarButton.addActionListener( e -> initCategoriaPanel() );
         panel.add( voltarButton );
 
@@ -137,16 +152,13 @@ public class AtualizarProdutoSwing extends JFrame {
         repaint();
     }
 
-    // Metodo para buscar os produtos pela categoria selecionada no JComboBox
     private void buscarProdutosPorCategoria() {
         String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
-        // Chama o controller para buscar os produtos da categoria
         List<ProdutoEntity> filtrados = produtoController.buscarPorCategoria( categoriaSelecionada );
         listModel.clear(); // Limpa a lista atual
         if (filtrados == null || filtrados.isEmpty()) {
             JOptionPane.showMessageDialog( this, "Nenhum produto encontrado para a categoria " + categoriaSelecionada );
         } else {
-            // Adiciona cada produto encontrado ao modelo da lista
             filtrados.forEach( listModel::addElement );
         }
     }
