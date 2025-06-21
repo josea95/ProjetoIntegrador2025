@@ -153,13 +153,20 @@ public class AtualizarProdutoSwing extends JFrame {
     }
 
     private void buscarProdutosPorCategoria() {
-        String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
-        List<ProdutoEntity> filtrados = produtoController.buscarPorCategoria( categoriaSelecionada );
-        listModel.clear(); // Limpa a lista atual
-        if (filtrados == null || filtrados.isEmpty()) {
-            JOptionPane.showMessageDialog( this, "Nenhum produto encontrado para a categoria " + categoriaSelecionada );
-        } else {
-            filtrados.forEach( listModel::addElement );
+        try {
+            String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
+            List<ProdutoEntity> produtos = produtoController.buscarPorCategoria( categoriaSelecionada );
+            listModel.clear();
+            if (produtos.isEmpty()) {
+                JOptionPane.showMessageDialog( this, "Nenhum produto encontrado para a categoria " + categoriaSelecionada );
+            } else {
+                produtos.forEach( listModel::addElement );
+            }
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog( this, ex.getMessage() );
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog( this, "Erro ao buscar produtos: " + ex.getMessage() );
+            ex.printStackTrace();
         }
     }
 
@@ -191,7 +198,6 @@ public class AtualizarProdutoSwing extends JFrame {
             JOptionPane.showMessageDialog( this, ex.getMessage() );
         } catch (Exception ex) {
             JOptionPane.showMessageDialog( this, "Erro ao atualizar: " + ex.getMessage() );
-            ex.printStackTrace();
         }
     }
 }
