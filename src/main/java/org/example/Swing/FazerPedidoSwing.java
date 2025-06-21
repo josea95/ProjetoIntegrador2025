@@ -30,6 +30,10 @@ public class FazerPedidoSwing extends JFrame {
     private FilaPedidoEntity filaPedidoEntityPedido;
     private PedidoController pedidoController;
 
+    private final Font fonte = new Font( "Arial", Font.BOLD, 14 );
+    private final Color fundo = new Color( 220, 220, 220 );
+    private final Color corBotoes = new Color( 245, 245, 245 );
+
     public FazerPedidoSwing(PedidoService pedidoService, UsuarioEntity usuarioLogado) {
         this.usuarioLogado = usuarioLogado;
         this.pedidoController = new PedidoController( pedidoService );
@@ -44,16 +48,21 @@ public class FazerPedidoSwing extends JFrame {
 
     private void initComponents() {
         JPanel mainPanel = new JPanel( new BorderLayout( 10, 10 ) );
+        mainPanel.setBackground( fundo );
 
         // Painel superior
         JPanel topPanel = new JPanel( new FlowLayout() );
-        topPanel.add( new JLabel( "Categoria:" ) );
+        JLabel labelCategoria = new JLabel( "Categoria:" );
+        labelCategoria.setFont( fonte );
+        topPanel.add( labelCategoria );
         String[] categorias = {"Marmitas", "Bebidas", "Porções"};
         categoriaCombo = new JComboBox<>( categorias );
         topPanel.add( categoriaCombo );
 
         buscarButton = new JButton( "Buscar Produtos" );
-        buscarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        buscarButton.setFont( fonte );
+        buscarButton.setBackground( corBotoes );
+
         buscarButton.addActionListener( e -> {
             String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
             List<ProdutoEntity> produtos = pedidoController.buscarProdutosPorCategoria( categoriaSelecionada );
@@ -63,9 +72,8 @@ public class FazerPedidoSwing extends JFrame {
             }
         } );
         topPanel.add( buscarButton );
+        //Painel principal -> onde os produtos e o carrinho serão exibidos
         mainPanel.add( topPanel, BorderLayout.NORTH );
-
-        // Painel central
         produtosModel = new DefaultListModel<>();
         produtosList = new JList<>( produtosModel );
 
@@ -77,10 +85,13 @@ public class FazerPedidoSwing extends JFrame {
         centerPanel.add( new JScrollPane( carrinhoList ) );
         mainPanel.add( centerPanel, BorderLayout.CENTER );
 
+        //Painel inferior -> onde os botões serão exibidos
         JPanel bottomPanel = new JPanel( new FlowLayout() );
+        bottomPanel.setBackground( fundo );
 
         adicionarButton = new JButton( "Adicionar ao Carrinho" );
-        adicionarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        adicionarButton.setFont( fonte );
+        adicionarButton.setBackground( corBotoes );
         adicionarButton.addActionListener( e -> {
             ProdutoEntity produtoEscolhido = produtosList.getSelectedValue();
             if (produtoEscolhido != null) {
@@ -93,7 +104,8 @@ public class FazerPedidoSwing extends JFrame {
         bottomPanel.add( adicionarButton );
 
         removerButton = new JButton( "Remover do Carrinho" );
-        removerButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        removerButton.setFont( fonte );
+        removerButton.setBackground( corBotoes );
         removerButton.addActionListener( e -> {
             ProdutoEntity produtoSelecionado = carrinhoList.getSelectedValue();
             if (produtoSelecionado != null) {
@@ -105,7 +117,9 @@ public class FazerPedidoSwing extends JFrame {
         bottomPanel.add( removerButton );
 
         confirmarButton = new JButton( "Confirmar Pedido" );
-        confirmarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        confirmarButton.setFont( fonte );
+        confirmarButton.setBackground( corBotoes );
+
         confirmarButton.addActionListener( e -> {
             if (filaPedidoEntityPedido == null || filaPedidoEntityPedido.getProdutos().isEmpty()) {
                 JOptionPane.showMessageDialog( this,
@@ -139,7 +153,8 @@ public class FazerPedidoSwing extends JFrame {
         bottomPanel.add( confirmarButton );
 
         voltarButton = new JButton( "Voltar" );
-        voltarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        voltarButton.setFont( fonte );
+        voltarButton.setBackground( corBotoes );
         voltarButton.addActionListener( e -> dispose() );
         bottomPanel.add( voltarButton );
         mainPanel.add( bottomPanel, BorderLayout.SOUTH );
