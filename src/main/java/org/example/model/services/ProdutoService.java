@@ -51,10 +51,25 @@ public class ProdutoService {
         produtoRepository.atualizar( produto );
     }
 
+//    public void deletarProduto(Long id) {
+//        ProdutoEntity produto = produtoRepository.buscarPorId( id );
+//        if (produto == null) {
+//            throw new IllegalArgumentException( "Produto não encontrado para deletar." );
+//        }
+//        produtoRepository.deletar( id );
+//    }
     public void deletarProduto(Long id) {
         ProdutoEntity produto = produtoRepository.buscarPorId( id );
         if (produto == null) {
             throw new IllegalArgumentException( "Produto não encontrado para deletar." );
+        }
+        // Verificar se está na fila
+        if (produtoRepository.existeProdutoEmFilaPedidos( produto )) {
+            throw new IllegalStateException( "Não é possível deletar. Produto está em um pedido em andamento." );
+        }
+        // Verificar se está no histórico
+        if (produtoRepository.existeProdutoEmHistoricoPedidos( produto )) {
+            throw new IllegalStateException( "Não é possível deletar. Produto já foi utilizado em pedidos no histórico." );
         }
         produtoRepository.deletar( id );
     }

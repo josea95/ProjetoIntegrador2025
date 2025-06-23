@@ -34,14 +34,26 @@ public class ProdutoRepository {
             em.getTransaction().commit(); // confirma a transacao
         }
     }
+
     public boolean existeProdutoEmFilaPedidos(ProdutoEntity produto) {
         Long count = em.createQuery(
                         "SELECT COUNT(fp) FROM FilaPedidoEntity fp JOIN fp.produtos pp " +
-                                "WHERE pp.produto = :produto AND fp.statusPedido IN :statusList", Long.class)
-                .setParameter("produto", produto)
-                .setParameter("statusList", List.of( StatusPedido.FILA, StatusPedido.PREPARANDO))
+                                "WHERE pp.produto = :produto AND fp.statusPedido IN :statusList", Long.class )
+                .setParameter( "produto", produto )
+                .setParameter( "statusList", List.of( StatusPedido.FILA, StatusPedido.PREPARANDO ) )
                 .getSingleResult();
 
+        return count != null && count > 0;
+    }
+
+    public boolean existeProdutoEmHistoricoPedidos(ProdutoEntity produto) {
+        Long count = em.createQuery(
+                        "SELECT COUNT(ph) FROM ProdutoHistoricoPedidoEntity ph WHERE ph.produto = :produto", Long.class )
+                .setParameter( "produto", produto )
+                .getSingleResult();
+        // verifica se o produto existe no histórico de pedidos
+        // se count for maior que 0 (true), significa que o produto existe no histórico de pedidos
+        // se count for igual a 0 (false), significa que o produto não existe no histórico de pedidos
         return count != null && count > 0;
     }
 

@@ -115,11 +115,21 @@ public class DeletarProdutoSwing extends JFrame {
                 produtoController.deletarProduto( produtoSelecionado.getId() );
                 JOptionPane.showMessageDialog( this, "Produto deletado com sucesso!" );
                 buscarProdutosPorCategoria();
-            } catch (IllegalArgumentException ex) {
-                JOptionPane.showMessageDialog( this, ex.getMessage() );
+            } catch (IllegalStateException | IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        ex.getMessage(),
+                        "Erro ao deletar",
+                        JOptionPane.WARNING_MESSAGE
+                );
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog( this, "Erro ao deletar produto: " + ex.getMessage() );
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Erro inesperado ao deletar o produto. Por favor, tente novamente.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                // ex.printStackTrace(); para aparecer no terminal
             }
         }
     }
