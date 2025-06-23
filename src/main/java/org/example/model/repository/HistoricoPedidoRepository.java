@@ -1,8 +1,8 @@
 package org.example.model.repository;
 
 import org.example.model.entities.HistoricoPedidoEntity;
-
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class HistoricoPedidoRepository {
@@ -13,23 +13,16 @@ public class HistoricoPedidoRepository {
         this.em = em;
     }
 
-    public void salvar(HistoricoPedidoEntity pedido) {
+    public void salvar(HistoricoPedidoEntity historico) {
         em.getTransaction().begin();
-        em.persist(pedido);
+        em.persist(historico);
         em.getTransaction().commit();
     }
 
-    public HistoricoPedidoEntity buscarPorId(int id) {
-        return em.find(HistoricoPedidoEntity.class, id);
-    }
-
-    public List<HistoricoPedidoEntity> listarTodos() {
-        return em.createQuery("FROM HistoricoPedidoEntity", HistoricoPedidoEntity.class).getResultList();
-    }
-
-    public void deletar(HistoricoPedidoEntity pedido) {
-        em.getTransaction().begin();
-        em.remove(em.contains(pedido) ? pedido : em.merge(pedido));
-        em.getTransaction().commit();
+    public List<HistoricoPedidoEntity> listarHistoricoPorUsuario(Object usuario) {
+        TypedQuery<HistoricoPedidoEntity> query = em.createQuery(
+                "SELECT h FROM HistoricoPedidoEntity h WHERE h.usuario = :usuario", HistoricoPedidoEntity.class);
+        query.setParameter("usuario", usuario);
+        return query.getResultList();
     }
 }

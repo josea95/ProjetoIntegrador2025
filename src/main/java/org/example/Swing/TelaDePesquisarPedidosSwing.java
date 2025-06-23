@@ -1,4 +1,4 @@
-package org.example.view;
+package org.example.Swing;
 
 import org.example.controller.FilaPedidoController;
 import org.example.model.repository.FilaPedidoRepository;
@@ -56,3 +56,4 @@ public class TelaDePesquisarPedidosSwing extends JFrame {
         panel.add( pesquisarButton );
     }
 }
+

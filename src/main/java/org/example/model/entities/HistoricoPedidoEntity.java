@@ -28,7 +28,8 @@ public class HistoricoPedidoEntity {
     private LocalTime horaPedido;
 
     @Column(name = "valor_pedido")
-    private double valorPedido;
+    private Double valorPedido;
+
 
     @Column(name = "senha_pedido")
     private String senhaPedido;
@@ -40,8 +41,8 @@ public class HistoricoPedidoEntity {
     @JoinColumn(name = "id_usuario", nullable = false)
     private UsuarioEntity usuario;
 
-    @OneToMany(mappedBy = "historicoPedido")
-    private List<ProdutoPedidoEntity> produtos;
+    @OneToMany(mappedBy = "historicoPedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProdutoHistoricoPedidoEntity> produtos;
 
     @ManyToOne
     @JoinColumn(name = "id_historico")
@@ -80,13 +81,14 @@ public class HistoricoPedidoEntity {
         this.horaPedido = horaPedido;
     }
 
-    public double getValorPedido() {
+    public Double getValorPedido() {
         return valorPedido;
     }
 
-    public void setValorPedido(double valorPedido) {
+    public void setValorPedido(Double valorPedido) {
         this.valorPedido = valorPedido;
     }
+
 
     public String getSenhaPedido() {
         return senhaPedido;
@@ -112,11 +114,11 @@ public class HistoricoPedidoEntity {
         this.usuario = usuario;
     }
 
-    public List<ProdutoPedidoEntity> getProdutos() {
+    public List<ProdutoHistoricoPedidoEntity> getProdutos() {
         return produtos;
     }
 
-    public void setProdutos(List<ProdutoPedidoEntity> produtos) {
+    public void setProdutos(List<ProdutoHistoricoPedidoEntity> produtos) {
         this.produtos = produtos;
     }
 
