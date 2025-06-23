@@ -31,8 +31,11 @@ public class ProdutoEntity {
     private Long id;
 
     private String nome;
+    //Adicionando a coluna "ativo" para indicar se o produto está ativo ou não , para consegui deletar o produto
+    @Column(nullable = false)
+    private boolean ativo = true;
 
-    @Column(name = "categoria")
+    @Column(name = "categoria", nullable = false)
     private String categoria;
 
     @Column(columnDefinition = "TEXT")

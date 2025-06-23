@@ -8,7 +8,6 @@ import org.example.model.util.CustomizerFactory;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-//Adptando o controller para as novas telas em Swing
 public class ProdutoController {
 
     private ProdutoService produtoService;
@@ -33,6 +32,4 @@ public class ProdutoController {
     public List<ProdutoEntity> buscarPorCategoria(String categoria) {
         return produtoService.buscarProdutosPorCategoria( categoria );
     }
-
 }
-

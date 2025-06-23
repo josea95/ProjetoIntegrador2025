@@ -19,7 +19,7 @@ public class FilaPedidosSwing extends JFrame {
 		this.filaPedidoService = filaPedidoService;
 
 		setTitle("Fila de Pedidos");
-		setSize(700, 500);
+		setSize(1200, 700);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -27,16 +27,16 @@ public class FilaPedidosSwing extends JFrame {
 
 		// Botão VOLTAR
 		JButton btnVoltar = new JButton("Voltar");
-		btnVoltar.setBounds(10, 419, 89, 23);
+		btnVoltar.setBounds(10, 627, 89, 23);
 		getContentPane().add(btnVoltar);
 
 		// Botão ATUALIZAR
 		JButton btnAtualizar = new JButton("Atualizar Fila");
-		btnAtualizar.setBounds(561, 419, 110, 23);
+		btnAtualizar.setBounds(1064, 627, 110, 23);
 		getContentPane().add(btnAtualizar);
 
 		JButton btnSalvarAlteracoes = new JButton("Salvar Alterações");
-		btnSalvarAlteracoes.setBounds(230, 419, 150, 23);
+		btnSalvarAlteracoes.setBounds(413, 627, 150, 23);
 		getContentPane().add(btnSalvarAlteracoes);
 
 		btnSalvarAlteracoes.addActionListener(new ActionListener() {
@@ -71,8 +71,9 @@ public class FilaPedidosSwing extends JFrame {
 
 		// Tabela
 		table = new JTable();
+		setSize(1200,700);
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(10, 11, 664, 397);
+		scrollPane.setBounds(10, 11, 1200, 600);
 		getContentPane().add(scrollPane);
 
 		// Carrega dados inicialmente

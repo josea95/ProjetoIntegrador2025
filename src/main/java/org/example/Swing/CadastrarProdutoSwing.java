@@ -19,6 +19,9 @@ public class CadastrarProdutoSwing extends JFrame {
     private ProdutoController produtoController;
     private ProdutoService produtoService;
 
+    private final Font fonte = new Font( "Arial", Font.BOLD, 14 );
+    private final Color fundo = new Color( 220, 220, 220 );
+
     public CadastrarProdutoSwing(ProdutoController produtoController) {
         this.produtoController = produtoController;
         setTitle( "Cadastro de Produto" );
@@ -30,34 +33,70 @@ public class CadastrarProdutoSwing extends JFrame {
     }
 
     private void initComponents() {
-        JPanel panel = new JPanel( new GridLayout( 5, 2, 10, 10 ) );
+        JPanel contentPanel = new JPanel( new BorderLayout() );
+        contentPanel.setBackground( fundo );
 
-        panel.add( new JLabel( "Categoria:" ) );
+        JPanel formPanel = new JPanel( new GridLayout( 4, 2, 10, 10 ) );
+        formPanel.setBackground( fundo );
+
+        JLabel labelCategoria = new JLabel( "Categoria:" );
+        labelCategoria.setFont( fonte );
+        labelCategoria.setBackground( fundo );
+        formPanel.add( labelCategoria );
+
         String[] categorias = {"Marmitas", "Bebidas", "Porções"};
         categoriaCombo = new JComboBox<>( categorias );
-        panel.add( categoriaCombo );
+        categoriaCombo.setFont( fonte );
+        categoriaCombo.setBackground( fundo );
+        formPanel.add( categoriaCombo );
 
-        panel.add( new JLabel( "Nome:" ) );
-        nomeField = new JTextField();
-        panel.add( nomeField );
+        JLabel labelNome = new JLabel( "Nome:" );
+        labelNome.setFont( fonte );
+        labelNome.setBackground( fundo );
+        formPanel.add( labelNome );
 
-        panel.add( new JLabel( "Preço:" ) );
-        precoField = new JTextField();
-        panel.add( precoField );
+        nomeField = new JTextField( 20 );
+        nomeField.setFont( fonte );
+        formPanel.add( nomeField );
 
-        panel.add( new JLabel( "Descrição: " ) );
-        descricaoField = new JTextField();
-        panel.add( descricaoField );
+        JLabel labelPreco = new JLabel( "Preço:" );
+        labelPreco.setFont( fonte );
+        labelPreco.setBackground( fundo );
+        formPanel.add( labelPreco );
+
+        precoField = new JTextField( 20 );
+        precoField.setFont( fonte );
+        formPanel.add( precoField );
+
+        JLabel labelDescricao = new JLabel( "Descrição:" );
+        labelDescricao.setFont( fonte );
+        labelDescricao.setBackground( fundo );
+        formPanel.add( labelDescricao );
+
+        descricaoField = new JTextField( 20 );
+        descricaoField.setFont( fonte );
+        formPanel.add( descricaoField );
+
+        contentPanel.add( formPanel, BorderLayout.CENTER );
+
+        // Painel inferior com botões
+        JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
+        buttonPanel.setBackground( fundo );
 
         cadastrarButton = new JButton( "Cadastrar" );
+        cadastrarButton.setFont( fonte );
+        cadastrarButton.setBackground( fundo );
         cadastrarButton.addActionListener( e -> cadastrarProduto() );
-        panel.add( cadastrarButton );
+        buttonPanel.add( cadastrarButton );
 
         voltarButton = new JButton( "Voltar" );
+        voltarButton.setFont( fonte );
+        voltarButton.setBackground( fundo );
         voltarButton.addActionListener( e -> dispose() );
-        panel.add( voltarButton );
+        buttonPanel.add( voltarButton );
 
-        setContentPane( panel );
+        contentPanel.add( buttonPanel, BorderLayout.SOUTH );
+        setContentPane( contentPanel );
     }
 
     private void cadastrarProduto() {
@@ -65,9 +104,7 @@ public class CadastrarProdutoSwing extends JFrame {
             String nome = nomeField.getText().trim();
             String categoria = (String) categoriaCombo.getSelectedItem();
             String descricao = descricaoField.getText().trim();
-            String precoText = precoField.getText().trim();
-
-            double preco = Double.parseDouble( precoText );
+            double preco = Double.parseDouble( precoField.getText().trim() );
 
             ProdutoEntity produto = new ProdutoEntity();
             produto.setNome( nome );
@@ -76,10 +113,8 @@ public class CadastrarProdutoSwing extends JFrame {
             produto.setPreco( preco );
 
             produtoController.cadastrarProduto( produto );
-
             JOptionPane.showMessageDialog( this, "Produto cadastrado com sucesso!" );
             limparCampos();
-
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog( this, "Preço inválido. Informe um número válido." );
         } catch (IllegalArgumentException e) {
@@ -94,5 +129,4 @@ public class CadastrarProdutoSwing extends JFrame {
         precoField.setText( "" );
         descricaoField.setText( "" );
     }
-
 }

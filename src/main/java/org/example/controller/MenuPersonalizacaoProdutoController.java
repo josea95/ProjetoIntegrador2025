@@ -5,12 +5,10 @@ import org.example.Swing.CadastrarProdutoSwing;
 import org.example.Swing.DeletarProdutoSwing;
 import org.example.Swing.MenuPersonalizacaoSwing;
 
-//Alterado nome do Controller para MenuPersonalizacaoProdutoController
 public class MenuPersonalizacaoProdutoController {
 
     private ProdutoController produtoController;
 
-    //Chamando pela controller ao invés da service
     public MenuPersonalizacaoProdutoController(ProdutoController produtoController) {
         this.produtoController = produtoController;
     }

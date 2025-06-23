@@ -24,28 +24,26 @@ public class TelaLoginSwing extends JFrame {
 
 	public  TelaLoginSwing() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 500);
+		setBounds(10, 11, 700, 500);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
-		contentPane.setForeground(new Color(128, 128, 0));
-		contentPane.setBackground(new Color(16, 19, 44));
+		contentPane.setBackground(Color.gray);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
+		panel.setBounds(177, 91, 350, 239);
 		panel.setBorder(new CompoundBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED, new Color(240, 240, 240), new Color(255, 255, 255), new Color(105, 105, 105), new Color(160, 160, 160)), new LineBorder(new Color(180, 180, 180))), null));
-		panel.setBounds(136,24,251,227);
 		panel.setToolTipText("");
-		panel.setForeground(new Color(237, 143, 239));
-		panel.setBounds(47, 11, 350, 239);
-		panel.setBackground(new Color(223, 239, 242));
+		
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel_2 = new JLabel("Login");
 		lblNewLabel_2.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblNewLabel_2.setForeground(new Color(75, 99, 107));
+
 		lblNewLabel_2.setBackground(new Color(201, 206, 231));
 		lblNewLabel_2.setBounds(150, 43, 73, 20);
 		panel.add(lblNewLabel_2);
@@ -64,19 +62,18 @@ public class TelaLoginSwing extends JFrame {
 		lblNewLabel_1.setBounds(150, 118, 46, 14);
 		panel.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel = new JLabel("Sistema Marmitch");
+		JLabel lblNewLabel = new JLabel("Sistema Marmitech");
 		lblNewLabel.setForeground(new Color(0, 0, 0));
-		lblNewLabel.setBounds(91, 0, 179, 38);
+		lblNewLabel.setBounds(81, 0, 259, 38);
 		lblNewLabel.setFont(new Font("Goudy Old Style", Font.ITALIC, 26));
 		panel.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("Entrar");
 		btnNewButton.addActionListener(e -> fazerLogin());
 
-		btnNewButton.setBackground(new Color(45,67,87));
+
 		btnNewButton.setFont(new Font("Malgun Gothic Semilight", Font.BOLD, 13));
-		btnNewButton.setBackground(new Color(41, 26, 64));
-		btnNewButton.setForeground(new Color(75, 99, 107));
+		btnNewButton.setForeground(new Color(0, 0, 0));
 		btnNewButton.setBounds(130, 175, 89, 23);
 		panel.add(btnNewButton);
 		

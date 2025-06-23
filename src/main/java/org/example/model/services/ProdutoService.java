@@ -26,7 +26,6 @@ public class ProdutoService {
         if (produto.getCategoria() == null || produto.getCategoria().isBlank()) {
             throw new IllegalArgumentException( "A categoria não pode ser vazia." );
         }
-
         produto.setDataCriacao( LocalDate.now() );
         produtoRepository.salvar( produto );
     }
@@ -42,19 +41,39 @@ public class ProdutoService {
         if (existente == null) {
             throw new IllegalArgumentException( "Produto não encontrado para atualização." );
         }
+        if (existente.getPreco().doubleValue() != produto.getPreco().doubleValue()) {
+            if (produtoRepository.existeProdutoEmFilaPedidos( existente )) {
+                throw new IllegalStateException(
+                        "O produto não pode ser atualizado, pois possui pedidos em andamento." );
+            }
+        }
         produto.setDataAtualizacao( LocalDate.now() );
         produtoRepository.atualizar( produto );
     }
 
+//    public void deletarProduto(Long id) {
+//        ProdutoEntity produto = produtoRepository.buscarPorId( id );
+//        if (produto == null) {
+//            throw new IllegalArgumentException( "Produto não encontrado para deletar." );
+//        }
+//        produtoRepository.deletar( id );
+//    }
     public void deletarProduto(Long id) {
         ProdutoEntity produto = produtoRepository.buscarPorId( id );
         if (produto == null) {
             throw new IllegalArgumentException( "Produto não encontrado para deletar." );
         }
+        // Verificar se está na fila
+        if (produtoRepository.existeProdutoEmFilaPedidos( produto )) {
+            throw new IllegalStateException( "Não é possível deletar. Produto está em um pedido em andamento." );
+        }
+        // Verificar se está no histórico
+        if (produtoRepository.existeProdutoEmHistoricoPedidos( produto )) {
+            throw new IllegalStateException( "Não é possível deletar. Produto já foi utilizado em pedidos no histórico." );
+        }
         produtoRepository.deletar( id );
     }
 
-    // Buscar produtos por categoria
     public List<ProdutoEntity> buscarProdutosPorCategoria(String categoria) {
         if (categoria == null || categoria.trim().isEmpty()) {
             throw new IllegalArgumentException( "Categoria não pode ser vazia." );

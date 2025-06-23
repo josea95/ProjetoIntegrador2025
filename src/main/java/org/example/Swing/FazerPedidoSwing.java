@@ -1,10 +1,10 @@
 package org.example.Swing;
 
-import org.example.controller.PedidoController;
-
 import org.example.model.entities.FilaPedidoEntity;
 import org.example.model.entities.ProdutoEntity;
 import org.example.model.entities.UsuarioEntity;
+
+import org.example.controller.PedidoController;
 
 import org.example.model.services.PedidoService;
 
@@ -26,13 +26,15 @@ public class FazerPedidoSwing extends JFrame {
     private JButton confirmarButton;
     private JButton voltarButton;
 
-    private PedidoService pedidoService;
-    private PedidoController pedidoController;
     private UsuarioEntity usuarioLogado;
     private FilaPedidoEntity filaPedidoEntityPedido;
+    private PedidoController pedidoController;
+
+    private final Font fonte = new Font( "Arial", Font.BOLD, 14 );
+    private final Color fundo = new Color( 220, 220, 220 );
+    private final Color corBotoes = new Color( 245, 245, 245 );
 
     public FazerPedidoSwing(PedidoService pedidoService, UsuarioEntity usuarioLogado) {
-        this.pedidoService = pedidoService;
         this.usuarioLogado = usuarioLogado;
         this.pedidoController = new PedidoController( pedidoService );
         this.filaPedidoEntityPedido = pedidoController.iniciarPedido( usuarioLogado );
@@ -46,28 +48,32 @@ public class FazerPedidoSwing extends JFrame {
 
     private void initComponents() {
         JPanel mainPanel = new JPanel( new BorderLayout( 10, 10 ) );
+        mainPanel.setBackground( fundo );
 
         // Painel superior
         JPanel topPanel = new JPanel( new FlowLayout() );
-        topPanel.add( new JLabel( "Categoria:" ) );
+        JLabel labelCategoria = new JLabel( "Categoria:" );
+        labelCategoria.setFont( fonte );
+        topPanel.add( labelCategoria );
         String[] categorias = {"Marmitas", "Bebidas", "Porções"};
         categoriaCombo = new JComboBox<>( categorias );
         topPanel.add( categoriaCombo );
 
         buscarButton = new JButton( "Buscar Produtos" );
-        buscarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        buscarButton.setFont( fonte );
+        buscarButton.setBackground( corBotoes );
+
         buscarButton.addActionListener( e -> {
             String categoriaSelecionada = (String) categoriaCombo.getSelectedItem();
-            List<ProdutoEntity> produtos = pedidoService.buscarProdutosPorCategoria( categoriaSelecionada );
+            List<ProdutoEntity> produtos = pedidoController.buscarProdutosPorCategoria( categoriaSelecionada );
             produtosModel.clear();
             for (ProdutoEntity produto : produtos) {
                 produtosModel.addElement( produto );
             }
         } );
         topPanel.add( buscarButton );
+        //Painel principal -> onde os produtos e o carrinho serão exibidos
         mainPanel.add( topPanel, BorderLayout.NORTH );
-
-        // Painel central
         produtosModel = new DefaultListModel<>();
         produtosList = new JList<>( produtosModel );
 
@@ -79,15 +85,18 @@ public class FazerPedidoSwing extends JFrame {
         centerPanel.add( new JScrollPane( carrinhoList ) );
         mainPanel.add( centerPanel, BorderLayout.CENTER );
 
+        //Painel inferior -> onde os botões serão exibidos
         JPanel bottomPanel = new JPanel( new FlowLayout() );
+        bottomPanel.setBackground( fundo );
 
         adicionarButton = new JButton( "Adicionar ao Carrinho" );
-        adicionarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        adicionarButton.setFont( fonte );
+        adicionarButton.setBackground( corBotoes );
         adicionarButton.addActionListener( e -> {
             ProdutoEntity produtoEscolhido = produtosList.getSelectedValue();
             if (produtoEscolhido != null) {
                 carrinhoModel.addElement( produtoEscolhido );
-                pedidoService.adicionarProdutoAoPedido( filaPedidoEntityPedido, produtoEscolhido );
+                pedidoController.adicionarProdutoAoPedido( filaPedidoEntityPedido, produtoEscolhido );
             } else {
                 JOptionPane.showMessageDialog( this, "Selecione um produto para adicionar." );
             }
@@ -95,7 +104,8 @@ public class FazerPedidoSwing extends JFrame {
         bottomPanel.add( adicionarButton );
 
         removerButton = new JButton( "Remover do Carrinho" );
-        removerButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        removerButton.setFont( fonte );
+        removerButton.setBackground( corBotoes );
         removerButton.addActionListener( e -> {
             ProdutoEntity produtoSelecionado = carrinhoList.getSelectedValue();
             if (produtoSelecionado != null) {
@@ -107,42 +117,47 @@ public class FazerPedidoSwing extends JFrame {
         bottomPanel.add( removerButton );
 
         confirmarButton = new JButton( "Confirmar Pedido" );
-        confirmarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        confirmarButton.setFont( fonte );
+        confirmarButton.setBackground( corBotoes );
+
         confirmarButton.addActionListener( e -> {
             if (filaPedidoEntityPedido == null || filaPedidoEntityPedido.getProdutos().isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
+                JOptionPane.showMessageDialog( this,
                         "O carrinho está vazio. Adicione produtos antes de confirmar.",
                         "Erro",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        JOptionPane.ERROR_MESSAGE );
                 return;
             }
-            String descricao = JOptionPane.showInputDialog(
-                    this,
-                    "Digite uma descrição para o pedido (opcional):"
-            );
+            String descricao = JOptionPane.showInputDialog( this,
+                    "Digite uma descrição para o pedido (opcional):" );
             if (descricao != null && !descricao.trim().isEmpty()) {
                 filaPedidoEntityPedido.setObservacao( descricao );
             }
-            String resultado = pedidoController.confirmarPedido( filaPedidoEntityPedido );
 
-            if (resultado.startsWith( "ERRO" )) {
-                JOptionPane.showMessageDialog( this, resultado, "Erro", JOptionPane.ERROR_MESSAGE );
+
+            boolean confirmado = pedidoController.confirmarPedido( filaPedidoEntityPedido );
+            if (!confirmado) {
+                JOptionPane.showMessageDialog( this,
+                        "Erro ao confirmar pedido. Verifique se há produtos no carrinho.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE );
             } else {
-                JOptionPane.showMessageDialog( this, resultado, "Pedido confirmado", JOptionPane.INFORMATION_MESSAGE );
+                JOptionPane.showMessageDialog( this,
+                        "Pedido confirmado com sucesso! Sua senha é " + filaPedidoEntityPedido.getSenhaPedido(),
+                        "Pedido confirmado",
+                        JOptionPane.INFORMATION_MESSAGE );
                 carrinhoModel.clear();
-                filaPedidoEntityPedido = pedidoService.fazerPedido( usuarioLogado );
+                filaPedidoEntityPedido = pedidoController.iniciarPedido( usuarioLogado );
             }
         } );
         bottomPanel.add( confirmarButton );
 
         voltarButton = new JButton( "Voltar" );
-        voltarButton.setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
+        voltarButton.setFont( fonte );
+        voltarButton.setBackground( corBotoes );
         voltarButton.addActionListener( e -> dispose() );
         bottomPanel.add( voltarButton );
         mainPanel.add( bottomPanel, BorderLayout.SOUTH );
         setContentPane( mainPanel );
     }
-
 }

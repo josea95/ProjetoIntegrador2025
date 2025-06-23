@@ -24,6 +24,7 @@ public class TelaDePesquisarPedidosSwing extends JFrame {
         getContentPane().setLayout( null );
         setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
         setSize( 700, 500 );
+        setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
         panel.setBackground( new Color( 128, 128, 128 ) );
