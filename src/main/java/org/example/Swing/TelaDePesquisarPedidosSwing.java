@@ -1,59 +1,53 @@
-package org.example.Swing;
-
-import org.example.controller.FilaPedidoController;
-import org.example.model.repository.FilaPedidoRepository;
-import org.example.model.services.FilaPedidoService;
-
-import org.example.model.util.CustomizerFactory;
-
-import javax.persistence.EntityManager;
+package org.example.view;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class TelaDePesquisarPedidosSwing extends JFrame {
 
-    EntityManager em = CustomizerFactory.getEntityManager();
-    FilaPedidoRepository filaPedidoRepository = new FilaPedidoRepository( em );
-    FilaPedidoService filaPedidoService = new FilaPedidoService( em );
-    FilaPedidoController filaPedidoController = new FilaPedidoController( filaPedidoService );
-
-    private JTextField textField;
+    private JTextField campoBusca;
+    private JTable tabelaPedidos;
 
     public TelaDePesquisarPedidosSwing() {
-        getContentPane().setLayout( null );
-        setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-        setSize( 700, 500 );
+        setTitle("Pesquisar Pedidos");
+        setSize(800, 400);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        getContentPane().setLayout(null);
 
+        // Painel de topo
         JPanel panel = new JPanel();
-        panel.setBackground( new Color( 128, 128, 128 ) );
-        panel.setBounds( 0, 0, 436, 48 );
-        getContentPane().add( panel );
-        panel.setLayout( null );
+        panel.setBounds(10, 10, 760, 40);
+        getContentPane().add(panel);
+        panel.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel( "ID do pedido" );
-        lblNewLabel.setFont( new Font( "Tahoma", Font.PLAIN, 14 ) );
-        lblNewLabel.setBounds( 53, 0, 83, 38 );
-        panel.add( lblNewLabel );
+        JLabel lblBusca = new JLabel("Cliente ou ID:");
+        lblBusca.setBounds(10, 10, 100, 20);
+        panel.add(lblBusca);
 
-        textField = new JTextField();
-        textField.setBounds( 146, 12, 147, 19 );
-        panel.add( textField );
-        textField.setColumns( 10 );
+        campoBusca = new JTextField();
+        campoBusca.setBounds(110, 10, 400, 20);
+        panel.add(campoBusca);
 
-        JButton pesquisarButton = new JButton( "Pesquisar " );
-        pesquisarButton.setFont( new Font( "Arial", Font.PLAIN, 12 ) );
-        pesquisarButton.addActionListener( e -> {
-            String senha = textField.getText();
-            if (senha.isEmpty()) {
-                JOptionPane.showMessageDialog( null, "Por favor, insira uma senha." );
-                return;
-            }
-            filaPedidoController.pesquisarPedido( senha );
-        } );
-        pesquisarButton.setBounds( 314, 11, 112, 21 );
-        panel.add( pesquisarButton );
+        JButton botaoPesquisar = new JButton("Pesquisar");
+        botaoPesquisar.setBounds(530, 10, 100, 20);
+        panel.add(botaoPesquisar);
+
+        // Tabela
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(10, 60, 760, 290);
+        getContentPane().add(scrollPane);
+
+        String[] colunas = {
+                "ID do Pedido", "Nome do Cliente", "Produtos", "Valor Total", "Status", "Data e Hora"
+        };
+
+        tabelaPedidos = new JTable();
+        tabelaPedidos.setModel(new DefaultTableModel(new Object[][] {}, colunas));
+        scrollPane.setViewportView(tabelaPedidos);
+
+        // Visível
+        setVisible(true);
     }
 }
-

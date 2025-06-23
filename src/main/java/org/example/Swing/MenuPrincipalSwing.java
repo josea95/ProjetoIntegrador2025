@@ -12,6 +12,7 @@ import org.example.model.repository.ProdutoHistoricoPedidoRepository;
 
 import org.example.model.services.*;
 import org.example.model.util.CustomizerFactory;
+import org.example.view.TelaDePesquisarPedidosSwing;
 
 import javax.persistence.EntityManager;
 import javax.swing.*;
