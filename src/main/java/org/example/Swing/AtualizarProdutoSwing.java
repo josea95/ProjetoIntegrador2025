@@ -5,6 +5,7 @@ import org.example.model.entities.ProdutoEntity;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.time.format.DateTimeFormatter;
@@ -103,7 +104,7 @@ public class AtualizarProdutoSwing extends JFrame {
     private void initAtualizacaoPanel(ProdutoEntity produto) {
         JPanel panel = new JPanel( new GridLayout( 8, 2, 10, 10 ) );
         panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
-        panel.setBackground( fundo);
+        panel.setBackground( fundo );
 
         panel.add( new JLabel( "ID do Produto:" ) );
         JLabel idLabel = new JLabel( String.valueOf( produto.getId() ) );
@@ -190,6 +191,7 @@ public class AtualizarProdutoSwing extends JFrame {
             produtoController.atualizarProduto( produtoAtualizado );
 
             JOptionPane.showMessageDialog( this, "Produto atualizado com sucesso!" );
+            atualizarTabelaProdutos( categoriaField.getText() );
             initCategoriaPanel();
 
         } catch (NumberFormatException ex) {
@@ -199,5 +201,12 @@ public class AtualizarProdutoSwing extends JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog( this, "Erro ao atualizar: " + ex.getMessage() );
         }
+    }
+
+    // Metodo que atualiza a lista de produtos depois de atualizar um produto
+    private void atualizarTabelaProdutos(String categoriaSelecionada) {
+        List<ProdutoEntity> produtos = produtoController.buscarPorCategoria( categoriaSelecionada );
+        listModel.clear();
+        produtos.forEach(listModel::addElement);
     }
 }
