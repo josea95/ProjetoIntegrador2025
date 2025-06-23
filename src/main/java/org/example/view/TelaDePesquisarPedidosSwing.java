@@ -1,4 +1,4 @@
-package org.example.Swing;
+package org.example.view;
 
 import org.example.controller.FilaPedidoController;
 import org.example.model.repository.FilaPedidoRepository;

@@ -1,4 +1,4 @@
-package org.example.Swing;
+package org.example.view;
 
 import org.example.controller.HistoricoPedidoController;
 import org.example.controller.PedidoController;
@@ -128,4 +128,3 @@ public class MenuPrincipalSwing extends JFrame {
         setVisible( true );
     }
 }
-
