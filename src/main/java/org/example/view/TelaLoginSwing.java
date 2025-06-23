@@ -36,10 +36,10 @@ public class TelaLoginSwing extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 
-		JLabel lblTitulo = new JLabel("Sistema Marmitch");
+		JLabel lblTitulo = new JLabel("Sistema Marmitech");
 		lblTitulo.setForeground(Color.BLACK);
 		lblTitulo.setFont(new Font("Goudy Old Style", Font.ITALIC, 26));
-		lblTitulo.setBounds(91, 0, 179, 38);
+		lblTitulo.setBounds(91, 0, 260, 38);
 		panel.add(lblTitulo);
 
 		JLabel lblLogin = new JLabel("Login");
