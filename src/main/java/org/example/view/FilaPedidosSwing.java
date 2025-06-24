@@ -1,8 +1,7 @@
-package org.example.Swing;
+package org.example.view;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import org.example.model.entities.FilaPedidoEntity;
-import org.example.model.entities.ProdutoPedidoEntity;
 import org.example.model.services.FilaPedidoService;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

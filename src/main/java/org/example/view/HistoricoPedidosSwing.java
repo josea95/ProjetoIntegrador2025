@@ -1,17 +1,14 @@
 
-package org.example.Swing;
+package org.example.view;
 import org.example.model.entities.HistoricoPedidoEntity;
-import org.example.model.entities.ProdutoHistoricoPedidoEntity;
 import org.example.model.entities.UsuarioEntity;
 import org.example.model.services.HistoricoPedidoService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import static org.example.model.util.FormatadorUtils.formatarProdutos;
 import static org.example.model.util.FormatadorUtils.formatarProdutosHistorico;
 
 public class HistoricoPedidosSwing extends JFrame {

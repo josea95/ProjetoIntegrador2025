@@ -1,9 +1,9 @@
 package org.example.controller;
 
-import org.example.Swing.AtualizarProdutoSwing;
-import org.example.Swing.CadastrarProdutoSwing;
-import org.example.Swing.DeletarProdutoSwing;
-import org.example.Swing.MenuPersonalizacaoSwing;
+import org.example.view.AtualizarProdutoSwing;
+import org.example.view.CadastrarProdutoSwing;
+import org.example.view.DeletarProdutoSwing;
+import org.example.view.MenuPersonalizacaoSwing;
 
 public class MenuPersonalizacaoProdutoController {
 

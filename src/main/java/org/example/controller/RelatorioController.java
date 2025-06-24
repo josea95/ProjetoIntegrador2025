@@ -1,11 +1,11 @@
 package org.example.controller;
 
-import org.example.view.RelatorioView;
+import org.example.model.services.RelatorioService;
 
 public class RelatorioController {
-    private final RelatorioView relatorioView;
+    private final RelatorioService relatorioService;
 
-    public RelatorioController(RelatorioView relatorioView) {
-        this.relatorioView = relatorioView;
+    public RelatorioController(RelatorioService relatorioService) {
+        this.relatorioService = relatorioService;
     }
 }

@@ -1,4 +1,4 @@
-package org.example.Swing;
+package org.example.view;
 
 import org.example.model.entities.FilaPedidoEntity;
 import org.example.model.entities.ProdutoEntity;
