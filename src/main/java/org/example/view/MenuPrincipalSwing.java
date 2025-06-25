@@ -103,7 +103,7 @@ public class MenuPrincipalSwing extends JFrame {
         btnPesquisarPedido.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
 
         btnPesquisarPedido.addActionListener( e -> {
-            TelaDePesquisarPedidosSwing telaPesquisar = new TelaDePesquisarPedidosSwing();
+            TelaDePesquisarPedidosSwing telaPesquisar = new TelaDePesquisarPedidosSwing(filaPedidoService);
             telaPesquisar.setVisible( true );
         } );
         getContentPane().add( btnPesquisarPedido );
