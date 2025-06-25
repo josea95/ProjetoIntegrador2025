@@ -15,10 +15,11 @@ public class UsuarioRepository {
     }
 
     public void salvar(UsuarioEntity usuario) {
-        em.getTransaction().begin();
-        em.persist(usuario);
-        em.getTransaction().commit();
+        em.getTransaction().begin();      // Inicia uma transação no banco
+        em.persist(usuario);              // Diz para o EntityManager salvar o objeto usuario no banco
+        em.getTransaction().commit();     // Finaliza (confirma) a transação, gravando os dados
     }
+
 
     public UsuarioEntity buscarPorId(int id) {
         return em.find(UsuarioEntity.class, id);

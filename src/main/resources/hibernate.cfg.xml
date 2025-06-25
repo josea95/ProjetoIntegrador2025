@@ -13,7 +13,7 @@
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
         <property name="hibernate.show_sql">false</property>
         <property name="hibernate.format_sql">false</property>
-        <property name="hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <mapping class="org.example.model.entities.UsuarioEntity"/>
         <mapping class="org.example.model.entities.ProdutoEntity"/>
@@ -21,6 +21,5 @@
         <mapping class="org.example.model.entities.ProdutoHistoricoPedidoEntity"/>
         <mapping class="org.example.model.entities.ProdutoPedidoEntity"/>
         <mapping class="org.example.model.entities.HistoricoPedidoEntity"/>
-
     </session-factory>
 </hibernate-configuration>

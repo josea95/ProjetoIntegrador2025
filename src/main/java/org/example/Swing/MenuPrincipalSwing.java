@@ -103,10 +103,11 @@ public class MenuPrincipalSwing extends JFrame {
         btnPesquisarPedido = new JButton( "Pesquisar Pedido" );
         btnPesquisarPedido.setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
 
-        btnPesquisarPedido.addActionListener( e -> {
-            TelaDePesquisarPedidosSwing telaPesquisar = new TelaDePesquisarPedidosSwing();
-            telaPesquisar.setVisible( true );
-        } );
+        btnPesquisarPedido.addActionListener(e -> {
+            TelaDePesquisarPedidosSwing telaPesquisar = new TelaDePesquisarPedidosSwing(filaPedidoService);
+            telaPesquisar.setVisible(true);
+        });
+
         getContentPane().add( btnPesquisarPedido );
 
         btnHistorico = new JButton( "Ver Histórico de Pedidos" );
@@ -129,4 +130,3 @@ public class MenuPrincipalSwing extends JFrame {
         setVisible( true );
     }
 }
-
